@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>ORDER READ</title>
+</head>
+
+<!-- 테이블 데이터 전용 style -->
+<style>
+    tr#item td, tr#itemHead th{
+        text-align: center;
+    }
+</style>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'주문 상세'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">order list</a></li>
+                            <li class="active">order read</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="customer-login mb-40">
+                        <!-- 주문상품 세부내역 START -->
+                        <h3>주문 상품 세부내역은 <a data-bs-toggle="collapse" href="#checkout-login">여기를 클릭하세요</a></h3>
+                        <div id="checkout-login" class="checkout-login collapse fix">
+                            <div class="checkout-login-wrapper mt-30">
+                                <h5 style="color: #191c1f">주문상품별 세부내역</h5>
+                                <br/>
+                                <table id="orderTable" class="table">
+                                    <thead>
+                                    <tr id="itemHead">
+                                        <th>상품명</th>
+                                        <th>옵션1</th>
+                                        <th>옵션2</th>
+                                        <th>색상</th>
+                                        <th>가격(할인 후)</th>
+                                        <th>주문수량</th>
+                                        <th>최종 결재금액</th>
+                                        <th>적립 포인트</th>
+                                        <th>배송</th>
+                                        <th>리뷰</th>
+                                        <th>취소/반품/교환</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr id="item" th:each="item:${orderVO.orderItemList}">
+                                        <!-- 상품 세부페이지 링크 연결 예정 -->
+                                        <td name="iName"><a th:href="@{/shop/read(pno=${item.pno},mno=${orderVO.mno})}"><strong style="text-align: center">[[${item.iName}]]</strong></a></td>
+                                        <input type="hidden" name="pno" th:value="${item.pno}" readonly>
+                                        <td name="iOption">[[${item.iOption}]]<span style="font-size: x-small">([[${item.iOptionName}]])</span></td>
+                                        <td name="iOption">[[${item.iOption2}]]<span style="font-size: x-small">([[${item.iOptionName2}]])</span></td>
+                                        <td name="iColor" th:text="${item.iColor}"></td>
+                                        <td name="iDisPrice" data-th-text="${#numbers.formatInteger(item.iDisPrice, 3, 'COMMA') + ' 원'}"></td>
+                                        <td name="iCount" th:text="${item.iCount}"></td>
+                                        <td name="iTotalPrice" data-th-text="${#numbers.formatInteger(item.iTotalPrice, 3, 'COMMA') + ' 원'}"></td>
+                                        <td name="isavePoint" data-th-text="${#numbers.formatInteger(item.iSavePoint, 3, 'COMMA') + ' POINT'}"></td>
+                                        <!-- 배송조회 -->
+                                        <td class="pro-title" style="font-weight: bold; color: #191c1f">
+                                            <a th:if="${item.iDeliveryStatus != '배송전'}" th:href="@{/mypage/delivery/read(oINo=${item.oINo})}"><img width="30" height="30" src="/icons_bootstrap/truck.svg"></a>
+                                            <div th:if="${item.iDeliveryStatus == '배송전'}">배송전</div>
+                                        </td>
+                                        <!-- 리뷰등록 -->
+                                        <td class="pro-title" style="font-weight: bold; color: #191c1f">
+
+                                            <a th:if="${item.iReviewStatus.equals('미등록') && orderVO.tPayStatus.equals('결제완료')}"
+                                               th:href="@{/mypage/order/regReview(mno=${orderVO.mno},ono=${item.ono},oINo=${item.oINo})}">
+                                                <img width="30" height="30" src="/icons_bootstrap/pencil-square.svg">
+                                            </a>
+                                            <div th:if="${item.iReviewStatus != '미등록'}">등록완료</div>
+                                            <div th:if="${item.iReviewStatus.equals('미등록') && orderVO.tPayStatus != '결제완료'}">작성불가</div>
+                                        </td>
+                                        <!-- 취소/반품/교환 -->
+                                        <td class="pro-title" style="font-weight: bold; color: #191c1f">
+                                            <a th:if="${item.iExStatus.equals('미신청') && orderVO.tPayStatus.equals('결제완료')}"
+                                               th:href="@{/mypage/order/exchange(mno=${orderVO.mno},ono=${item.ono},pno=${item.pno},oINo=${item.oINo})}">
+                                                <img width="20" height="20" src="/icons_bootstrap/arrow-left-right.svg">
+                                            </a>
+                                            <div th:if="${item.iExStatus != '미신청'}">신청완료</div>
+                                            <div th:if="${item.iExStatus.equals('미신청') && orderVO.tPayStatus != '결제완료'}">신청불가</div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <span style="font-size: x-small">* 배송조회 버튼: 사업자 배송 등록 시 조회버튼 활성화됩니다.</span><br/>
+                                <span style="font-size: x-small">* 리뷰작성 버튼: 리뷰 작성 이력이 없는 경우 활성화됩니다.</span><br/>
+                                <span style="font-size: x-small">* 취소/반품/교환 버튼: 신청 이력이 없는 경우 활성화됩니다.</span><br/>
+                                <span style="font-size: x-small">* 해당 주문 취소 처리 완료 시 모든 버튼 비활성화됩니다.</span>
+                            </div>
+                        </div>
+                        <!-- 주문상품 세부내역 END -->
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="checkout-form">
+                        <div class="row">
+                            <div class="col-lg-6 mb-40">
+                                <form action="#">
+                                    <h3>주문자 정보</h3>
+                                    <!-- 숨김 데이터 -->
+                                    <input type="hidden" name="mno" th:value="${orderVO.mno}" readonly>
+                                    <input type="hidden" name="ono" th:value="${orderVO.ono}" readonly>
+                                    <!-- 표시 데이터 -->
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label th:for="orderDate">주문일시</label>
+                                            <input type="text" name="orderDate" th:value="${orderVO.orderDate}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label th:for="name">주문자 성명</label>
+                                            <input type="text" name="name" th:value="${orderVO.name}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label th:for="phoneNum">주문자 연락처(휴대전화)</label>
+                                            <input type="text" name="mobileNum" th:value="${orderVO.mobileNum}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <h3>받는사람 정보</h3>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label th:for="receiverName">받는사람 성명</label>
+                                            <input type="text" name="receiverName" th:value="${orderVO.receiverName}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label th:for="receiverPhone">받는사람 연락처</label>
+                                            <input type="text" name="receiverPhone" th:value="${orderVO.receiverPhone}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label th:for="postcode">우편번호</label>
+                                            <input type="text" name="postcode" th:value="${orderVO.postcode}" readonly>
+                                        </div>
+                                        <div class="col-xs-12 mb-30">
+                                            <label th:for="address">도로명주소</label>
+                                            <input type="text" name="address" th:value="${orderVO.address}" readonly>
+                                        </div>
+                                        <div class="col-xs-12 mb-30">
+                                            <label th:for="detailAddress">세부주소</label>
+                                            <input type="text" name="detailAddress" th:value="${orderVO.detailAddress}" readonly>
+                                        </div>
+                                        <div class="order-notes">
+                                            <label th:for="message">배송 메세지</label>
+                                            <textarea id="message" name="message" th:text="${orderVO.message}" readonly></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- 주문 결제 내역 -->
+                            <div class="col-lg-6 col-12 mb-40">
+                                <div class="order-wrapper">
+                                    <h3>결제 내역</h3>
+                                    <div class="order-table table-responsive mb-30">
+                                        <table class="table"><!-- 클래스명 제거시 디자인 통일됨 -->
+                                            <thead>
+                                            <tr>
+                                                <th class="product-name">구분</th>
+                                                <th class="product-total">금액(단위: 원)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="item : ${orderVO.orderItemList}">
+                                                <td class="product-name">
+                                                    <strong class="product-qty">[[${item.iName}]]</strong> [ [[${item.iOption}]] / [[${item.iOption2}]] / [[${item.iColor}]] ]
+                                                     <strong class="product-qty"> × [[${item.iCount}]]</strong>
+                                                </td>
+                                                <td class="product-total">
+<!--                                                    <div data-th-text="${#numbers.formatInteger(result.totalPrice, 3, 'COMMA') + '원'}"></div>-->
+                                                    <span class="amount" data-th-text="${#numbers.formatInteger(item.iTotalPrice, 3, 'COMMA') + ' 원'}"></span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <th>총 상품가격</th>
+                                                <td><strong data-th-text="${#numbers.formatInteger(orderVO.tProductPrice, 3, 'COMMA') + ' 원'}"></strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>배송비</th>
+                                                <td>
+                                                    <div th:if="${orderVO.tShipFee > 0}" data-th-text="${#numbers.formatInteger(orderVO.tShipFee, 3, 'COMMA') + ' 원'}"></div>
+                                                    <div th:if="${orderVO.tShipFee == 0}"> - 원</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>사용 포인트</th>
+                                                <td>
+                                                    <div th:if="${orderVO.tUsePoint > 0}" data-th-text="${#numbers.formatInteger(orderVO.tUsePoint, 3, 'COMMA') + ' 원'}"></div>
+                                                    <div th:if="${orderVO.tUsePoint == 0}"> - 원</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>최종 결제금액</th>
+                                                <td><strong data-th-text="${#numbers.formatInteger(orderVO.tTotalPrice, 3, 'COMMA') + ' 원'}"></strong>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-30">
+                                        <label th:for="tSavePoint">총 적립 포인트</label>
+                                        <input type="text" name="tSavePoint" th:value="${#numbers.formatInteger(orderVO.tSavePoint, 3, 'COMMA') + ' POINT'}" readonly>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-30">
+                                        <label th:for="tPayStatus">결재상태</label>
+                                        <input type="text" name="tPayStatus" th:value="${orderVO.tPayStatus}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+        // 뒤로가기 버튼 클릭
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/order/list?mno='+mno;
+        })
+    })
+
+</script>
+</html>

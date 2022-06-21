@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>Admin-memberList</title>
+</head>
+
+<body>
+<!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <h1 th:text="${memName}+'님'"></h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a></li>
+                        <li class="active">memberList</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <form action="#">
+                <div class="col-xs-12">
+                    <div class="wishlist-table table-responsive mb-40">
+                        <h3>회원 리스트</h3>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="pro-remove">회원번호</th>
+                                <th class="pro-remove">아이디</th>
+                                <th class="pro-remove">이름</th>
+                                <th class="pro-thumbnail">주소</th>
+                                <th class="pro-price">전화번호</th>
+                                <th class="pro-price">이메일</th>
+                                <th class="pro-add-to-cart">닉네임</th>
+                                <th class="pro-remove">권한</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="dto:${list.getList()}">
+                                <td class="pro-remove"><a th:href="@{/admin/member/modify(mno=${dto.mno})}" th:text="${dto.mno}"/></td>
+                                <td class="pro-remove" th:text="${dto.id}"></td>
+                                <td class="pro-remove" th:text="${dto.name}"></td>
+                                <td class="pro-thumbnail" th:text="${dto.address}"></td>
+                                <td class="pro-price"><span class="amount" th:text="${dto.mobileNum}"/></td>
+                                <td class="pro-price"><a th:href="@{/admin/mail/write(mno=${dto.mno})}" class="in-stock" th:text="${dto.email}"/></td>
+                                <td class="pro-remove" th:text="${dto.nickName}"></td>
+                                <td class="pro-remove" th:text="${dto.auth}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- Paging custom -->
+                        <div class="paginationC clearfix">
+                            <!-- 이전 버튼 -->
+                            <li th:if="${list.getPrePage() != 0}">
+                                <a th:href="@{/admin/member/member(pageNum=${list.getPrePage()})}">Previous</a>
+                            </li>
+                            <li th:if="${list.getPrePage() == 0}">
+                                <a>Previous</a>
+                            </li>
+                            <!-- 페이지 번호-->
+                            <li th:each="page: ${#numbers.sequence(list.getNavigateFirstPage(), list.getNavigateLastPage())}" th:classappend="${page == list.getPageNum()} ? 'active'">
+                                <a th:text="${page}" th:href="@{/admin/member/member(pageNum=${page})}"></a>
+                            </li>
+                            <!-- 다음 버튼-->
+                            <li th:if="${list.getNextPage() != 0}">
+                                <a th:href="@{/admin/member/member(pageNum=${list.getNextPage()})}">Next</a>
+                            </li>
+                            <li th:if="${list.getNextPage() == 0}">
+                                <a>Next</a>
+                            </li>
+                            <p>현재페이지[[${pageNum}]]</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->
+</body>
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+</html>

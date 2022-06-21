@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.admin.ProductOptMapper">
+
+    <insert id="insert">
+        insert into tbl_product_opt (pno, pOption, pOptionName, pOption2, pOptionName2, pAmount, pOptionPrice, pColor)
+        values (#{pno}, #{pOption}, #{pOptionName}, #{pOption2}, #{pOptionName2}, #{pAmount}, #{pOptionPrice}, #{pColor})
+    </insert>
+
+    <select id="getAll" resultType="com.green.team4.vo.shop.Product_optVO">
+        select * from tbl_product_opt
+    </select>
+
+    <select id="getProductJoin" resultType="com.green.team4.vo.shop.Product_optVO">
+<!-- pno를 통한 상품 색상, 사이즈별 가격 및 수량 조회 -->
+        select p.pno, p.pname, o.pSize, o.pColor, o.pAmount from  tbl_product p
+        inner join tbl_product_opt o
+        on p.pno = #{p.pno};
+    </select>
+
+    <!-- 상품 옵션정도 모두 가져오기 -->
+    <select id="getProductOption" resultType="com.green.team4.vo.shop.Product_optVO">
+        select distinct * from tbl_product_opt
+        where pno=#{pno}
+    </select>
+
+    <select id="getOpt" resultType="com.green.team4.vo.shop.Product_optVO">
+        select * from tbl_product_opt where pno=#{pno}
+    </select>
+
+    <select id="getColors" resultType="com.green.team4.vo.shop.Product_optVO">
+        select pColor from tbl_product_opt where pno=#{pno};
+    </select>
+
+    <update id="update">
+        update tbl_product_opt
+        set pOption=#{pOption}, pOptionName=#{pOptionName}, pOption2=#{pOption2}, pOptionName2=#{pOptionName2},
+        pAmount=#{pAmount}, pOptionPrice=#{pOptionPrice}, pColor=#{pColor}
+        where pno=#{pno}
+    </update>
+
+    <update id="updateOption1">
+        update tbl_product_opt
+        set pOption=null
+        where pOption="없음"
+    </update>
+
+    <update id="updateOption2">
+        update tbl_product_opt
+        set pOption2=null
+        where pOption2="없음"
+    </update>
+
+    <update id="updateColor">
+        update tbl_product_opt
+        set pColor=null
+        where pColor="없음"
+    </update>
+
+    <!-- tbl_product_opt 취소/교환/반품 시 재고 업데이트용 -->
+    <update id="updateAmt">
+        update tbl_product_opt
+        set pAmount=#{pAmount}
+        where pcno=#{pcno}
+    </update>
+
+    <delete id="delete">
+        delete from tbl_product_opt where pcno=#{pcno}
+    </delete>
+
+
+    <select id="findAmount" resultType="com.green.team4.vo.shop.Product_optVO">
+        select * from tbl_product_opt ps where pno = #{pno} <include refid="option"></include>
+    </select>
+
+    <sql id="option">
+        <if test="(pColor == null and pColor =='') and (pOption ==null and pOption =='') and (pOption2 ==null and pOption2 =='') ">
+
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption ==null or pOption =='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor = #{pColor} and ps.pOption is null and ps.pOption2  is null
+        </if>
+        <if test="(pColor == null or pColor =='' )and (pOption !=null and pOption !='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor is null and ps.pOption = #{pOption} and  ps.pOption2  is null
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption !=null and pOption !='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor = #{pColor} and ps.pOption = #{pOption} and ps.pOption2  is null
+        </if>
+        <if test="(pColor == null or pColor =='') and (pOption !=null and pOption !='') and (pOption2 !=null and pOption2 !='') ">
+            and ps.pColor is null and ps.pOption= #{pOption} and ps.pOption2 = #{pOption2}
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption !=null and pOption !='') and (pOption2 !=null and pOption2 !='') ">
+            and ps.pColor = #{pColor} and  ps.pOption = #{pOption} and ps.pOption2 = #{pOption2}
+        </if>
+
+    </sql>
+
+</mapper>

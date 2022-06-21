@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <!-- iamport.payment.js -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <title>mypage-main</title>
+</head>
+<style>
+    .address_search_btn{
+        margin-bottom: 20px;
+    }
+    .addressInfo_input_div{
+        display: none;
+    }
+
+    .addressBtn_1{
+        margin-right: 20px;
+        margin-bottom: 10px;
+        background-color: #555;
+    }
+    .total_info_div ul{
+        list-style: none;
+    }
+    .total_info_div li{
+        text-align: right;
+        margin-top:10px;
+    }
+    .price_span_label{
+        float: left;
+    }
+    .price_total_li{
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+    }
+    .strong_red{
+        color: red;
+    }
+    .strong_blue{
+        color: blue;
+    }
+    .total_price_red{
+        font-size: 25px;
+    }
+    .total_price_label{
+        margin-top: 5px;
+    }
+    .point_li{
+        padding: 15px;
+        border-top: 1px solid #ddd;
+        margin: 10px -15px 0;
+    }
+    .total_info_btn_div{
+        border-top: 1px solid #ddd;
+        text-align: center;
+        padding: 15px 20px;
+    }
+
+    .address_search_btn{
+        vertical-align: middle;
+        display: inline-block;
+        border: 1px solid #aaa;
+        width: 90px;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        color: #555;
+        cursor: pointer;
+    }
+
+    .product-name{
+        text-align: center;
+    }
+    .product_color_td{
+        text-align: center;
+    }
+    .product_color_td{
+        text-align: center;
+    }
+</style>
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section" style="background-image: url('/mainPageImg/5.jpeg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <h1 th:text="'주문페이지'"></h1>
+                    <ul class="breadcrumb">
+                        <li><a onclick="history.back()">뒤로가기</a></li>
+                        <li class="active">주문/결제</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- PAGE SECTION START -->
+<div class="page-section section pt-120 pb-80" >
+    <div class="container">
+
+            <div class="col-12">
+                <div class="checkout-form">
+                    <div class="row" >
+                        <div class="col-lg-6 mb-40"  style=" margin: 0 auto; width: 1130px">
+                            <form action="#">
+                                <h2>주문/결제</h2>
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12 mb-30">
+                                        <label for="b_f_name">주문자명</label>
+                                        <input id="b_f_name" type="text" th:value="${memberInfo.name}" readonly/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-30">
+                                        <label for="b_l_name">연락처 </label>
+                                        <input id="b_l_name" type="text" th:value="${memberInfo.phoneNum}" readonly/>
+                                    </div>
+                                </div>
+                                <hr>
+                                <h6>받는 사람 정보</h6>
+                                <div class="addressInfoBtn_div">
+                                    <a class="addressBtn addressBtn_1" onclick="showAddress('1')" >등록된 주소</a>
+                                    <a class="addressBtn addressBtn_2" onclick="showAddress('2')">직접 입력</a>
+                                </div>
+                                <br/> <!-- SW 추가 br만 -->
+                                <div class="addressInfo_input_div addressInfo_input_div_1" style="display: block">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label for="b_f_name">이름<span class="required">*</span></label>
+                                            <input id="b_f_name" type="text" th:value="${memberInfo.name}" readonly/>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label for="b_phone">연락처  <span class="required">*</span></label>
+                                            <input id="b_phone" type="text" th:value="${memberInfo.phoneNum}"  />
+                                        </div>
+                                        <div class="address-box">
+                                            <div class="col-sm-2 col-xs-12 mb-30">
+                                                <label>우편번호 <span class="required">*</span></label>
+                                                <input type="text" th:value="${memberInfo.postcode}" readonly />
+                                            </div>
+                                            <div class="col-sm-12 col-xs-12 mb-30">
+                                                <label>주소 <span class="required">*</span></label>
+                                                <input type="text" th:value="${memberInfo.address}" readonly/>
+                                            </div>
+                                            <div class="col-sm-12 col-xs-12 mb-30">
+                                                <label for="b_zip">상세주소 <span class="required">*</span></label>
+                                                <input id="b_zip" type="text" th:value="${memberInfo.detailAddress}" readonly />
+                                            </div>
+                                            <input class="selectAddress" value="T" type="hidden">
+                                            <input class="receiverName_input" th:value="${memberInfo.name}" type="hidden">
+                                            <input class="receiverPhone_input" th:value="${memberInfo.phoneNum}" type="hidden">
+                                            <input class="address1_input" type="hidden" th:value="${memberInfo.postcode}">
+                                            <input class="address2_input" type="hidden" th:value="${memberInfo.address}">
+                                            <input class="address3_input" type="hidden" th:value="${memberInfo.detailAddress}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="addressInfo_input_div addressInfo_input_div_2">
+                                    <div class="row">
+
+                                        <!-- SW추가 0605 개인 배송지 가져오기 Btn 시작 -->
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <a class="btn" th:onclick="getShipmentInfo([[${memberInfo.mno}]])">개인 배송지 가져오기</a>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+
+                                        </div>
+                                        <!-- SW추가 0605 개인 배송지 가져오기 Btn 끝 -->
+
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label for="b_f_name">이름</label>
+                                            <input id="b_f_name" type="text" class="receiverName_input" name="receiverName"/>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label for="b_phone">연락처  <span class="required">*</span></label>
+                                            <input id="b_phone" type="text" class="receiverPhone_input"  name="receiverPhone"  />
+                                        </div>
+                                        <div class="address-box ">
+                                            <a class="address_search_btn" onclick="execution_daum_address()">주소 찾기</a><br>
+                                            <div class="col-sm-2 col-xs-12 mb-30">
+                                                <label>우편번호 <span class="required">*</span></label>
+                                                <input type="text" class="address1_input"   />
+                                            </div>
+
+                                            <div class="col-sm-12 col-xs-12 mb-30">
+                                                <label>주소 <span class="required">*</span></label>
+                                                <input type="text" class="address2_input"  />
+                                            </div>
+                                            <div class="col-sm-12 col-xs-12 mb-30">
+                                                <label for="b_zip">상세주소 <span class="required">*</span></label>
+                                                <input  class="address3_input" type="text"  />
+                                            </div>
+                                            <input class="selectAddress" value="F" type="hidden">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="order-notes">
+                                    <label for="order_note">배송 요청사항</label>
+                                    <input id="order_note" type="text" class="message_input" name="message" >
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="col-lg-6 col-12 mb-40" style=" margin: 0 auto; width: 1100px">
+
+                        <div class="order-wrapper">
+                            <h3>주문서</h3>
+                            <div class="order-table table-responsive mb-30">
+                                <div class="goods_kind_div">
+                                    주문상품 <span class="goods_kind_div_kind"></span>종류 총&nbsp;<span class="goods_kind_div_count"></span>개
+                                </div>
+                                <table  th:each="product :${orderlist}">
+                                    <thead >
+                                        <th  class="product-name"  style="width: 400px;text-align: center;">이미지</th>
+                                        <th  class="product-name" style="text-align: center">상품명</th>
+                                        <th class="product-name" style="text-align: center">수량</th>
+                                        <th th:if="${product.pColor} != null" class="product-name" style="text-align: center">색상</th>
+                                        <th th:if="${product.pOption} != null" class="product-name" style="text-align: center">[[${product.pOptionName}]]</th>
+                                        <th th:if="${product.pOption2} != null" class="product-name" style="text-align: center">[[${product.pOptionName2}]]</th>
+                                        <th class="product-name" style="text-align: center">가격</th>
+                                        <th class="product-name" style="text-align: center">적립금</th>
+                                        <th class="product-name" style="text-align: center">주문금액</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody >
+                                    <tr >
+                                        <td  class="product-name" style="width: 400px;text-align: center" ><img th:src="|/display?fileName=${product.pImage}|" style="width: 150px;height: 140px"></td>
+                                       <td  class="product-name" style="text-align: center;"  >
+                                           <strong class="product_name_td" th:text="${product.pName}" th:value="${product.pName}"></strong>
+                                        </td>
+                                        <td class="product-name" th:text="${product.itemCount}" style="text-align: center">
+                                            <strong th:text="${product.itemCount}"></strong>
+                                        </td>
+                                        <td th:if="${product.pColor} != null" class="product-name" style="text-align: center" ><strong th:text="${product.pColor}"></strong></td>
+                                        <td th:if="${product.pOption} != null" class="product-name" style="text-align: center"><strong th:text="${product.pOption}"></strong></td>
+                                        <td th:if="${product.pOption2} != null" class="product-name" style="text-align: center"><strong th:text="${product.pOption2}"></strong></td>
+                                        <td class="product_price_td" style="text-align: center">
+                                            <strong><span style="text-align: center" th:text="${#numbers.formatInteger(product.salePrice, 0, 'COMMA')}+원"></span></strong>
+                                            <input type="hidden" class="individual_pPrice_input" th:value="${product.pPrice}">
+                                            <input type="hidden" class="individual_salePrice_input" th:value="${product.salePrice}">
+                                            <input type="hidden" class="individual_totalPrice_input" th:value="${product.totalPrice}">
+                                            <input type="hidden" class="individual_point_input" th:value="${product.point}">
+                                            <input type="hidden" class="individual_totalPoint_input" th:value="${product.totalPoint}">
+                                            <input type="hidden" class="individual_itemCount_input" th:value="${product.itemCount}">
+                                            <input type="hidden" class="individual_pno_input" th:value="${product.pno}">
+                                            <input type="hidden" class="individual_pColor_input" th:value="${product.pColor}">
+                                            <input type="hidden" class="individual_pOption_input" th:value="${product.pOption}">
+                                            <input type="hidden" class="individual_pOption2_input" th:value="${product.pOption2}">
+                                            <input type="hidden" class="individual_pOptionName_input" th:value="${product.pOptionName}">
+                                            <input type="hidden" class="individual_pOptionName2_input" th:value="${product.pOptionName2}">
+                                            <input type="hidden" class="individual_pOptionPrice_input" th:value="${product.pOptionPrice}">
+                                        </td>
+                                        <td style="text-align: center">
+                                            <strong><span style="text-align: center" th:text="${#numbers.formatInteger(product.totalPoint, 0, 'COMMA')}+P"></span></strong>
+                                        </td>
+                                        <td style="text-align: center">
+                                            <strong><span style="text-align: center"  th:text="${#numbers.formatInteger(product.totalPrice, 0, 'COMMA')}+원"></span></strong>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                    <br>
+                                </table>
+
+                            </div>
+                            <div class="point_div">
+                                <div class="point_div_subject"><strong>쿠폰/포인트 사용</strong></div>
+                                <table class="point_table">
+                                    <tr>
+                                        <div class="coupon-form ">
+                                            <p>쿠폰</p>
+                                            <!--                                                <p>Enter your coupon code if you have one</p>-->
+                                            <form class="coupon_form">
+                                                <select  class="coupon_select">
+                                                    <option disabled></option>
+                                                </select>
+                                                <input id="couponBtn" type="submit" value="쿠폰 보기" />
+                                            </form>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            사용가능 포인트 : [[${memberInfo.point}]] &nbsp;&nbsp;&nbsp; 포인트 입력 : <input class="order_point_input" th:value="0" style="width:80px;font-size:10px;">P
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <a class="order_point_input_btn order_point_input_btn_All" data-state="A">모두사용</a><br>
+                                            <a class="order_point_input_btn order_point_input_btn_Cancel" data-state="C" style="display: none;">사용취소</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <hr>
+                            <div class="total_info_div">
+                                <div class="total_info_price_div">
+                                    <ul>
+                                        <li>
+                                            <span class="price_span_label">상품 금액</span>
+                                            <span class="totalPrice_span"></span>원
+                                        </li>
+                                        <li>
+                                            <span class="price_span_label">배송비</span>
+                                            <strong>+</strong><span class="delivery_price_span"></span>원
+                                        </li>
+                                        <li>
+                                            <span class="price_span_label">쿠폰 할인금액</span>
+                                            <strong class="strong_blue">-
+                                                <span class="coupon_span">
+
+                                                </span>원
+                                            </strong>
+                                        </li>
+                                        <li>
+                                            <span class="price_span_label">포인트 할인금액</span>
+                                            <strong class="strong_blue">-
+                                                <span class="usePoint_span">
+
+                                                </span>원
+                                            </strong>
+                                        </li>
+                                        <li class="point_li">
+                                            <span class="price_span_label">적립예정 포인트</span>
+                                            <span class="totalPoint_span"></span>
+                                        </li>
+                                        <li class="price_total_li">
+                                            <strong class="price_span_label total_price_label">최종 결제 금액</strong>
+                                            <strong class="strong_red">
+                                                <span class="total_price_red finalTotalPrice_span">
+
+                                                </span>원
+                                            </strong>
+                                        </li>
+
+                                    </ul>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="order-button">
+
+                                <!-- 주문 요청 form -->
+                                <form class="order_form" action="/order" method="post">
+                                    <!--   주문번호  -->
+                                    <input name="ono"  type="hidden">
+                                    <!-- 주문자 정보 -->
+                                    <input name="mno" th:value="${memberInfo.mno}" type="hidden">
+                                    <input name="id" th:value="${memberInfo.id}" type="hidden">
+                                    <!--            <input name="receiverPhone" type="hidden">-->
+                                    <!-- 주소록 & 받는이-->
+                                    <input name="receiverName" type="hidden">
+                                    <input name="receiverPhone" type="hidden">
+                                    <input name="postcode" type="hidden">
+                                    <input name="address" type="hidden">
+                                    <input name="detailAddress" type="hidden">
+                                    <!-- 사용 포인트 -->
+                                    <input name="tUsePoint" type="hidden">
+                                    <!-- 배송 메세지 정보-->
+                                    <input type="hidden"  name="message" >
+                                    <!-- 쿠폰 금액-->
+                                    <input type="hidden"  name="tCouponPrice" >
+                                    <!--  사용한 쿠폰 번호-->
+                                    <input type="hidden" name="tCpno" value="0"  >
+                                </form>
+<!--                                <input type="submit" class="order_btn" value="결제하기(개발자용)" />-->
+                                <input type="submit" onclick="requestPay()" value="결제하기">
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ship modal SW 추가 0605, 시작 -->
+<div class="shipModal modal fade container" tabindex="-1" role="dialog">
+    <div class="row modal-dialog" role="document">
+        <div class="col-lg-8 col-12 mx-auto">
+            <div class="login-reg-form modal-content">
+                <div class="row">
+                    <div class="modal-header">
+                        <h4 class="ship-modal-title" th:text="'개인 배송지 목록'"></h4>
+                    </div>
+                    <div class="row">
+                        <form>
+                            <!-- ajax로 가져온 배송지들 display 영역 -->
+                            <div class="shipList col-xs-12 mb-20">
+                                <ul>
+
+                                </ul>
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <button type="button" class="btn shipCloseBtn">닫기</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ship modal SW 추가 0605, 끝 -->
+
+
+
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<script>
+
+    function requestPay() {
+        let receiverName =null
+        let addr1=null
+        let addr2=null
+        let addr3=null
+        $(".addressInfo_input_div").each(function (i,obj){
+            //받는이,주소 값 넣기
+            if($(obj).find(".selectAddress").val()==='T'){
+                receiverName =  $("input[name='receiverName']").val($(obj).find(".receiverName_input").val());
+                addr1 =  $("input[name='postcode']").val($(obj).find(".address1_input").val());
+                addr2 =  $("input[name='address']").val($(obj).find(".address2_input").val());
+                addr3 = $("input[name='detailAddress']").val($(obj).find(".address3_input").val());
+                $("input[name='receiverPhone']").val($(obj).find(".receiverPhone_input").val());
+
+            }
+            // 포인트 값 넣기
+            $("input[name='tUsePoint']").val($(".order_point_input").val())
+            // 쿠폰으로 할인받은 금액 넣기
+            $("input[name='tCouponPrice']").val($(".coupon_span").text())
+            //기타 값 넣기
+            $("input[name='message']").val($(".message_input").val())
+
+
+        })
+        /* 상품정보 */
+        let form_contents = '';
+        $(".product_price_td").each(function(index, element){
+            console.log(index)
+            // console.log("element : ",element)
+            let pno = $(element).find(".individual_pno_input").val();
+            let itemCount = $(element).find(".individual_itemCount_input").val();
+            let pColor = $(element).find(".individual_pColor_input").val();
+            let pOption = $(element).find(".individual_pOption_input").val();
+            let pOptionPrice = $(element).find(".individual_pOptionPrice_input").val();
+            let pOptionName = $(element).find(".individual_pOptionName_input").val();
+            let pOptionName2 = $(element).find(".individual_pOptionName2_input").val();
+            let pOption2 = $(element).find(".individual_pOption2_input").val();
+            let pno_input = "<input name='orders[" + index + "].pno' type='hidden' value='" + pno + "'>";
+            form_contents += pno_input;
+            let itemCount_input = "<input name='orders[" + index + "].iCount' type='hidden' value='" + itemCount + "'>";
+            form_contents += itemCount_input;
+            let pColor_input = "<input name='orders[" + index + "].pColor' type='hidden' value='" + pColor + "'>";
+            form_contents += pColor_input;
+            let pOption_input = "<input name='orders[" + index + "].pOption' type='hidden' value='" + pOption + "'>";
+            form_contents += pOption_input;
+            let pOptionName_input = "<input name='orders[" + index + "].pOptionName' type='hidden' value='" + pOptionName + "'>";
+            form_contents += pOptionName_input;
+            let pOption2_input = "<input name='orders[" + index + "].pOption2' type='hidden' value='" + pOption2 + "'>";
+            form_contents += pOption2_input;
+            let pOptionName2_input = "<input name='orders[" + index + "].pOptionName2' type='hidden' value='" + pOptionName2 + "'>";
+            form_contents += pOptionName2_input;
+            let pOptionPrice_input = "<input name='orders[" + index + "].pOptionPrice' type='hidden' value='" + pOptionPrice + "'>";
+            form_contents += pOptionPrice_input;
+
+        });
+        $(".order_form").append(form_contents);
+        let name = "";
+        if($(".product_name_td").length ==1){
+             name = $(".product_name_td").text()
+        }
+        else{
+            let firstPname = $(".product_name_td").eq(0).text()
+            let pCount = $(".product_name_td").length-1
+            name = firstPname.concat(" 외",pCount,"건")
+        }
+        console.log(name)
+        //let receiverName =receiverName.val(),
+        let postcode=addr1.val()
+        let  addr=addr2.val()
+        let  addr_detail=addr3.val()
+        let  amount=Number($(".finalTotalPrice_span").text())
+        let  buyer_name=$(".buyer_name_td").text()
+        let  buyer_email=$("input[name='email']").val()
+        let  buyer_tel=$("input[name='phone']").val()
+        let ono = createOrderNum();
+
+        //IMP.request_pay(param, callback) 결제창 호출
+        IMP.init("imp63826642"); // 예: imp00000000
+        IMP.request_pay({ // param
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: ono,
+            name: name,
+            amount: 100,
+            buyer_email:buyer_email,
+            buyer_name: buyer_name,
+            buyer_tel: buyer_tel,
+            buyer_addr: addr+addr_detail,
+            buyer_postcode: postcode,
+        }, function (rsp) { // callback
+            console.log("하이")
+            console.log("rsp",rsp)
+            if (rsp.success) {
+                //나중에 시간날때 해보기(결제 검증작업)
+                // jQuery로 HTTP 요청
+                // jQuery.ajax({
+                //     url: "{서버의 결제 정보를 받는 endpoint}", // 예: https://www.myservice.com/payments/complete
+                //     method: "POST",
+                //     headers: { "Content-Type": "application/json" },
+                //     data: {
+                //         imp_uid: rsp.imp_uid,
+                //         merchant_uid: rsp.merchant_uid
+                //     }
+                // }).done(function (data) {
+                //     // 가맹점 서버 결제 API 성공시 로직
+                //     orderInsert();
+                // })
+
+                var msg = "";
+                msg += '결제승인/시도된 PG사' +rsp.pg_provider;
+                msg += '고유ID : ' + rsp.imp_uid;
+                msg += '상점 거래ID : ' + rsp.merchant_uid;
+                msg += '주문 상태 : ' + rsp.status;
+                msg += '카드 승인번호 : ' + rsp.apply_num;
+
+                $("input[name='ono']").val(parseInt(rsp.merchant_uid));
+                orderInsert();
+            } else {
+                alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+            }
+            // alert(msg)
+
+        });
+    }
+    function orderInsert(){
+        console.log("하이하이")
+        let formObj=$(".order_form")
+        formObj.attr("action","/order")
+        formObj.attr("method","post")
+        formObj.submit();
+    }
+    // 주문번호 만들기
+    function createOrderNum(){
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        let orderNum = year + month + day;
+        for(let i=0;i<10;i++) {
+            orderNum += Math.floor(Math.random() * 8);
+        }
+        return orderNum;
+    }
+
+
+    //결제하기
+    $(".order_btn").on("click", function(e){
+
+        $(".addressInfo_input_div").each(function (i,obj){
+            console.log("obj ",obj)
+            //받는이,주소 값 넣기
+            if($(obj).find(".selectAddress").val()==='T'){
+                $("input[name='receiverName']").val($(obj).find(".receiverName_input").val());
+                $("input[name='receiverPhone']").val($(obj).find(".receiverPhone_input").val());
+                $("input[name='postcode']").val($(obj).find(".address1_input").val());
+                $("input[name='address']").val($(obj).find(".address2_input").val());
+                $("input[name='detailAddress']").val($(obj).find(".address3_input").val());
+
+            }
+        });
+        // 포인트 값 넣기
+        $("input[name='tUsePoint']").val($(".order_point_input").val())
+        // 쿠폰으로 할인받은 금액 넣기
+        $("input[name='tCouponPrice']").val($(".coupon_span").text())
+        //기타 값 넣기
+        $("input[name='ono']").val(new Date().getTime());
+        $("input[name='message']").val($(".message_input").val())
+        /* 상품정보 값 넣기 */
+        let form_contents = '';
+        $(".product_price_td").each(function(index, element){
+            console.log(index)
+            // console.log("element : ",element)
+            let pno = $(element).find(".individual_pno_input").val();
+            let itemCount = $(element).find(".individual_itemCount_input").val();
+            let pColor = $(element).find(".individual_pColor_input").val();
+            let pOption = $(element).find(".individual_pOption_input").val();
+            let pOptionPrice = $(element).find(".individual_pOptionPrice_input").val();
+            let pOptionName = $(element).find(".individual_pOptionName_input").val();
+            let pOptionName2 = $(element).find(".individual_pOptionName2_input").val();
+            let pOption2 = $(element).find(".individual_pOption2_input").val();
+            let pno_input = "<input name='orders[" + index + "].pno' type='hidden' value='" + pno + "'>";
+            form_contents += pno_input;
+            let itemCount_input = "<input name='orders[" + index + "].iCount' type='hidden' value='" + itemCount + "'>";
+            form_contents += itemCount_input;
+            let pColor_input = "<input name='orders[" + index + "].pColor' type='hidden' value='" + pColor + "'>";
+            form_contents += pColor_input;
+            let pOption_input = "<input name='orders[" + index + "].pOption' type='hidden' value='" + pOption + "'>";
+            form_contents += pOption_input;
+            let pOptionName_input = "<input name='orders[" + index + "].pOptionName' type='hidden' value='" + pOptionName + "'>";
+            form_contents += pOptionName_input;
+            let pOption2_input = "<input name='orders[" + index + "].pOption2' type='hidden' value='" + pOption2 + "'>";
+            form_contents += pOption2_input;
+            let pOptionName2_input = "<input name='orders[" + index + "].pOptionName2' type='hidden' value='" + pOptionName2 + "'>";
+            form_contents += pOptionName2_input;
+            let pOptionPrice_input = "<input name='orders[" + index + "].pOptionPrice' type='hidden' value='" + pOptionPrice + "'>";
+            form_contents += pOptionPrice_input;
+
+        })
+        $(".order_form").append(form_contents);
+        $(".order_form").submit();
+    });
+    <!--    주소div 보여주기-->
+    function showAddress(classname){
+        //모두 숨기기
+        $(".addressInfo_input_div").css("display","none")
+        // 하나만 보여주기
+        $(".addressInfo_input_div_"+classname).css("display","block")
+
+        //버튼 색상 변경
+
+        $(".addressBtn").css('backgroundColor', 'white')
+        $(".addressBtn_"+classname).css('backgroundColor', '#555')
+        //주소 선택하기 (사용자 등록주소, 직접입력 주소)
+        $(".addressInfo_input_div").each(function (i,obj){
+            console.log(obj)
+            //F로 디폴트
+            $(this).find(".selectAddress").val("F")
+        })
+        //T로 변경
+        $(".addressInfo_input_div_"+classname).find(".selectAddress").val("T")
+    }
+    /* 다음 주소 연동 */
+    function execution_daum_address() {
+        console.log("동작");
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if (data.userSelectedType === 'R') {
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if (extraAddr !== '') {
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 추가해야할 코드
+                    // 주소변수 문자열과 참고항목 문자열 합치기
+                    addr += extraAddr;
+
+                } else {
+                    addr += ' ';
+                }
+                $(".address1_input").val(data.zonecode);
+                $(".address2_input").val(addr);
+                $(".address3_input").attr("readonly",false)
+                $(".address3_input").val(""); // SW 추가 0605(개별배송지 입력하다가 직접입력으로 바꿀때 기존 데이터 지우기 위해 추가)
+                $(".address3_input").focus();
+            }
+        }).open();
+    }
+
+    // 개인 배송지 가져오기 SW 추가 0605 시작 -------------------------------------------------
+
+    // (공통) Modal 숨길때마다 Modal 데이터 초기화
+    $('.shipModal').on('hidden.bs.modal', function () {
+        console.log("Modal hide 들어오나")
+        $(".shipList ul").empty(); // Modal 다시 띄울때 중복 방지
+    })
+    // 회원 개별 배송지 정보 List 가져오기
+    function getShipmentInfo (mno){
+        var data ={mno:mno}
+        console.log("getShipmentInfo => 입력받은 data: ",data)
+        $.ajax({
+            url:'/mypage/memberInfo/shipOne',
+            method:'post',
+            data:JSON.stringify(data),
+            contentType:'application/json; charset=utf-8',
+            dataType:'json',
+            success:function (shipmentList){
+                console.log("getShipmentInfo Ajax통신 성공 후 받은 result: ",shipmentList);
+                var shipListUL = $(".shipList ul")
+                var str = "";
+                $(shipmentList).each(function (){
+                    console.log(this)
+                    str+="<hr/>";
+                    str+="<li>";
+                    str+="<h6 th:id=\"shipName\">"+this.shipName+"</h6>"
+                    str+="<div th:id=\"shipPostcode\">"+this.postcode+"</div>"
+                    str+="<div th:id=\"shipAddress\">"+this.address+"</div>"
+                    str+="<div th:id=\"shipDetailAddress\">"+this.detailAddress+"</div>"
+                    str+="<button type='button' id='selectShipBtn' class='btn'>선택</button>"
+                    str+="</li>"
+                    str+="<hr/>";
+                })
+                shipListUL.append(str);
+                $(".shipModal").modal('show');
+            }
+        })
+    }
+    // 배송지 선택 버튼 클릭
+    $(document).on("click", "#selectShipBtn",function (){
+        // 선택한 배송지 정보 가져오기
+        var postcode = $(this).parent().children("div").eq(0).text();
+        var address = $(this).parent().children("div").eq(1).text();
+        var detailAddress = $(this).parent().children("div").eq(2).text();
+
+        // 선택한 배송지 정보로 상품 배송지 업데이트
+        var inputDiv = $(".addressInfo_input_div_2");
+        inputDiv.find("input.address1_input").val(postcode);
+        inputDiv.find("input.address2_input").val(address);
+        inputDiv.find("input.address3_input").val(detailAddress);
+
+        // Modal 닫기
+        alert("배송지가 선택되었습니다.")
+        $(".shipModal").modal('hide');
+    })
+    // 배송지 Modal 닫기
+    $(".shipCloseBtn").click(function (){
+        $(".shipModal").modal('hide');
+    })
+
+    // 개인 배송지 가져오기 SW 추가 0605 끝 -------------------------------------------------
+
+    // 포인트 사용1
+    $(".order_point_input").on("propertychange change keyup paste input",function (){
+        let finalTotalPrice = parseInt($(".finalTotalPrice_span").text());
+        const maxPoint = parseInt([[${memberInfo.point}]])
+        let inputValue = parseInt($(this).val())
+        console.log(finalTotalPrice)
+        if(inputValue<0 ){
+            $(this).val(0)
+        }
+        else if(inputValue>maxPoint){
+            $(this).val(maxPoint)
+        }
+        else if(finalTotalPrice<inputValue){
+            $(this).val(0)
+        }
+        setTotalInfo();
+    })
+    // 포인트 사용2(모두사용)
+    $(".order_point_input_btn").click(function (){
+        const maxPoint = parseInt([[${memberInfo.point}]])
+        let finalTotalPrice = parseInt($(".finalTotalPrice_span").text());
+        let state = $(this).data("state");
+        if(state == 'A'){
+            console.log("All")
+            if(maxPoint>finalTotalPrice){
+                $(".order_point_input").val(finalTotalPrice);
+                $(".order_point_input_btn_All").css("display","none")
+                $(".order_point_input_btn_Cancel").css("display","block")
+            }
+            else{
+                $(".order_point_input").val(maxPoint);
+                $(".order_point_input_btn_All").css("display","none")
+                $(".order_point_input_btn_Cancel").css("display","block")
+            }
+
+        }
+        else if(state == 'C'){
+            console.log("Cancel")
+            $(".order_point_input").val(0);
+            $(".order_point_input_btn_All").css("display","block")
+            $(".order_point_input_btn_Cancel").css("display","none")
+        }
+        setTotalInfo();
+    })
+    /* 총 주문 정보 세팅(배송비, 총 가격, 마일리지, 물품 수, 종류) */
+    function setTotalInfo(){
+        let totalPrice = 0;		// 총 가격
+        let totalCount = 0;		// 총 갯수
+        let totalKind = 0;		// 총 종류
+        let totalPoint = 0;		// 총 포인트
+        let deliveryPrice = 0;	// 배송비
+        let usePoint = 0;		// 사용 포인트(할인가격)
+        let couponVal = 0;
+        let disPriceBycoupon = 0;
+        let finalTotalPrice = 0; // 최종 가격(총 가격 + 배송비)
+
+        $(".product_price_td").each(function (index,ele){
+            console.log("product_price_td",ele)
+            totalPrice += parseInt($(ele).find(".individual_totalPrice_input").val())
+            totalCount += parseInt($(ele).find(".individual_itemCount_input").val())
+            totalPoint += parseInt($(ele).find(".individual_totalPoint_input").val())
+            totalKind +=1;
+        })
+        //쿠폰 할인값
+        couponVal = $(".coupon_select").val()/100
+        console.log('couponVal',couponVal)
+        disPriceBycoupon = Math.floor(totalPrice * couponVal); // 할인될 값
+        // totalPrice =Math.floor(totalPrice * (1 - couponVal)); // 할인 적용된 값
+
+        /* 배송비 결정 */
+        if(totalPrice >= 30000){
+            deliveryPrice = 0;
+        } else if(totalPrice == 0){
+            deliveryPrice = 0;
+        } else {
+            deliveryPrice = 3000;
+        }
+        //고객이 사용하는 포인트
+        usePoint = $(".order_point_input").val()
+        finalTotalPrice = totalPrice - disPriceBycoupon - usePoint  + deliveryPrice;
+        /* 값 삽입 */
+        // 총 가격
+        $(".totalPrice_span").text(totalPrice.toLocaleString());
+        // 총 갯수
+        $(".goods_kind_div_count").text(totalCount);
+        // 총 종류
+        $(".goods_kind_div_kind").text(totalKind);
+        // 총 마일리지
+        $(".totalPoint_span").text(totalPoint.toLocaleString()+"P");
+        // 배송비
+        $(".delivery_price_span").text(deliveryPrice.toLocaleString());
+        // 최종 가격(총 가격 + 배송비)
+        $(".finalTotalPrice_span").text(finalTotalPrice);
+        // 할인가(사용 포인트)
+        $(".usePoint_span").text(usePoint.toLocaleString());
+        // 쿠폰으로 할인된 금액
+        $(".coupon_span").text(disPriceBycoupon)
+    }
+    $("#couponBtn").click(function (e){
+        e.preventDefault();
+        let mno = [[${memberInfo.mno}]]
+        let cpConditionVal =$(".finalTotalPrice_span").text();
+        data = {
+            mno:mno,
+            cpConditionVal:cpConditionVal
+        }
+        $.ajax({
+            type: "get",
+            url: "/rest/getCoupons",
+            data: data,
+            contentType: "application/json;charset=UTF-8",
+            success: (result) => {
+                console.log(result)
+                var str=""
+                if(result.length==0){
+                    str+="<option id='0' value=\"0\" disabled >사용가능한 쿠폰이 없습니다.</option>"
+                } else {
+                    str+='<option id="0" value="0" >쿠폰을 선택해주세요</option>'
+                    $(result).each(function(){
+                        str+='<option id="'+this.cpNo+'" class="coupon_option"  value="'+this.cpValue+'">'+this.cpName+'('+this.cpConditionVal+'원이상 구매시)</option>'
+                    })
+
+                }
+                $(".coupon_select").html(str)
+            },
+        });
+    })
+
+
+    $(".coupon-form").on("change",".coupon_select",function (){
+        let cpNo=$(".coupon_select option:selected").attr("id")
+        $("input[name='tCpno']").val(cpNo)
+        setTotalInfo();
+    })
+
+    //회원이 들어올때 기본적인 셋팅할것들
+    $(document).ready(function (){
+
+        setTotalInfo();
+
+    })
+</script>
+</body>
+</html>

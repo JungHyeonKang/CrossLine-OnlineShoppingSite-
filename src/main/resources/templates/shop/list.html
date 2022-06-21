@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-main</title>
+</head>
+<style>
+
+
+    .float-end{
+        margin-right: 80px;
+    }
+    .reviewCnt_span{
+        font-size:12px;
+        margin-left: 3px;
+    }
+    .product_TimeDealLogo{
+        border: solid 1px red;
+        color: red;
+        background-color: white;
+    }
+    .product_BestLogo{
+        border: solid 1px blue;
+        color: blue;
+        background-color: white;
+    }
+    .product_HotDealLogo{
+        border: solid 1px hotpink;
+        color: hotpink;
+        background-color: white;
+    }
+</style>
+
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section" style="background-image: url('/mainPageImg/15.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content" >
+                    <h1>SHOP</h1>
+                    <ul class="breadcrumb">
+                        <li><a style="color: black" onclick="history.back()">뒤로가기</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="page-section section pt-120 pb-120">
+
+    <div class="container">
+        <div class="cateName_div" th:if="${pCateName} != null">
+            <h4>[[${pCateName.pCateName}]]</h4>
+            <br>
+            <br>
+        </div>
+        <div class="keyword_div" th:if="${cri.keyword != null && cri.keyword != ''}" >
+            <h4>"[[${cri.keyword}]]" 를 검색하신 결과입니다</h4>
+            <br>
+            <br>
+        </div>
+        <div class="row justify-content-between">
+
+            <div class="isotope-product-filter col-auto" >
+                <a  th:href="@{/shop/list(pCateCode=${category.pCateCode},tier=${category.tier},page=1,numPerPage=8,sort='',keyword='')}"  th:data-filter="|.${category.pCateCode}|" th:value="${category.pCateCode}" th:each="category : ${cateTier3ListWithCode}" th:text="${category.pCateName}"></a>
+            </div>
+            <!-- Product Filter Toggle -->
+            <div class="col-auto">
+                <button class="product-filter-toggle">filter</button>
+            </div>
+        </div>
+        <!-- Product Filter Wrapper -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="product-filter-wrapper">
+                    <!-- Product Filter -->
+                    <div class="product-filter col-md-3 col-sm-6 col-xs-12 mb-30">
+                        <h5>Sort by</h5>
+                        <ul class="sort-by">
+                            <li><a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=1,numPerPage=8,sort='',keyword=${cri.keyword})}">기본</a></li>
+                            <li><a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=1,numPerPage=8,sort='ratingDesc',keyword=${cri.keyword})}">평점순</a></li>
+                            <li><a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=1,numPerPage=8,sort='reviewCntDesc',keyword=${cri.keyword})}">리뷰많은순</a></li>
+                            <li><a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=1,numPerPage=8,sort='new',keyword=${cri.keyword})}">신제품순</a></li>
+                            <li><a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=1,numPerPage=8,sort='priceasc',keyword=${cri.keyword})}">가격낮은순</a></li>
+                            <li><a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=1,numPerPage=8,sort='pricedesc',keyword=${cri.keyword})}">가격높은순</a></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="isotope-grid row">
+
+
+            <div class="isotope-item  col-xl-3 col-lg-4 col-md-6 col-12 mb-50" th:classappend="${dto.pCateCode}" th:each="dto : ${list}">
+                <div class="product-item product-item-2 text-center">
+                    <!-- Product Image -->
+                    <div class="product-img">
+                        <!-- Image -->
+                        <a class="image"  th:href="@{/shop/read(pno=${dto?.pno})}"><img th:src="|/display?fileName=${dto.pImage}|"  alt="" style="width: 442px; height: 350px"></a>
+
+                    </div>
+                    <!-- Portfolio Info -->
+                    <div class="product-info">
+                        <!-- Title -->
+                        <h5 class="title">
+                            <button th:if="${dto.pCateCode.substring(0,1)}=='0'"  class="product_BestLogo" style="font-size: 4px;float: left;">BEST</button><button th:if="${dto.pDiscount>0.0}"  class="product_HotDealLogo" style="font-size: 4px;float: left;margin-left: 2px;">핫딜</button>
+                            <a style="margin-right: 25px" th:href="@{/shop/read(pno=${dto?.pno})}">[[${dto?.pName}]]</a></h5>
+                        <!-- Price -->
+                        <div class="price-ratting fix"  th:if="${dto.pDiscount>0.0}">
+                            <span  style="color: red;float: left;font-size: 20px"><strong th:text="${#numbers.formatInteger(dto.pDiscount*100,0)}"></strong><small>%</small></span><span class="price"><strong style="font-size: 19px"><span class="new" th:text="|${#numbers.formatInteger(dto.pPrice-dto.pPrice*dto.pDiscount,0,'COMMA')}원|"></span></strong><span class="old"><small th:text="|${#numbers.formatInteger(dto.pPrice,0,'COMMA')}원|"></small></span></span>
+                        </div>
+                        <div class="price-ratting fix" th:if="${dto.pDiscount==0.0}" >
+                            <span  class="price"><span class="new" ><strong style="font-size: 19px" th:text="${#numbers.formatInteger(dto.pPrice,0,'COMMA')}"></strong><small>원</small></span></span>
+                        </div>
+                        <span class="ratting float-end" style="margin-left: 15px" >
+                                <th:block th:if="${#numbers.formatInteger(dto.pRating,0)} !=0" th:with="end = ${#numbers.formatInteger(dto.pRating,0)}, end2 = 5-${#numbers.formatInteger(dto.pRating,0)}">
+                                    <i class="fa fa-star active"
+                                       th:each="star,numStat : ${#numbers.sequence(1, end)}" ></i>
+                                     <i class="fa fa-star" th:if="${end } !=5"
+                                        th:each="star : ${#numbers.sequence(1, end2)}"></i>
+                                    <span class="reviewCnt_span" th:text="|(${dto.pReviewCnt})|"></span>
+                                </th:block>
+
+                            </span>
+                        <span th:if="${#numbers.formatInteger(dto.pRating,0)} ==0" class="ratting float-end" style="margin-left: 65px">
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                            <span class="reviewCnt_span" th:text="|(${dto.pReviewCnt})|"></span>
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="paginationC clearfix">
+            <li  th:if="${pagingVO.prev}"
+            >
+                <a th:href="@{/shop/list(page=${pagingVO.start-1},numPerPage=${cri.numPerPage},sort=${cri.sort},keyword=${cri.keyword})}">이전</a>
+            </li>
+            <th:block  th:with="start = ${pagingVO.start}, end = ${pagingVO.end}">
+                <li
+                        th:with="start = ${pagingVO.start}, end = ${pagingVO.end} "
+                        th:each="pageButton : ${#numbers.sequence(start, end)}"
+                >
+                    <a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=${pageButton},numPerPage=${cri.numPerPage},sort=${cri.sort},keyword=${cri.keyword})}" th:text="${pageButton}"></a>
+                </li>
+            </th:block>
+            <li  th:if="${pagingVO.next}"
+            >
+                <a th:href="@{/shop/list(pCateCode=${cri.pCateCode},tier=${cri.tier},page=${pagingVO.end+1},numPerPage=${cri.numPerPage},sort=${cri.sort},keyword=${cri.keyword})}">다음</a>
+            </li>
+            <div style="font-size: small;">[ page[[${cri.page}]] ]</div>
+        </div>
+
+
+    </div>
+</div>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+</body>
+<script>
+    // let selectView = $('#selectView');
+    //
+    // function loadGetListBysearch(){
+    //     let keyword  = $('#keyword').val();
+    //     console.log("검색어 들어오나유?",keyword);
+    //     $.getJSON("/rest/getListBySearch/"+keyword,function (data){
+    //         console.log(data)
+    //         let str = "";
+    //         $(data).each(function (){
+    //             console.log(this.pImage)
+    //             // str +=	'<tr><td ><a href="/shop/read?pno='+this.pno+'"><img class="search_img" src=/display?fileName='+this.pimage+'></a></td>';
+    //             // str +=	'<td style="vertical-align : bottom; font-size:15px;"><a  href="/shop/read?pno='+this.pno+'">'+this.pname+'</a>';
+    //             // str +=   '<p style="font-size:7px">'+this.pprice+'원</p></td>';
+    //             str += '<div class="search_result_div">'
+    //             str +=	'<a href="/shop/read?pno='+this.pno+'"><img class="search_img" src=/display?fileName='+this.pimage+' style="width: 200px; height:200"></a><br>';
+    //             str +=	'<br><a class="search_Name"  href="/shop/read?pno='+this.pno+'">'+this.pname+'</a>';
+    //             str +=   '<div style="font-size:7px">'+this.pprice+'원</div>';
+    //             str += '</div>'
+    //             str += '<hr/>';
+    //         })
+    //         selectView.html(str);
+    //     })
+    //
+    // }
+    $("input[name='keyword']").keyup(function (){
+        loadGetListBysearch();
+    })
+    $(".wishlist").click(function (){
+
+        let pno =$(this).parents(".isotope-item").find(".hidden_data_div").find("input[name=pno]").val()
+        let mno = $("input[name=mnoSec]").val();
+        console.log($(this).children().find(".pe-7s-like"))
+        $.ajax({
+            type:"post",
+            url :"/mypage/interest/insert",
+            data:{pno: pno, mno:mno},
+            success:function (result){
+                if(result==1){
+                    alert("마이페이지 > 찜한 목록에 등록되었습니다")
+                    $(this).children().find(".pe-7s-like").css("color","red")
+
+
+                }
+                else{
+                    alert("취소되었습니다.")
+                    $(this).children().find(".pe-7s-like").css("color","black")
+
+                }
+            }
+        })
+
+    })
+
+    $(document).ready(function (){
+
+
+    })
+
+</script>
+<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+
+
+</html>

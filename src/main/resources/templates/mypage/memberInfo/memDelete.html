@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>WITHDRAWAL</title>
+</head>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'회원탈퇴'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">member info</a></li>
+                            <li class="active">withdrawal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-section section pt-120 pb-45">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form action="/mypage/memberInfo/memDelete" method="post">
+                            <div class="row">
+                                <h3>회원탈퇴</h3>
+                                <p>회원탈퇴 설문조사를 작성해주세요</p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <!-- 숨김 data -->
+                                <input type="hidden" name="mno" th:value="${mno}" readonly>
+                                <!-- 표시 data -->
+                                <div class="col-xs-12 mb-20">
+                                    <label>탈퇴사유 <span class="required">*</span></label>
+                                    <div>
+                                        <select name="dMCategory" size="1" required>
+                                            <option value="none">==탈퇴사유를 선택하세요==</option>
+                                            <option value="서비스 불편">서비스 불편</option>
+                                            <option value="사용 빈도 감소">사용 빈도 감소</option>
+                                            <option value="상품 종류 부족">상품 종류 부족</option>
+                                            <option value="가격 경쟁력 부족">가격 경쟁력 부족</option>
+                                            <option value="기타">기타</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <label>세부내용 <span class="required">*</span></label>
+                                    <textarea name="dMContent" class="form-control" cols="30" rows="10" placeholder="탈퇴 사유 세부내용을 입력해주세요"></textarea>
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <input style="background: #dc3545" type="submit" name="memDeleteBtn" class="btn" value="회원탈퇴하기">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    // 회원탈퇴 버튼 클릭
+    $("input[name=memDeleteBtn]").click(function (){
+        var target = $(this).closest('form')
+        if(!confirm("정말 회원탈퇴 하시겠습니까?")){
+            alert("회원탈퇴를 취소합니다.")
+            return
+        }
+        else {
+            target.submit();
+            alert("회원탈퇴 완료되었습니다. 더 좋은 모습으로 찾아뵙겠습니다. 감사합니다.")
+        }
+    })
+
+    // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+    $("#goBack").click(function (){
+        console.log("들어오나")
+        var mno = $("input[name=mno]").val();
+        console.log(mno)
+        window.location.href = '/mypage/memberInfo/read?mno='+mno;
+    })
+</script>
+</html>

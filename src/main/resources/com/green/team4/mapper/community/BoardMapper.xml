@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.community.BoardMapper">
+    <!-- result Map : myBatis에서 제공하는 자동 매핑으로 해결이 어려운 경우를 위해 구조를 설계할 수 있도록 만들어진 도구이다. -->
+
+    <!--  sql 태그를 사용해 자주 사용하는 칼럼을 따로 묶어주었다. sql은 스네이크 케이스, dto는 카멜 케이스를 사용하므로
+        application.properties에 map-underscore-to-comel-case를 추가할 것-->
+
+
+    <insert id="insert" parameterType="com.green.team4.vo.community.BoardVO">
+        insert into tbl_board values ( null, #{mno}, #{title},#{content},#{bImg},now(),null,#{community},#{nonMemberId},#{nonMemberPassword})
+    </insert>
+
+    <select id="readOne" parameterType="long" resultType="com.green.team4.vo.community.BoardVO">
+        select bno, tbl_board.mno, title, content, id, password, nickName, nonMemberId,nonMemberPassword, regDate, modDate, bImg, community
+        from tbl_board
+        left outer join tbl_memberinfo tm on tbl_board.mno = tm.mno
+        where bno=#{bno}
+    </select>
+
+    <select id="userInfo" parameterType="long" resultType="com.green.team4.vo.community.BoardVO">
+        select mno, nickName from tbl_memberinfo where mno=#{mno};
+    </select>
+
+    <update id="modify" parameterType="com.green.team4.vo.community.BoardVO">
+        update tbl_board set
+                            title = #{title},
+                            content = #{content},
+                            modDate = now()
+        where bno= #{bno}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        delete from tbl_board where bno=#{bno}
+    </delete>
+
+<!--    <select id="readList" parameterType="com.green.team4.vo.community.BoardVO" resultType="com.green.team4.vo.community.BoardVO">-->
+<!--        select bno, title, content,nickName,nonMemberId, regDate, modDate from tbl_board,tbl_memberinfo;-->
+<!--    </select>-->
+
+    <select id="readList" parameterType="com.green.team4.vo.community.BoardVO" resultType="com.green.team4.vo.community.BoardVO">
+        select * from tbl_board
+    </select>
+
+    <!--    include : sql 조각을 사용할 수 있게 해준다. id로 연결-->
+    <select id="getPageList" parameterType="com.green.team4.vo.community.Criteria" resultType="com.green.team4.vo.community.BoardVO">
+        select bno, title, content, nickName, nonMemberId, regDate, modDate
+        from tbl_board
+        left outer join tbl_memberinfo tm on tm.mno = tbl_board.mno
+        <trim prefix="where">
+            <if test="type=='title' and keyword != null and keyword !='' ">
+                title like concat('%',#{keyword},'%')
+            </if>
+            <if test="type=='content' and keyword != null and keyword !='' ">
+                content like concat('%',#{keyword},'%')
+            </if>
+            <if test="type=='username' and keyword != null and keyword !='' ">
+                nonMemberId like concat('%',#{keyword},'%') or nickName like concat('%',#{keyword},'%')
+            </if>
+            <if test="type=='' and keyword=='' and keyword !=''">
+
+            </if>
+        </trim>
+        order by bno desc, regDate desc
+        limit #{page}, #{pageNum}
+    </select>
+    <select id="getTotalCount" resultType="int">
+        select count(*) from tbl_board
+        left outer join tbl_memberinfo tm on tbl_board.mno = tm.mno
+        where bno > 0
+            <if test="type=='title' and keyword != null and keyword !=''">
+                and title like concat('%',#{keyword},'%')
+            </if>
+            <if test="type=='content' and keyword != null and keyword !=''">
+                and content like concat('%',#{keyword},'%')
+            </if>
+            <if test="type=='nonMemberId' and keyword != null and keyword !=''">
+                and nonMemberId like concat('%',#{keyword},'%') or nickName like concat('%',#{keyword},'%')
+            </if>
+            <if test="type=='null' and keyword == null and keyword == ''">
+
+            </if>
+
+    </select>
+
+    <!--    JH추가-->
+    <select id="readListForMain"  resultType="com.green.team4.vo.community.BoardVO">
+        select * from tbl_board
+            limit 10
+    </select>
+
+    <!-- SW추가 -->
+    <select id="getAllByMno" resultType="com.green.team4.vo.community.BoardVO">
+        select * from tbl_board
+        where mno=#{mno}
+    </select>
+
+    <!-- SW추가 -->
+    <select id="getAllByMnoSearch" resultType="com.green.team4.vo.community.BoardVO">
+        select * from tbl_board
+        where mno=#{mno}
+        <if test="keyword == 'title'">
+            AND title LIKE CONCAT('%',#{search},'%')
+        </if>
+        <if test="keyword == 'content'">
+            AND content LIKE CONCAT('%',#{search},'%')
+        </if>
+        order by regDate desc
+    </select>
+
+</mapper>

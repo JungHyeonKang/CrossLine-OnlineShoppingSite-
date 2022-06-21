@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>MYPAGE</title>
+</head>
+
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'MY PAGE'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a th:id="goBack">Home</a></li>
+                            <li class="active">myPage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-section section pt-60" style="margin-top: 50px">
+        <div class="container">
+            <div class="row">
+                <div class="section-title text-center col-xs-12 mb-60">
+                    <h2 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" ><span style="font-weight:bold;">[[${memName}]]</span> 님 환영합니다 :)</h2>
+                    <br>
+                    <p style="font-size: large" class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">쇼핑 내역 등 다양한 정보를 확인해보세요</p>
+                    <br/>
+                    <br/>
+                    <div class="product-img wow fadeInUp">
+                        <a class="image" th:href="@{/mypage/memberInfo/read(mno=${mno})}">
+                            <img src="/icons_bootstrap/person-circle.svg" height="150" alt="">
+                        </a>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <h4 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" ><span style="font-weight: bold" th:text="${#calendars.format(#calendars.createNow(),'MM')}+'월 '"></span>적립 포인트</h4>
+                    <p style="color: #dc3545;font-weight: bold" class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s"
+                       data-th-text="${'당월: '+#numbers.formatInteger(thisMPoint, 3, 'COMMA') + ' P' +'  /  '+'누적: '+#numbers.formatInteger(accuPoint, 3, 'COMMA') + ' P'}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- List -->
+    <div class="page-section section pt-40"> <!-- class: pb-120 지움 -->
+        <div class="container">
+            <div class="isotope-grid row">
+
+                <!-- 찜목록 -->
+                <div class="isotope-item ptable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/interest/list(mno=${mno})}">
+                                <img src="/icons_bootstrap/heart.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">찜한 상품</h5>
+                            <p>[[${itrCnt}]] 개</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 장바구니 -->
+                <div class="isotope-item pable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/cart/list(mno=${mno})}">
+                                <img src="/icons_bootstrap/cart3.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">장바구니</h5>
+                            <p>[[${cartCnt}]] 개</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 주문목록 -->
+                <div class="isotope-item pable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/order/list(mno=${mno})}">
+                                <img src="/icons_bootstrap/list-task.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">주문 목록</h5>
+                            <p>[[${orderCnt}]] 개</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 취소/반품/교환 -->
+                <div class="isotope-item pable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/exchange/list(mno=${mno})}">
+                                <img src="/icons_bootstrap/arrow-left-right.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">취소/반품/교환</h5>
+                            <p>[[${exCnt}]] 개</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 리뷰 -->
+                <div class="isotope-item pable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/review/list(mno=${mno})}">
+                                <img src="/icons_bootstrap/pencil-square.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">내가 쓴 리뷰</h5>
+                            <p>[[${rCnt}]] 개</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1:1문의 -->
+                <div class="isotope-item pable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/personalQ/list(mno=${mno})}">
+                                <img src="/icons_bootstrap/chat-bubbles-question-svgrepo-com.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">1:1문의내역</h5>
+                            <p>[[${pqCnt}]] 개</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 커뮤니티 글 -->
+                <div class="isotope-item pable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/board/list(mno=${mno})}">
+                                <img src="/icons_bootstrap/globe2.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">내가 쓴 게시글</h5>
+                            <p>[[${bCnt}]] 개</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스포츠시설 찾기 -->
+                <div class="isotope-item pable col-xl-3 col-lg-4 col-md-6 col-12 mb-50">
+                    <div class="product-item product-item-2 text-center">
+                        <!-- Menu Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/map/mapRead(mno=${mno})}">
+                                <img src="/icons_bootstrap/man-running-in-gym-svgrepo-com.svg" height="80" alt="">
+                            </a>
+                        </div>
+                        <!-- Menu Info -->
+                        <div class="product-info">
+                            <h5 class="title">운동시설 찾기</h5>
+                            <p><br/></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 페이지 진입한 회원의 mno (hidden) -->
+    <input type="hidden" th:name="mno" th:value="${mno}">
+
+</body>
+
+<!-- 카카오지도 API & 라이브러리 불러오기 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a47cc80dbbabed24ab87dc231f336fc&libraries=services,clusterer,drawing"></script>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+    $("#goBack").click(function (){
+        window.location.href = '/mainPage';
+    })
+</script>
+
+</html>

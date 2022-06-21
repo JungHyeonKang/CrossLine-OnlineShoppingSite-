@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>Product-List</title>
+</head>
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+<script src="/js/storeDataSendAjax.js"></script>
+
+<div class="wrapper">
+
+<!-- START HEADER SECTION -->
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'상품목록'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a th:href="@{/admin/product/list(pno=${getOne.pno})}">product</a></li>
+                            <li class="active">list</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- END HEADER SECTION -->
+
+<!-- PAGE SECTION START -->
+<div class="page-section section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="customer-login mb-40">
+                    <!-- LOGIN START -->
+                    <h3>특정한 상품을 찾고싶나요? <a data-bs-toggle="collapse" href="#checkout-login">Click here to search</a></h3>
+                    <div id="checkout-login" class="checkout-login collapse fix">
+                        <div class="checkout-login-wrapper mt-30">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                            <!--특정상품조회-->
+                                <form name="getForm" action="/admin/product/list">
+                                    <h5>상품 조회(이미지 클릭시 수정 및 삭제)</h5>
+                                    <br/>
+                                    <select>
+                                        <option value="">상품번호 조회</option>
+                                        <option value="">상품명 조회</option>
+                                    </select>
+                                    <br/>
+                                    <input name="pno" th:placeholder="상품번호조회">
+                                    <br/>
+                                    <a th:href="@{/admin/product/modify(pno=${getOne.pno})}"><li>
+                                        <br/>
+                                        <img th:src="|/display?fileName=${getOne.pImage}|" style="width: 150px; height: 150px"/></li></a>
+                                    <ul>
+                                        <li th:text="'상품번호: '+${getOne.pno}"></li>
+                                        <li th:text="'상품명: '+${getOne.pName}"/>
+
+                                        <li th:text="'등록일: '+${getOne.pRegdate}"/>
+                                    </ul>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- LOGIN END -->
+                    <br/>
+                    <h2>등록 상품 목록</h2>
+                    <!-- 검색 -->
+                    <form action="" method="get">
+                        <div class="col-xl-8 col-md-7 col-12">
+                            <div class="cart-coupon mb-40">
+                                <p>조건을 선택하고 키워드를 입력하세요</p>
+                                <select name="keyword" id="keyword">
+                                    <option>전체조회</option>
+                                    <option value="pno">상품번호</option>
+                                    <option value="pName">상품명</option>
+                                    <option value="pPrice">가격</option>
+                                </select>
+                                <br/>
+                                <input type="hidden" name="pno" th:value="${getOne.pno}">
+                                <br/>
+                                <input type="text" id="search" name="search">
+                                <input type="submit" value="search" />
+                            </div>
+                        </div>
+                    </form>
+                    <br/>
+                    <h6>상세정보 조회 및 수정을 원하시면 상품명 혹은 이미지를 눌러주세요</h6>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="cart-table table-responsive mb-40">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="pro-remove">Number</th>
+                                            <th class="pro-quantity">Category</th>
+                                            <th class="pro-thumbnail">Image</th>
+                                            <th class="pro-title">Product</th>
+                                            <th class="pro-price">Price</th>
+                                            <th class="pro-quantity">
+                                                Registration Date</th>
+                                            <th class="pro-subtotal">Rating</th>
+                                            <th class="pro-subtotal">Status</th>
+                                            <th class="pro-price">상태변경</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="dto : ${products.getList()}">
+                                        <td class="pro-price" id="pno">[[${dto.pno}]]</td>
+                                        <td class="pro-price">[[${dto.pCateCode}]]</td>
+                                        <td class="pro-thumbnail"><a th:href="@{/admin/product/modify(pno=${dto.pno})}"><img th:src="|/display?fileName=${dto.pImage}|" style="width: 100px; height: 100px"/></a></td>
+                                        <td class="pro-title"><a th:href="@{/admin/product/modify(pno=${dto.pno})}">[[${dto.pName}]]</a></td>
+                                        <td class="pro-price" id="price" th:text="|₩${#numbers.formatInteger(dto.pPrice, 0, 'COMMA')}|" ></td>
+                                        <td class="pro-price">[[${dto.pRegdate}]]</td>
+                                        <td class="pro-subtotal">[[${dto.pRating}]]</td>
+                                        <td class="pro-subtotal">[[${dto.pStatus}]]</td>
+                                        <td class="pro-price">
+                                            <form id="removeForm" th:action="@{/admin/product/stop}" method="post">
+                                                <input type="hidden" th:value="${dto.pno}" th:name="pno">
+                                                <input type="hidden" th:value="${dto.pStatus}" th:name="pStatus">
+                                                <input th:if="${dto.pStatus != '판매중지'}" class="stopAndStart" name="productRemove" value="판매중지 처리" type="button"/>
+                                                <input th:if="${dto.pStatus == '판매중지'}" class="stopAndStart" name="productSell" value="판매중 처리" type="button"/>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Paging custom -->
+    <div class="paginationC clearfix">
+        <!-- 이전 버튼 -->
+        <li th:if="${products.getPrePage() != 0}">
+            <a th:href="@{/admin/product/list(pno=${getOne.pno}, pageNum=${products.getPrePage()}, keyword=${search.getKeyword()}, search=${search.getSearch()})}">Previous</a>
+        </li>
+        <li th:if="${products.getPrePage() == 0}">
+            <a>Previous</a>
+        </li>
+        <!-- 페이지 번호-->
+        <li th:each="page: ${#numbers.sequence(products.getNavigateFirstPage(), products.getNavigateLastPage())}" th:classappend="${page == products.getPageNum()} ? 'active'">
+            <a th:text="${page}" th:href="@{/admin/product/list(pno=${getOne.pno}, pageNum=${page}, keyword=${search.getKeyword()}, search=${search.getSearch()})}"></a>
+        </li>
+        <!-- 다음 버튼-->
+        <li th:if="${products.getNextPage() != 0}">
+            <a th:href="@{/admin/product/list(pno=${getOne.pno}, pageNum=${products.getNextPage()}, keyword=${search.getKeyword()}, search=${search.getSearch()})}">Next</a>
+        </li>
+        <li th:if="${products.getNextPage() == 0}">
+            <a>Next</a>
+        </li>
+        <p>현재페이지[[${pageNum}]]</p>
+    </div>
+
+<!-- FOOTER TOP SECTION START -->
+    <th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<!-- FOOTER BOTTOM SECTION END -->
+
+</body>
+<script>
+console.log("pno: ", $("#pno").val());
+    function removeProduct(){
+        var pno = document.querySelector("#pno").innerText;
+        console.log("pno: ", pno)
+    }
+    $(document).ready(function (){
+        $(".stopAndStart").click(function (e){
+
+            var target = $(this).closest('form');
+            console.log("target: ", target);
+
+            if(!confirm("real??")){
+                alert("처리 완료하였습니다.")
+                return
+            }
+            else {
+                target.submit();
+                alert("처리 완료하였습니다.")
+            }
+        })
+    })
+</script>
+
+</html>

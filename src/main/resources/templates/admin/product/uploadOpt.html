@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>product/uploadOpt</title>
+</head>
+<style>
+    .required{
+        color: red;
+    }
+</style>
+
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <h1 th:text="'상품옵션등록'"></h1>
+                    <ul class="breadcrumb">
+                        <li><a th:href="@{/admin/product/upload}">upload</a></li>
+                        <li class="active">uploadOpt</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- PAGE SECTION START -->
+<div class="page-section section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="customer-login mb-40">
+                    <!-- LOGIN START -->
+                    <h3>Returning customer? <a data-bs-toggle="collapse" href="#checkout-login">Click here to login</a></h3>
+                    <div id="checkout-login" class="checkout-login collapse fix">
+                        <div class="checkout-login-wrapper mt-30">
+                            <p>Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed est sit amet ipsum luctus.</p>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <form action="#">
+                                    <div class="fix mb-20">
+                                        <label>Username or email <span class="required">*</span></label>
+                                        <input type="text" />
+                                    </div>
+                                    <div class="fix mb-20">
+                                        <label>Password  <span class="required">*</span></label>
+                                        <input type="text" />
+                                    </div>
+                                    <div class="fix mb-20">
+                                        <input type="submit" value="Login" />
+                                        <label class="remember-me-box">
+                                            <input type="checkbox" />
+                                            Remember me 
+                                        </label>
+                                    </div>
+                                    <a href="#">Lost your password?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- LOGIN END -->						
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="checkout-form">
+                    <div class="row">
+                        <div class="col-lg-6 mb-40">
+                            <form class="forModify" method="post" action="/admin/product/uploadOpt" enctype="multipart/form-data">
+                                <h3>등록한 상품정보</h3>
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>카테고리코드</label>
+                                        <input type="text" name="pCateCode" th:placeholder="${product.pCateCode}" th:value="${product.pCateCode}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>카테고리코드</label>
+                                        <input type="text" placeholder="예정" readonly/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label for="pName">상품번호</label>
+                                        <input type="text" name="pno" th:placeholder="${product.pno}" th:value="${product.pno}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label for="pName">상품명</label>
+                                        <input type="text" id="pName" name="pName" th:placeholder="${product.pName}" th:value="${product.pName}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label for="price">상품가격</label>
+                                        <input type="text" id="price" name="pOptPrice" th:placeholder="${product.pPrice}" th:value="${product.pPrice}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <input type="hidden" />
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>상품 대표이미지</label>
+                                        <img th:src="|/display?fileName=${product.pImage}|" style="width: 150px; height: 150px"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>상품 상세정보 대표이미지</label>
+                                        <img th:src="|/display?fileName=${product.pInformation}|" style="width: 150px; height: 150px"/>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-lg-6 col-12 mb-40">
+                                    <div class="coupon-form mb-30">
+                                            <h3>상품 옵션 등록</h3>
+
+                                            <div class="col-sm-6 col-xs-12 mb-20">
+                                                <h7>옵션1<span class="required">*</span></h7>
+                                                <label><input type="text" id="option1" name="pOptionName" placeholder="옵션명"></label>
+                                            </div>
+
+                                            <div class="col-sm-6 col-xs-12 mb-20">
+                                                <h7>상세옵션1<span class="required">*</span></h7>
+                                                <select id="options1">
+                                                    <option type="text" value="직접입력">옵션을 선택해주세요</option>
+                                                    <option id="optNull" type="text" value="없음">--- 없음 ---</option>
+                                                    <option id="optSelf" type="text" value="직접입력">--- 직접입력 ---</option>
+                                                    <option type="text" style="align-center">--- 의류 ---</option>
+                                                    <option id="optClothesEng" type="text" value="SIZE(S...)">SIZE(S...)</option>
+                                                    <option id="optClothesNum" type="text" value="SIZE(90...)">SIZE(90...)</option>
+                                                    <option id="optPantsNum" type="text" value="SIZE(30...)">SIZE(30...)</option>
+                                                    <option id="optShoes" type="text" value="SHOES(240...)">SHOES(240...)</option>
+                                                    <option type="text" style="align-center">--- 식품 ---</option>
+                                                    <option id="optTaste" type="text" value="FLAVOR">FLAVOR</option>
+                                                    <option id="optFoodGram" type="text" value="GRAM(food)">GRAM(100g...)</option>
+                                                    <option id="optFoodKG" type="text" value="KG(food)">KG(1kg...)</option>
+                                                    <option type="text" style="align-center">--- 운동기구 ---</option>
+                                                    <option id="optShape" type="text" value="SHAPE">SHAPE</option>
+                                                    <option id="optMachineGram" type="text" value="GRAM(machine)">GRAM(500g...)</option>
+                                                    <option id="optMachineKG" type="text" value="KG(machine)">KG(1kg...)</option>
+                                                </select>
+
+                                                <div id="optNullCheckbox" style="display:none">
+                                                    <label><input class="opt1Class" type=checkbox name=opt1 value="없음">없음</label>
+                                                </div>
+
+<!--                                                <div id="optSelfAdd" style="display:none">-->
+<!--                                                    <label><input class="self1" type=text name=opt1 placeholder="직접입력">-->
+<!--                                                        <button type="button" id="opt1Add">추가</button>-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+
+<!--                                                <div id="optSelfAdd1" style="display:none">-->
+<!--                                                    <label><input class="self1" type=text name=opt1 placeholder="직접입력">-->
+<!--                                                        <button type="button" id="opt1Add1">추가</button>-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+
+<!--                                                <div id="optSelfAdd2" style="display:none">-->
+<!--                                                    <label><input class="self1" type=text name=opt1 placeholder="직접입력">-->
+<!--                                                        <button type="button" id="opt1Add2">추가</button>-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+
+<!--                                                <div id="optSelfAdd3" style="display:none">-->
+<!--                                                    <label><input class="self1" type=text name=opt1 placeholder="직접입력">-->
+<!--                                                        <button type="button" id="opt1Add3">추가</button>-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+
+<!--                                                <div id="optSelfAdd4" style="display:none">-->
+<!--                                                    <label><input class="self1" type=text name=opt1 placeholder="직접입력">-->
+<!--                                                        <button type="button" id="opt1Add4">추가</button>-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+
+<!--                                                <div id="optSelfAdd5" style="display:none">-->
+<!--                                                    <label><input class="self1" type=text name=opt1 placeholder="직접입력">-->
+<!--                                                        <button type="button" id="opt1Add5">추가</button>-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+                                                
+                                                <div id="optClothesEngCheckbox" style="display:none">
+                                                    <label>
+                                                    <input type='checkbox'
+                                                           class="opt1Class"
+                                                           value='selectall'
+                                                           onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type=checkbox name=opt1 value=S>S</label>
+                                                    <label><input class="opt1Class" type=checkbox name=opt1 value=SM>SM</label>
+                                                    <label><input class="opt1Class" type=checkbox name=opt1 value=M>M</label>
+                                                    <label><input class="opt1Class" type=checkbox name=opt1 value=L>L</label>
+                                                    <label><input class="opt1Class" type=checkbox name=opt1 value=XL>XL</label>
+                                                    <label><input class="opt1Class" type=checkbox name=opt1 value=XXL>XXL</label>
+                                                </div>
+
+                                                <div id="optClothesNumCheckbox" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt1Class"
+                                                           value='selectall'
+                                                           onclick='selectAll(this)'/>SELECT ALL
+                                                </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=80>80</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=85>85</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=90>90</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=95>95</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=100>100</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=105>105</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=110>110</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=115>115</label>
+                                                </div>
+
+                                                <div id="optPantsNumCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=30>30</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=32>32</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=34>34</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=36>36</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=38>38</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=40>40</label>
+                                                </div>
+
+                                                <div id="optShoesCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=240>240</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=245>245</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=250>250</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=255>255</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=260>260</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=265>265</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=270>270</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=275>275</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=280>280</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=285>285</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=290>290</label>
+                                                </div>
+
+                                                <div id="optFlavorCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=초코>초코</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=바닐라>바닐라</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=딸기>딸기</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=바나나>바나나</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=메론>메론</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=오렌지>오렌지</label>
+                                                </div>
+
+                                                <div id="optFoodGramCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=100>100</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=200>200</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=300>300</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=400>400</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=500>500</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=600>600</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=700>700</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=800>800</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=900>900</label>
+                                                </div>
+
+                                                <div id="optFoodKGCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=1>1</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=2>2</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=3>3</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=4>4</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=5>5</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=6>6</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=7>7</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=8>8</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=9>9</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=10>10</label>
+                                                </div>
+
+                                                <div id="optShapeCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=일체형>일체형</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=분리형>분리형</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=접이식>접이식</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=탈부착식>탈부착식</label>
+                                                </div>
+
+                                                <div id="optMachineGramCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=100>100</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=200>200</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=300>300</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=400>400</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=500>500</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=600>600</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=700>700</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=800>800</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=900>900</label>
+                                                </div>
+                                                <div id="optMachineKGCheckbox" style="display:none">
+                                                    <label>
+                                                        <input type='checkbox'
+                                                               class="opt1Class"
+                                                               value='selectall'
+                                                               onclick='selectAll(this)'/>SELECT ALL
+                                                    </label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=1>1</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=2>2</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=3>3</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=4>4</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=5>5</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=6>6</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=7>7</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=8>8</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=9>9</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=10>10</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=11>11</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=12>12</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=13>13</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=14>14</label>
+                                                    <label><input class="opt1Class" type="checkbox" name="opt1" value=15>15</label>
+                                                </div>
+
+                                            </div>
+
+                                        <div class="col-sm-6 col-xs-12 mb-20">
+                                            <h7>옵션2<span class="required">*</span></h7>
+                                            <label><input type="text" class="option2Class" name="pOptionName2" placeholder="옵션명" readonly></label>
+                                        </div>
+
+                                        <div class="col-sm-6 col-xs-12 mb-20">
+                                            <h7>상세옵션2<span class="required">*</span></h7>
+                                            <select id="options2" class="option2Class" readonly>
+                                                <option id="optSelf2" type="text" value="직접입력">옵션을 선택해주세요</option>
+                                                <option id="optNull2" type="text" value="없음">--- 없음 ---</option>
+                                                <option type="text" style="align-center">--- 의류 ---</option>
+                                                <option id="optClothesEng2" type="text" value="SIZE(S...)">SIZE(S...)</option>
+                                                <option id="optClothesNum2" type="text" value="SIZE(90...)">SIZE(90...)</option>
+                                                <option id="optPantsNum2" type="text" value="SIZE(30...)">SIZE(30...)</option>
+                                                <option id="optShoes2" type="text" value="SHOES(240...)">SHOES(240...)</option>
+                                                <option type="text" style="align-center">--- 식품 ---</option>
+                                                <option id="optTaste2" type="text" value="FLAVOR">FLAVOR</option>
+                                                <option id="optFoodGram2" type="text" value="GRAM(food)">GRAM(100g...)</option>
+                                                <option id="optFoodKG2" type="text" value="KG(food)">KG(1kg...)</option>
+                                                <option type="text" style="align-center">--- 운동기구 ---</option>
+                                                <option id="optShape2" type="text" value="SHAPE">SHAPE</option>
+                                                <option id="optMachineGram2" type="text" value="GRAM(machine)">GRAM(500g...)</option>
+                                                <option id="optMachineKG2" type="text" value="KG(machine)">KG(1kg...)</option>
+                                            </select>
+
+                                            <div id="optNullCheckbox2" style="display:none">
+                                                <label><input class="opt1Class" type=checkbox name=opt2 value="없음">없음</label>
+                                            </div>
+
+                                            <div id="optClothesEngCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll2(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type=checkbox name=opt2 value=S>S</label>
+                                                <label><input class="opt2Class" type=checkbox name=opt2 value=SM>SM</label>
+                                                <label><input class="opt2Class" type=checkbox name=opt2 value=M>M</label>
+                                                <label><input class="opt2Class" type=checkbox name=opt2 value=L>L</label>
+                                                <label><input class="opt2Class" type=checkbox name=opt2 value=XL>XL</label>
+                                                <label><input class="opt2Class" type=checkbox name=opt2 value=XXL>XXL</label>
+                                            </div>
+
+                                            <div id="optClothesNumCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll2(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=80>80</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=85>85</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=90>90</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=95>95</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=100>100</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=105>105</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=110>110</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=115>115</label>
+                                            </div>
+
+                                            <div id="optPantsNumCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll2(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=30>30</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=32>32</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=34>34</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=36>36</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=38>38</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=40>40</label>
+                                            </div>
+
+                                            <div id="optShoesCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll2(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=240>240</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=245>245</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=250>250</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=255>255</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=260>260</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=265>265</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=270>270</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=275>275</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=280>280</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=285>285</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=290>290</label>
+                                            </div>
+
+                                            <div id="optFlavorCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll2(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=초코>초코</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=바닐라>바닐라</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=딸기>딸기</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=바나나>바나나</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=메론>메론</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=오렌지>오렌지</label>
+                                            </div>
+
+                                            <div id="optFoodGramCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=100>100</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=200>200</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=300>300</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=400>400</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=500>500</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=600>600</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=700>700</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=800>800</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=900>900</label>
+                                            </div>
+
+                                            <div id="optFoodKGCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=1>1</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=2>2</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=3>3</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=4>4</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=5>5</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=6>6</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=7>7</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=8>8</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=9>9</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=10>10</label>
+                                            </div>
+
+                                            <div id="optShapeCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=일체형>일체형</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=분리형>분리형</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=접이식>접이식</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=탈부착식>탈부착식</label>
+                                            </div>
+
+                                            <div id="optMachineGramCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=100>100</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=200>200</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=300>300</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=400>400</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=500>500</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=600>600</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=700>700</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=800>800</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=900>900</label>
+                                            </div>
+
+                                            <div id="optMachineKGCheckbox2" style="display:none">
+                                                <label>
+                                                    <input type='checkbox'
+                                                           class="opt2Class"
+                                                           value='selectall'
+                                                           onclick='selectAll(this)'/>SELECT ALL
+                                                </label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=1>1</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=2>2</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=3>3</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=4>4</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=5>5</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=6>6</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=7>7</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=8>8</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=9>9</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=10>10</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=11>11</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=12>12</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=13>13</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=14>14</label>
+                                                <label><input class="opt2Class" type="checkbox" name="opt2" value=15>15</label>
+                                            </div>
+
+
+                                        </div>
+                                            <br/>
+                                            <div class="col-sm-6 col-xs-12 mb-20">
+                                                <h7>색상<span class="required">*</span></h7>
+                                                <br/>
+                                                <div>
+                                                    <label><input class="opt1Class" type="checkbox" name="colorOpt" value="없음">없음</label>
+                                                </div>
+                                                <div>SELECT ALL</div>
+                                                <input type='checkbox'
+                                                       class="colorClass"
+                                                       value='selectall'
+                                                       onclick='selectAllColor(this)'/>
+                                                <table style="border-spacing: 9px; border-collapse: separate;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>BLACK</th>
+                                                            <th>WHITE</th>
+                                                            <th>GRAY</th>
+                                                            <th>YELLOW</th>
+                                                            <th>GREEN</th>
+                                                            <th>PURPLE</th>
+                                                            <th>RED</th>
+                                                            <th>BLUE</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="BLACK"/></th>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="WHITE"/></th>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="GRAY"/></th>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="YELLOW"/></th>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="GREEN"/></th>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="PURPLE"/></th>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="RED"/></th>
+                                                            <th><input class="colorClass" type="checkbox" name="colorOpt" value="BLUE"/></th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="col-sm-6 col-xs-12 mb-20">
+                                                <h7>수량<span class="required">*</span></h7>
+                                                <br/>
+                                                <input type="text" id="amount" name="pAmount" />
+                                            </div>
+                                            <br/>
+                                            <br/>
+                                            <div class="col-sm-6 col-xs-12 mb-20">
+                                                <h7>상품이미지<span class="required">*</span></h7>
+                                                <input type="file" name="uploadFilesImg" multiple>
+                                            </div>
+
+                                            <div class="col-sm-6 col-xs-12 mb-20">
+                                                <h7>상품소개<span class="required">*</span></h7>
+                                                <input type="file" id="pInfo" name="uploadFilesInfo" multiple>
+                                            </div>
+
+                                            <input type="submit" value="최종 등록">
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->
+
+</body>
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<script>
+    //옵션1 전체선택, 해제
+    function selectAll(selectAll)  {
+      const checkboxes
+         = document.querySelectorAll('input[class="opt1Class"]');
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked
+      })
+    }
+    //옵션2 전체선택, 해제
+    function selectAll2(selectAll)  {
+      const checkboxes
+         = document.querySelectorAll('input[class="opt2Class"]');
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked
+      })
+    }
+    //색상 전체선택, 해제
+    function selectAllColor(selectAll)  {
+      const checkboxes
+         = document.querySelectorAll('input[class="colorClass"]');
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked
+      })
+    }
+
+   $(document).on('click','button[id=btnRemoveOpt2]',function(){
+        var target = $(this).closest('li#addedOpt2');
+        target.remove();
+        console.log(target)
+    });
+
+ $(document).ready(function(){
+
+    $("#options1").one('click',function(){
+        // for (let i = 80; i <= 120; i+=5) {
+        // $("#optClothesNumCheckbox").append(
+        //   "<label><input type="+"checkbox "+"name="+"opt1 " + "value=" + i + ">" + i + "</label>"
+        // )}
+        // for (let i = 240; i <= 290; i+=5) {
+        // $("#optShoesCheckbox").append(
+        // "<label><input type="+"checkbox "+"name="+"opt1 " + "value=" + i + ">" + i + "</label>"
+        // )}
+        // $("#optClothesEngCheckbox").append(
+        //     "<label><input type=+"checkbox "+"name="+"opt1 " + "value=S>S</label>"
+        //     +"<label><input type="+"checkbox "+"name="+"opt1 " + "value=SM>SM</label>"
+        //     +"<label><input type="+"checkbox "+"name="+"opt1 " + "value=M>M</label>"
+        //     +"<label><input type="+"checkbox "+"name="+"opt1 " + "value=L>L</label>"
+        //     +"<label><input type="+"checkbox "+"name="+"opt1 " + "value=XL>XL</label>"
+        //     +"<label><input type="+"checkbox "+"name="+"opt1 " + "value=XXL>XXL</label>"
+        // )
+        // $("#optSelfInput").append(
+        //     "<label><input type="+"text "+"name="+"opt1" + "></label>"
+        // );
+    });
+
+    $("#opt1Add").click(function(){
+        $('#optSelfAdd1').attr('style', 'display:show')
+    })
+    $("#opt1Add1").click(function(){
+        $('#optSelfAdd2').attr('style', 'display:show')
+    })
+    $("#opt1Add2").click(function(){
+        $('#optSelfAdd3').attr('style', 'display:show')
+    })
+    $("#opt1Add3").click(function(){
+        $('#optSelfAdd4').attr('style', 'display:show')
+    })
+    $("#opt1Add4").click(function(){
+        $('#optSelfAdd5').attr('style', 'display:show')
+    })
+
+    $("#options1").change(function(){
+         var option = $('#options1 option:selected').val();
+         console.log(option)
+
+         if(option === '직접입력'){
+            console.log('직접입력 opt: ', option)
+            $('#optSelfAdd').attr('style', 'display:show');
+         }else{
+            $('#optSelfAdd').attr('style', 'display:none');
+         }
+
+         if(option === '없음'){
+            console.log('없음 opt: ', option)
+            $('#optNullCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optNullCheckbox').attr('style', 'display:none');
+         }
+         
+        if(option === 'SIZE(90...)'){
+            console.log('SIZE(90...) opt: ', option)
+            $('#optClothesNumCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optClothesNumCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'SIZE(S...)'){
+            console.log('SIZE(S...) opt: ', option)
+            $('#optClothesEngCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optClothesEngCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'SHOES(240...)'){
+            console.log('SHOES(240...) opt: ', option)
+            $('#optShoesCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optShoesCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'SIZE(30...)'){
+            console.log('SIZE(30...) opt: ', option)
+            $('#optPantsNumCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optPantsNumCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'FLAVOR'){
+            console.log('FLAVOR opt: ', option)
+            $('#optFlavorCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optFlavorCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'GRAM(food)'){
+            console.log('GRAM opt: ', option)
+            $('#optFoodGramCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optFoodGramCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'KG(food)'){
+            console.log('KG(food) opt: ', option)
+            $('#optFoodKGCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optFoodKGCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'SHAPE'){
+            console.log('SHAPE opt: ', option)
+            $('#optShapeCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optShapeCheckbox').attr('style', 'display:none');
+         }
+
+         if(option === 'GRAM(machine)'){
+            console.log('FLAVOR opt: ', option)
+            $('#optMachineGramCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optMachineGramCheckbox').attr('style', 'display:none');
+         }
+         if(option === 'KG(machine)'){
+            console.log('FLAVOR opt: ', option)
+            $('#optMachineKGCheckbox').attr('style', 'display:show');
+         }else{
+            $('#optMachineKGCheckbox').attr('style', 'display:none');
+         }
+
+    })
+
+    $("#options2").change(function(){
+         var option2 = $('#options2 option:selected').val();
+         console.log(option2)
+
+         if(option2 === '직접입력'){
+            console.log('직접입력 opt: ', option2)
+            $('#optSelfInput2').attr('style', 'display:show');
+         }else{
+            $('#optSelfInput2').attr('style', 'display:none');
+         }
+
+         if(option2 === '없음'){
+            console.log('없음 opt2: ', option2)
+            $('#optNullCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optNullCheckbox2').attr('style', 'display:none');
+         }
+
+        if(option2 === 'SIZE(90...)'){
+            console.log('SIZE(90...) opt2: ', option2)
+            $('#optClothesNumCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optClothesNumCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'SIZE(S...)'){
+            console.log('SIZE(S...) opt2: ', option2)
+            $('#optClothesEngCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optClothesEngCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'SHOES(240...)'){
+            console.log('SHOES(240...) opt2: ', option2)
+            $('#optShoesCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optShoesCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'SIZE(30...)'){
+            console.log('SIZE(30...) opt2: ', option2)
+            $('#optPantsNumCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optPantsNumCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'FLAVOR'){
+            console.log('FLAVOR opt2: ', option2)
+            $('#optFlavorCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optFlavorCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'GRAM(food)'){
+            console.log('GRAM opt2: ', option2)
+            $('#optFoodGramCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optFoodGramCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'KG(food)'){
+            console.log('KG(food) opt2: ', option2)
+            $('#optFoodKGCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optFoodKGCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'SHAPE'){
+            console.log('SHAPE opt2: ', option2)
+            $('#optShapeCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optShapeCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'GRAM(machine)'){
+            console.log('GRAM opt2: ', option2)
+            $('#optMachineGramCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optMachineGramCheckbox2').attr('style', 'display:none');
+         }
+
+         if(option2 === 'KG(machine)'){
+            console.log('KG opt2: ', option2)
+            $('#optMachineKGCheckbox2').attr('style', 'display:show');
+         }else{
+            $('#optMachineKGCheckbox2').attr('style', 'display:none');
+         }
+
+    })
+
+    $("#btnShoes").click(function(){
+      if(flag === false){
+      for (let i = 245; i <= 290; i+=5) {
+      $("#shoesOpt").append(
+        "<label><input type="+"checkbox "+"name="+"opt1 " + "value=" + i + ">" + i + "</label>"
+        )}
+        flag = true;
+      }
+    })
+
+    $("#btnAddOpt2").click(function(){
+      $("#insertOpt2").append(
+        "<li id='addedOpt2'><input type=" + "text " + "name=" + "opt2 " + "placeholder=" + "직접입력 " + "id='addedOpt23'"
+          + "/><button type=" + "button " + "id=" + "btnRemoveOpt2" + ">삭제</button></li>"
+        )
+    })
+
+    let flag2 = false;
+    $("#option1").change(function(){
+        console.log("옵션1 작성완료")
+      flag2 = true;
+      $(".option2Class").removeAttr("readonly");
+    })
+
+    $(".option2Class").click(function(){
+      if(flag2 === false){
+        console.log(flag2);
+        alert("옵션1부터 입력해주세요.");
+      }
+    })
+
+ })
+</script>
+
+</html>

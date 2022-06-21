@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>Mail-List</title>
+</head>
+
+<body>
+<!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <h1 th:text="ADMIN"></h1>
+                    <ul class="breadcrumb">
+                        <li><a href="/mainPage">Home</a></li>
+                        <li class="active">MailList</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <form action="#">
+                <div class="col-xs-12">
+                    <div class="wishlist-table table-responsive mb-40">
+                        <h3>메일 리스트</h3>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="pro-remove">메일주소</th>
+                                <th class="pro-remove">제목</th>
+                                <th class="pro-thumbnail">내용</th>
+                                <th class="pro-price">발송일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="mail:${list.getList()}">
+                                <td class="pro-remove" th:text="${mail.email}"></td>
+                                <td class="pro-price"><span class="amount" th:text="${mail.subject}"/></td>
+                                <td class="pro-price"><span class="in-stock" th:text="${mail.text}"/></td>
+                                <td class="pro-remove" th:text="${mail.sendDate}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- Paging custom -->
+                        <div class="paginationC clearfix">
+                            <!-- 이전 버튼 -->
+                            <li th:if="${list.getPrePage() != 0}">
+                                <a th:href="@{/admin/mail/list(pageNum=${list.getPrePage()})}">Previous</a>
+                            </li>
+                            <li th:if="${list.getPrePage() == 0}">
+                                <a>Previous</a>
+                            </li>
+                            <!-- 페이지 번호-->
+                            <li th:each="page: ${#numbers.sequence(list.getNavigateFirstPage(), list.getNavigateLastPage())}" th:classappend="${page == list.getPageNum()} ? 'active'">
+                                <a th:text="${page}" th:href="@{/admin/mail/list(pageNum=${page})}"></a>
+                            </li>
+                            <!-- 다음 버튼-->
+                            <li th:if="${list.getNextPage() != 0}">
+                                <a th:href="@{/admin/mail/list(pageNum=${list.getNextPage()})}">Next</a>
+                            </li>
+                            <li th:if="${list.getNextPage() == 0}">
+                                <a>Next</a>
+                            </li>
+                            <p>현재페이지[[${pageNum}]]</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->
+</body>
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+</html>

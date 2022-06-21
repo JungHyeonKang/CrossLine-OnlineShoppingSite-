@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.community.ReplyMapper">
+    <!-- result Map : myBatis에서 제공하는 자동 매핑으로 해결이 어려운 경우를 위해 구조를 설계할 수 있도록 만들어진 도구이다. -->
+
+    <!--  sql 태그를 사용해 자주 사용하는 칼럼을 따로 묶어주었다. sql은 스네이크 케이스, dto는 카멜 케이스를 사용하므로
+        application.properties에 map-underscore-to-comel-case를 추가할 것-->
+
+
+    <insert id="insert" parameterType="com.green.team4.vo.community.ReplyVO">
+        insert into tbl_board_reply values ( null, #{bno},#{mno},#{reply},#{replyer},#{replyPassword},now(),null)
+    </insert>
+<!--    @ 필요 없을 것 같음 -->
+    <select id="readOne" parameterType="long" resultType="com.green.team4.vo.community.ReplyVO">
+        select rno, bno, reply, replyer, replyDate, modDate
+        from tbl_board_reply
+        where rno=#{rno}
+    </select>
+
+    <update id="modify" parameterType="com.green.team4.vo.community.ReplyVO">
+        update tbl_board_reply set
+                            reply = #{reply},
+                            modDate = now()
+        where rno= #{rno}
+    </update>
+
+    <delete id="deleteOne" parameterType="long">
+        delete from tbl_board_reply where rno=#{rno}
+    </delete>
+
+    <delete id="deleteAll" parameterType="long">
+        delete from tbl_board_reply where bno=#{bno}
+    </delete>
+
+    <select id="replyList" parameterType="com.green.team4.vo.community.ReplyVO" resultType="com.green.team4.vo.community.ReplyVO">
+        select rno, bno, reply, replyer, replyDate, modDate from tbl_board_reply;
+    </select>
+    <!--    include : sql 조각을 사용할 수 있게 해준다. id로 연결-->
+    <select id="getPageList" parameterType="com.green.team4.vo.community.Criteria" resultType="com.green.team4.vo.community.ReplyVO">
+        select rno, bno, reply, replyer, replyDate, modDate
+        from tbl_board_reply
+        where bno = #{bno}
+        order by rno desc, replyDate desc
+        limit #{criteria.page}, #{criteria.pageNum}
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        select count(*) from tbl_board_reply where rno > 0
+    </select>
+
+    <!-- SW 추가 -->
+    <select id="getCntByBno" resultType="int">
+        select count(*) from tbl_board_reply where bno = #{bno}
+    </select>
+
+    <!-- SW 추가: 회원이 작성한 댓글 모두 가져오기 -->
+    <select id="getAllByMno" resultType="com.green.team4.vo.community.ReplyVO">
+        select * from tbl_board_reply where mno = #{mno}
+    </select>
+</mapper>

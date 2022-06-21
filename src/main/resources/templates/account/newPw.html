@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>FindPassword</title>
+</head>
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'비밀번호 찾기'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a th:id="goBack">mainpage</a></li>
+                            <li class="active">비밀번호변경</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-10 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form action="/account/newPw" id="newPw" method="post">
+                            <div class="row">
+                                <h3>신규비밀번호등록</h3>
+                                <p>새로 등록할 비밀번호를 입력해주세요.</p>
+                                <input id="id" name="id" type="hidden" th:value="${id}">
+                                <div class="col-12 mb-20">
+                                    <label>비밀번호 <span class="required">*</span></label>
+                                    <input id="password" name="password" type="password">
+                                </div>
+                                <div class="col-12 mb-20">
+                                    <label>비밀번호확인 <span class="required">*</span></label>
+                                    <input type="password" id="password_con">
+                                </div>
+                                <div class="col-12 mb-20">
+                                    <input value="변경하기" id="btnPw" class="inline" type="submit">
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAGE SECTION END -->
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<script>
+
+    // 메인 화면으로 돌아가기
+    $("#goBack").click(function (){
+        var mno = $("input[name=mno]").val();
+        window.location.href = '/mainPage';
+    })
+<!--    const url = window.location.href;-->
+<!--    console.log("url: ", window.location.href)-->
+<!--    const urlParams = url.searchParams;-->
+<!--    console.log("urlParams: ", urlParams);-->
+<!--    console.log("urlParams.get('id')): ", urlParams.get('id'))-->
+<!--    document.write(urlParams.get('id'));-->
+
+    // 비밀번호 확인 체크(등록 클릭하면)
+    $("#btnPw").click(function (){
+        var password_con = $("#password_con").val();
+        var password = $("#password").val();
+
+        if(password !== password_con){
+            alert("비밀번호 확인이 맞지 않습니다.")
+        }
+        else{
+        alert("비밀번호 변경이 완료되었습니다.")
+        $("#newPw").submit();
+        }
+    })
+
+
+</script>
+</html>

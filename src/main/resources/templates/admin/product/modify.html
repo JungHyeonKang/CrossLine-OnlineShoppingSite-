@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>product-modify</title>
+</head>
+<style>
+    .required{
+        color: red;
+    }
+    button.button_2 {
+      border: 0;
+      outline: none;
+      font-size: 14px;
+      margin: 14px;
+      background: black;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+
+    }
+    button.button_2:hover {
+      color: white;
+      background: gray;
+    }
+</style>
+
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <h1 th:text="'상품옵션등록'"></h1>
+                    <ul class="breadcrumb">
+                        <li><a th:href="@{/admin/product/list(pno=1)}">List</a></li>
+                        <li class="active">Modify</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Body main wrapper start -->
+<div class="wrapper">
+ 
+<!-- PAGE SECTION START -->
+<div class="page-section section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="customer-login mb-40">
+                    <!-- LOGIN START -->
+                    <h3>Returning customer? <a data-bs-toggle="collapse" href="#checkout-login">Click here to login</a></h3>
+                    <div id="checkout-login" class="checkout-login collapse fix">
+                        <div class="checkout-login-wrapper mt-30">
+                            <p>Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed est sit amet ipsum luctus.</p>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <form action="#">
+                                    <div class="fix mb-20">
+                                        <label>Username or email <span class="required">*</span></label>
+                                        <input type="text" />
+                                    </div>
+                                    <div class="fix mb-20">
+                                        <label>Password  <span class="required">*</span></label>
+                                        <input type="text" />
+                                    </div>
+                                    <div class="fix mb-20">
+                                        <input type="submit" value="Login" />
+                                        <label class="remember-me-box">
+                                            <input type="checkbox" />
+                                            Remember me 
+                                        </label>
+                                    </div>
+                                    <a href="#">Lost your password?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- LOGIN END -->						
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="checkout-form">
+                    <div class="row">
+                        <div class="col-lg-6 mb-40">
+                                <h3>등록한 상품정보</h3>
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>카테고리코드</label>
+                                        <input type="text" name="pCateCode" th:placeholder="${product?.pCateCode}" />
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>할인률</label>
+                                        <input type="text" th:placeholder="${product.pDiscount}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>상품번호</label>
+                                        <input type="text" th:name="pno" th:placeholder="${product?.pno}" th:value="${product?.pno}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>상품명</label>
+                                        <input type="text" id="pName" name="pName" th:placeholder="${product?.pName}" th:value="${product?.pName}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>상품가격</label>
+                                        <input type="text" id="price" name="pOptPrice" th:placeholder="${product?.pPrice}" th:value="${product?.pPrice}"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <input type="hidden" />
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>상품 이미지</label>
+                                        <img th:src="|/display?fileName=${product?.pImage}|" style="width: 150px; height: 150px"/>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 mb-20">
+                                        <label>상품 정보 이미지</label>
+                                        <img th:src="|/display?fileName=${product?.pInformation}|" style="width: 150px; height: 150px"/>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="col-lg-6 col-12 mb-40">
+                            <div class="order-wrapper">
+                                <form action="/admin/product/modify" method="post">
+                                    <input type="hidden" th:name="pno" th:value="${product.pno}">
+                                    <h3>상품 재고 관리<span class="required">*</span></h3>
+                                    <div class="order-table table-responsive mb-30">
+
+                                        <div class="product-size section">
+                                            <h5 class="pd-sub-title">Select Option1<span class="required">*</span></h5>
+                                            <div th:each="opt1 : ${opt1List}">
+                                                <div style="float: left; width: 15%;">
+                                                    [[${opt1}]]
+                                                    <input type="radio" th:name="pOption" th:value="${opt1}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="product-size section">
+                                            <h5 class="pd-sub-title">Select Option2<span class="required">*</span></h5>
+                                            <div th:each="opt2 : ${opt2List}">
+                                                <div style="float: left; width: 15%;">
+                                                    [[${opt2}]]
+                                                    <input type="radio" th:name="pOption2" th:value="${opt2}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="product-size section">
+                                            <h5 class="pd-sub-title">Select Color<span class="required">*</span></h5>
+                                            <div th:each="color : ${colorList}">
+                                                <div style="float: left; width: 25%;">
+                                                    [[${color}]]
+                                                    <input type="radio" th:name="pColor" th:value="${color}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-xs-12 mb-20">
+                                            <h3>재고 변경<span class="required">*</span></h3>
+                                            <div id="amountresult"></div>
+                                            <input th:name="pAmount" th:type="text">
+                                            <button style="float:left" class="button_2" id="minus" type="button">- 10</button>
+                                            <button style="float:left" class="button_2" id="plus" type ="button">+10</button>
+                                        </div>
+                                        <button onclick="amountModifyAjax()" type="button"
+                                                class="btn btn-primary" style="background-color: black;">변경사항 등록</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->
+
+</body>
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+var opt1Name = "";
+var opt1 = "";
+var opt2Name = "";
+var opt2 = "";
+var color = "";
+
+function getInputValue(){
+                opt1Name = $('input[name=pOptionName]').val();
+                opt1 = $('input[name=pOption]:checked').val();
+                opt2Name = $('input[name=pOptionName2]').val();
+                opt2 = $('input[name=pOption2]:checked').val();
+                color = $("input[name='pColor']:checked").val();
+
+                console.log(opt1Name, typeof(opt1Name))
+                console.log(opt1, typeof(opt1))
+                console.log(opt2Name, typeof(opt2Name))
+                console.log(opt2, typeof(opt2))
+                console.log(color, typeof(color))
+            }
+
+    function amountAjax(){
+
+        var optVO = {
+            poptionName:$('input[name=pOptionName]').val(),
+            poption:$('input[name=pOption]:checked').val(),
+            poptionName2:$('input[name=pOptionName2]').val(),
+            poption2:$('input[name=pOption2]:checked').val(),
+            pcolor:$("input[name='pColor']:checked").val(),
+            pno:$("input[name=pno]").val()
+        }
+        console.log('optVO출력: ',optVO)
+
+            $.ajax({
+                    anyne:true,
+                    type: 'POST',
+                    data: JSON.stringify(optVO),
+                    url: "/admin/product/getAmount",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8;",
+                    success: function(data) {
+                        console.log(data);
+                        console.log(data.pamount);
+
+                    $('input[name=pAmount]').val(data.pamount);
+
+                    $('#amountresult').text(
+                        'Option1: '+optVO.poption+'  &  Option2: '+optVO.poption2+'  &   Color: '+optVO.pcolor+' & Amount: '+data.pamount
+                    )
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+
+                    }
+                })
+            }
+
+        function amountModifyAjax(){
+
+            var optVO = {
+                poptionName:$('input[name=pOptionName]').val(),
+                poption:$('input[name=pOption]:checked').val(),
+                poptionName2:$('input[name=pOptionName2]').val(),
+                poption2:$('input[name=pOption2]:checked').val(),
+                pcolor:$("input[name='pColor']:checked").val(),
+                pamount:$("input[name='pAmount']").val(),
+                pno:$("input[name=pno]").val()
+            }
+            console.log('optVO출력: ',optVO)
+
+                $.ajax({
+                    anyne:true,
+                    type: 'POST',
+                    data: JSON.stringify(optVO),
+                    url: "/admin/product/modifyAmount",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8;",
+                    success: function(data) {
+                        console.log(data);
+                        console.log(data.pamount);
+                        $('#amountresult').text(
+                        'Option1: '+optVO.poption+'  &  Option2: '+optVO.poption2+'  &   Color: '+optVO.pcolor+' & Amount: '+data.pamount
+                    )
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+
+                    }
+                })
+            }
+
+    $(document).ready(function(){
+        
+        $('input[type=radio]').change(function(){
+            console.log(this.value);
+            amountAjax();
+        })
+
+        $('#plus').click(function(){
+            let ten = 10;
+            let amountVal = $('input[name=pAmount]').val();
+            console.log('변경 전: ', amountVal, typeof(amountVal))
+            let result = Number(amountVal)
+            console.log('형변환 후: ', typeof(result));
+            let plusAmount = result += 10;
+            console.log("증가 후: ", plusAmount)
+            $('input[name=pAmount]').val(plusAmount);
+        })
+
+        $('#minus').click(function(){
+
+            let initialVal = $('input[name=pAmount]').val();
+            let ten = 10;
+            let amountVal = $('input[name=pAmount]').val();
+            console.log('변경 전: ', amountVal, typeof(amountVal))
+            let result = Number(amountVal)
+            console.log('형변환 후: ', typeof(result));
+            let minusAmount = 0;
+
+            if(result <= 10){
+                console.log('10이하를 뺄때')
+                minusAmount = 0;
+            }
+            else if(result >= 0){
+                minusAmount = result -= 10;
+            }
+
+            if(result == 0){
+                alert('0보다 작을 수 없습니다. 기존 재고량으로 초기화 됩니다.')
+                amountAjax();
+            }
+
+            console.log("감소 후: ", minusAmount)
+            $('input[name=pAmount]').val(minusAmount);
+        })
+
+    })
+</script>
+
+</html>

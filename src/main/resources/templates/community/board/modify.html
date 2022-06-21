@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>title</title>
+    <!-- head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+</head>
+<body>
+<!-- header fragment -->
+<div>
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+</div>
+<!-- banner -->
+<div class="page-banner-section section" style="background-image: url('/img/banner/nathan-dumlao-WyV_EOPHy6g-unsplash.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <a href="/community/main"><h1 th:text="'Community'"></h1></a>
+                    <ul class="breadcrumb">
+                        <li><a href="/community/board/list" th:id="goBack">sports</a></li>
+                        <li class="active">update</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page section -->
+<div class="page-section section pt-120 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="login-reg-form">
+                    <form id="modifyForm" action="modify" method="post">
+                        <div class="row">
+                            <div class="col-xs-12 mb-20">
+                                <label for="title">제목 <span class="required">*</span></label>
+                                <input id="title" name="title" type="text" th:value="${item.title}"/>
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <label for="content">내용</label>
+                                <textarea id="content" name="content" th:text="${item.content}"></textarea>
+                            </div>
+<!--                            <div class="col-xs-12 mb-20">-->
+<!--                                <label for="nonMemberId" th:if="${#authentication.name=='anonymousUser'}">작성자<span class="required">*</span></label>-->
+<!--                                <input id="nonMemberId" name="nonMemberId" type="text" th:if="${#authentication.name=='anonymousUser'}" th:value="${item.nonMemberId}" readonly/>-->
+<!--                                <label for="nickName" ${#authentication.name!='anonymousUser'}>작성자</span></label>-->
+<!--                                <input id="nickName" name="nickName" type="text" th:if="${#authentication.name!='anonymousUser'}" th:value="${item.nickName}" readonly/>-->
+<!--                            </div>-->
+
+                            <div class="bs-div-btn">
+                                <button class="btn" id="modify">수정</button>
+                                <button class="btn" id="list">목록</button>
+                                <button class="btn" id="delete">삭제</button>
+                            </div>
+
+                            <!-- Criteria -->
+                            <div class="criteria">
+                                <input type="hidden" th:value="${item.bno}" name="bno" readonly />
+                                <input type="hidden" th:value="${cri.page}" name="page" />
+                                <input type="hidden" th:value="${cri.pageNum}" name="pageNum" />
+<!--                                <input type="hidden" th:value="${#dates.format(item.regDate, 'yyyy-MM-dd')}" readonly />-->
+<!--                                <input type="hidden" th:value="${#dates.format(item.modDate, 'yyyy-MM-dd')}" readonly />-->
+                            </div>
+                        </div>
+                    </form>
+<!--                    <a href="list"><button type="text">List</button></a>-->
+<!--                    <input value="Update" type="submit">-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<!-- footer fragment -->
+<th:block th:replace="fragments/common/footer.html :: footerFragment"></th:block>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+    $(document).ready(function (){
+        $('#delete').click(function (){
+            // 삭제기능 구현
+            $('#modifyForm').attr('action','delete');
+            $('#modifyForm').submit();
+        })
+        $("#modify").on("click",function (){
+            console.log("hi")
+            $('#modifyForm').submit();
+        })
+        let modifyForm = $("#modifyForm");
+        $('#list').on("click",function (e){
+            e.preventDefault();
+            modifyForm.attr("action", "list").attr("method","get");
+            // .clone() : 대상의 데이터를 복제, .appendTo('대상')으로 적용시킴
+            let pageTag = $("input[name='page']").clone();
+            let pageNumTag = $("input[name='pageNum']").clone()
+            // list가 필요한 값은 criteria 뿐이므로, form 요소 초기화 후 필요한 정보만 추가
+            modifyForm.empty();
+            modifyForm.append(pageTag);
+            modifyForm.append(pageNumTag);
+            modifyForm.submit();
+            // 페이징 처리 완료
+        })
+    })
+</script>
+</html>

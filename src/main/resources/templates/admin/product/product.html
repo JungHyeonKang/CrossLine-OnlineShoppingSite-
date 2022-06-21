@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
+<style>
+    .bd-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1071;
+        min-height: 4rem;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+    }
+    .bd-sidebar {
+        position: sticky;
+        top: 4rem;
+        z-index: 1000;
+        height: calc(100vh - 4rem);
+        background: #eee;
+        border-right: 1px solid rgba(0,0,0,.1);
+        overflow-y: auto;
+        min-width: 160px;
+        max-width: 220px;
+    }
+    .bd-sidebar .nav {
+        display: block;
+    }
+    .bd-sidebar .nav>li>a {
+        display: block;
+        padding: .25rem 1.5rem;
+        font-size: 90%;
+    }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+
+<header class="navbar navbar-expand navbar-dark bg-dark bd-navbar">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active"><a class="nav-link" href="#">홈</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">메인 페이지</a></li>
+            <li class="nav-item"><a class="nav-link" href="/mypage/main?mno=8">마이 페이지</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">쇼핑몰 페이지</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/adpage">관리자 페이지</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-3 bd-sidebar">
+            <ul class="nav">
+                <h4>관리자 페이지</h4>
+                <li>
+                    <a href="/admin/member/member?mno=1">회원관리</a>
+                    <a href="/admin/product/list?pno=1">상품관리</a>
+                    <a href="/admin/product/upload">상품등록</a>
+                    <a href="/admin/product/modify?pno=1">상품정보수정</a>
+                    <a href="/admin/order/list">주문/배송관리</a>
+                    <a href="/admin/statistics/sales">각종 통계</a>
+                    <a href="/admin/mail/list">EMAIL & SMS</a>
+                    <a href="/admin/mail/write">개별 메일 전송</a>
+                    <a href="/admin/mail/list">자동 메일 및 문자(예정)</a>
+                </li>
+            </ul>
+            <br>
+        </div>
+        <main class="col-9 py-md-3 pl-md-5 bd-content" role="main">
+            <h5>상품관리</h5>
+        </main>
+    </div>
+</div>
+</body>
+</html>

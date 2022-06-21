@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.PersonalQFilesMapper">
+
+    <!-- tbl_personalQFiles 데이터 등록 -->
+    <insert id="insert">
+        insert into tbl_personalQFiles (pqNo, img_name, path, uuid)
+        values (#{pqNo}, #{img_name}, #{path}, #{uuid})
+    </insert>
+
+    <!-- tbl_personalQFiles 데이터 전체 가져오기(pqNo 단위) -->
+    <select id="getAllByPqNo" resultType="com.green.team4.vo.mypage.PersonalQFilesVO">
+        select * from tbl_personalQFiles
+        where pqNo=#{pqNo}
+        order by pqfNo desc
+    </select>
+
+    <!-- tbl_personalQFiles 데이터 수정 -->
+    <update id="update">
+        update tbl_personalQFiles
+        set img_name=#{img_name}, path=#{path}, uuid=#{uuid}
+        where pqfNo=#{pqfNo}
+    </update>
+
+    <!-- tbl_personalQFiles 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_personalQFiles where pqNo=#{pqNo}
+    </delete>
+
+</mapper>

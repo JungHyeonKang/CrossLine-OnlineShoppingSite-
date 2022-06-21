@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- mypage head fragment -->
+  <th:block th:replace="fragments/common/header :: head"></th:block>
+  <title>product/upload</title>
+</head>
+<style>
+.required{
+  color: red;
+}
+</style>
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="page-banner-content">
+          <h1 th:text="'상품등록'"></h1>
+          <ul class="breadcrumb">
+            <li><a th:href="@{/admin/product/list?pno=1}">member</a></li>
+            <li class="active">upload</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PAGE SECTION START -->
+
+<!-- modify -->
+<div class="page-section section pt-120 pb-45">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-12 mx-auto">
+        <div class="login-reg-form">
+          <form class="forModify" method="post" action="/admin/product/upload" enctype="multipart/form-data">
+            <div class="row">
+              <h3>상품등록</h3>
+              <p>판매할 상품을 등록하세요</p>
+              <div class="col-sm-6 col-xs-12 mb-20">
+                <div class="inputArea">
+                  <h7>카테고리<span class="required">*</span></h7>
+                  <select th:name="pCateCode">
+                    <div th:each="category : ${categoryList}">
+                      <option th:value="${category.pCateCode}">[[${category.pCateName}]]</option>
+                    </div>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xs-12 mb-20">
+                <div class="inputArea">
+                  <h7>할인률<span class="required">*</span></h7>
+                  <input type="text" name="pDiscount">
+                </div>
+              </div>
+              <div class="col-sm-6 col-xs-12 mb-20">
+                <label for="pName">상품명<span class="required">*</span></label>
+                <input type="text" id="pName" name="pName" required/>
+              </div>
+              <div class="col-sm-6 col-xs-12 mb-20">
+                <label for="price">상품가격<span class="required">*</span></label>
+                <input type="text" id="price" name="pPrice" />
+              </div>
+              <div class="col-sm-6 col-xs-12 mb-20">
+                <label>상품 대표이미지<span class="required">*</span></label>
+                <input type="file" name="pImg" multiple>
+              </div>
+              <div class="col-sm-6 col-xs-12 mb-20">
+                <label>상품 상세정보 대표이미지<span class="required">*</span></label>
+                <input type="file" name="pInfo" multiple>
+              </div>
+              <input type="submit" value="등록">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br/>
+</body>
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+</html>

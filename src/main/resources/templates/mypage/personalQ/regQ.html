@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>Q REGISTER</title>
+</head>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'1:1문의 등록'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">Q list</a></li>
+                            <li class="active">Q Register</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-section section pt-120 pb-45">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form action="/mypage/personalQ/regQ" method="post">
+                            <div class="row">
+                                <h3>1:1문의글 작성</h3>
+                                <p>궁금하신 내용을 작성해주세요</p>
+                                <br/>
+                                <br/>
+                                <div class="col-xs-12 mb-20">
+
+                                </div>
+                                <!-- 1:1문의글 작성 영역 -->
+                                <input type="hidden" name="mno" th:value="${mno}">
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>신청일자</label>
+                                    <input type="text" th:value="${#calendars.format(#calendars.createNow(),'yyyy-MM-dd HH:mm:ss')}">
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>카테고리 <span class="required">*</span></label>
+                                    <div>
+                                        <select name="pqCategory" size="1" required>
+                                            <option value="none">==카테고리를 선택하세요==</option>
+                                            <option value="주문문의">주문문의</option>
+                                            <option value="상품문의">상품문의</option>
+                                            <option value="일반문의">기타문의</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="ono" class="col-sm-6 col-xs-12 mb-20">
+                                    <label>주문번호 <span class="required">*</span></label>
+                                    <input type="text" name="ono" placeholder="주문번호 입력">
+                                </div>
+                                <div id="pno" class="col-sm-6 col-xs-12 mb-20">
+                                    <label>상품번호 <span class="required">*</span></label>
+                                    <input type="text" name="pno" placeholder="상품번호 입력">
+                                </div>
+                                <div class="col-xs-12 mb-20">
+
+                                </div>
+                                <div class="col-xs-12 mb-20">
+
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <label>제목 <span class="required">*</span></label>
+                                    <input type="text" name="pqTitle" placeholder="제목을 입력해주세요">
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <label>본문 <span class="required">*</span></label>
+                                    <textarea name="pqContent" class="form-control" cols="30" rows="10" placeholder="문의 내용을 입력해주세요"></textarea>
+                                </div>
+
+                                <!-- 첨부파일 등록 영역 -->
+                                <div class="col-xs-12 mb-20 form-group fileForm">
+                                    <label>이미지 <span style="font-size: x-small">*이미지 파일만 등록 가능합니다.</span></label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input files" id="fileInput" multiple>
+                                    </div>
+                                </div>
+                                <div class="box">
+
+                                </div>
+                                <!-- 등록된 이미지 출력 영역 -->
+                                <div class="col-xs-12 mb-20 uploadResult">
+                                    <ul>
+
+                                    </ul>
+                                </div>
+                                <div class="col-xs-12">
+                                    <input value="문의글 등록" name="regPersonalQ" type="submit">
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 교환 관련 옵션 태그 비활성화 이벤트
+
+        // (1) 페이지 로딩시 default 숨김
+        $("#ono").hide();
+        $("#pno").hide();
+
+        // (2) 상품문의 카테고리 선택 시 활성화
+        $("select[name=pqCategory]").change(function (){
+            if($("select[name=pqCategory]").val() === '주문문의'){
+                $("#ono").show();
+                $("#pno").hide();
+            }
+            else if ($("select[name=pqCategory]").val() === '상품문의'){
+                $("#ono").hide();
+                $("#pno").show();
+            }
+            else{
+                $("#ono").hide();
+                $("#pno").hide();
+            }
+        })
+
+
+
+        // 파일 업로드 -------------------------------------------------------------------------------
+
+        var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$")
+        var maxSize = 10485760; // 10MB
+
+        // 파일 업로드 전 체크 함수
+        const checkExtention = (fileName,fileSize)=>{
+            if(fileSize>=maxSize){
+                alert("파일 사이즈 초과")
+                return false;
+            }
+            if(regex.test(fileName)){
+                alert("해당 종류의 파일은 업로드 할 수 없습니다.")
+                return false;
+            }
+            return true
+        }
+
+        // 파일 업로드
+        $(".custom-file-input").change(function (e){
+            var fileName = $(this).val().split("\\").pop(); // pop은 배열의 마지막 요소 삭제하면서 fileName에 저장
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName); // siblings: 형제 노드
+            var formData = new FormData();
+            var inputFile = $(this)
+            var files = inputFile[0].files;
+            var appended = false
+            for (var i = 0; i < files.length; i++) {
+                if(!checkExtention(files[i].name, files[i].size)){
+                    return false
+                }
+                console.log(files[i])
+                formData.append("uploadFiles",files[i]) // 1
+                appended = true;
+                if(!appended) return ;
+                for(var value of formData.values()){
+                    console.log("value: ",value)
+                }
+                // 실제 업로드 부분
+                $.ajax({
+                    url:'/uploadAjax',
+                    processData:false,
+                    contentType:false,
+                    data:formData,
+                    type:'POST',
+                    dataType:'json',
+                    success:function (result){
+                        console.log("result: ",result)
+                        showResult(result);
+                    },
+                    error:function (jqXHR, testStatus, errorThrown){
+                        console.log("testStatus: ",testStatus)
+                    }
+                })
+            }
+        })
+
+        // event change
+        function showResult(uploadResultArr){
+            console.log("uploadResultArr: ",uploadResultArr);
+            var uploadUL = $(".uploadResult ul")
+            var str = "";
+            $(uploadResultArr).each(function (i,obj){
+                str+="<li data-name='"+obj.fileName + "' data-path='" +obj.folderPath+"' data-uuid='" +obj.uuid+"'>";
+                str+="<div>"
+                str+="<button type='button' data-file=\'"+obj.imageURL+"\'"
+                str+="class='btn btn-sm'>X</button><br>";
+                str+="<img src='/display?fileName="+obj.thumbnailURL+"'>"
+                str+="</div>"
+                str+="</li>"
+            })
+            uploadUL.append(str);
+        }
+
+        // 파일 삭제
+        $(".uploadResult").on("click","li button",function (e){
+            console.log("delete file")
+            var targetFile = $(this).data("file")
+            var targetLi = $(this).closest("li")
+            $.ajax({
+                url:'/removeFile',
+                data:{fileName:targetFile},
+                dataType: 'text',
+                type:'post',
+                success:function (result){
+                    alert(result)
+                    targetLi.remove()
+                }
+            })
+        })
+
+        // 등록 버튼 누르면~
+        $("input[name=regPersonalQ]").click(function (e){
+
+            e.preventDefault();
+            var str = "";
+
+            // 필수 정보 등록 여부 확인 --------------------------------------
+
+            // 카테고리 선택 여부 확인
+            if($("select[name=pqCategory]").val()==="none"){
+                alert("카테고리를 반드시 선택해주세요")
+                return
+            }
+            // 주문번호 입력 확인
+            if($("select[name=pqCategory]").val()==="주문문의"){
+                if($("input[name=ono]").val()===""){
+                    alert("주문번호를 반드시 입력해주세요")
+                    return
+                }
+            }
+            // 상품번호 입력 확인
+            if($("select[name=pqCategory]").val()==="상품문의"){
+                if($("input[name=pno]").val()===""){
+                    alert("상품번호를 반드시 입력해주세요")
+                    return
+                }
+            }
+            // 제목 입력 여부 확인
+            if($("input[name=pqTitle]").val()===""){
+                alert("제목을 반드시 선택해주세요")
+                return
+            }
+            // 본문 입력 여부 확인
+            if($("textarea[name=pqContent]").val()===""){
+                alert("본문을 반드시 작성해주세요")
+                return
+            }
+
+            // 비어있는 값 없음으로 set
+
+
+            // 첨부 이미지 등록 ----------------------------------------------
+            $(".uploadResult li").each(function (i,obj){
+                var target = $(obj)
+                str += "<input type='hidden' name='personalQFilesList["+i+"].img_name' value='"+target.data('name') +"'>";
+                str += "<input type='hidden' name='personalQFilesList["+i+"].path' value='"+target.data('path')+"'>";
+                str += "<input type='hidden' name='personalQFilesList["+i+"].uuid' value='"+target.data('uuid')+"'>";
+                // 태그들이 추가된 것을 확인한 후에 comment 제거
+                $(".box").html(str);
+            })
+            $("form").submit();
+            alert("신청이 완료되었습니다.")
+        })
+
+        // 파일 업로드 끝 -------------------------------------------------------------------------------
+
+        // 뒤로가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/personalQ/list?mno='+mno;
+        })
+    })
+</script>
+</html>

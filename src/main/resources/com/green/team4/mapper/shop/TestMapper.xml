@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.TestMapper">
+
+    <!-- 데이터 등록 -->
+    <insert id="insert">
+        insert into test_tbl (name, content)
+            values (#{name}, #{content})
+    </insert>
+
+    <!-- 데이터 전체 가져오기 -->
+    <select id="getAll" resultType="com.green.team4.vo.TestVO">
+        select * from test_tbl
+    </select>
+
+    <!-- 데이터 하나 가져오기 -->
+    <select id="getOne" resultType="com.green.team4.vo.TestVO">
+        select * from test_tbl
+            where tno=#{tno}
+    </select>
+
+    <!-- 데이터 수정 -->
+    <update id="update">
+        update test_tbl
+            set name=#{name}, content=#{content}
+                where tno=#{tno}
+    </update>
+
+    <!-- 데이터 삭제 -->
+    <delete id="delete">
+        delete from test_tbl where tno=#{tno}
+    </delete>
+
+</mapper>

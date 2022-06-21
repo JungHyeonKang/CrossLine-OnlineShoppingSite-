@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- footer fragment -->
+<div th:fragment="footerFragment">
+    <!-- FOOTER TOP SECTION START -->
+    <div class="footer-top-section section pt-100 pb-60">
+        <div class="container">
+            <div class="row">
+
+                <!-- Footer Widget -->
+                <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                    <h5 class="widget-title">ABOUT CROSS LINE</h5>
+                    <p>CROSS LINE 은 운동 관련 쇼핑과 커뮤니티 활동을 모두 즐길 수 있는 통합 플랫폼 입니다. 최고의 품질과 서비스로 여러분에게 최고의 경험을 제공할 수 있도록 노력하고 있습니다.</p>
+                </div>
+
+                <!-- Footer Widget -->
+                <div class="footer-widget col-lg-3 col-md-6 col-12 mb-40">
+                    <h5 class="widget-title">CUSTOMER SERVICE</h5>
+                    <ul>
+                        <li><a>Contact Us</a></li>
+                        <li><a>Returns & Refunds</a></li>
+                        <li><a>Terms & Conditions</a></li>
+                        <li><a>online store</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Widget -->
+                <div class="footer-widget col-lg-2 col-md-6 col-12 mb-40">
+                    <h5 class="widget-title">PROFILE</h5>
+                    <ul>
+                        <li><a>my Account</a></li>
+                        <li><a>Checkout</a></li>
+                        <li><a>help</a></li>
+                        <li><a>support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Widget -->
+                <div class="footer-widget col-lg-3 col-md-6 col-12 mb-40">
+                    <h5 class="widget-title">SIGN UP FOR OUR AWESOME NEWS</h5>
+                    <div class="footer-social fix">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                        <a href="#"><i class="fa fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FOOTER TOP SECTION END -->
+
+    <!-- FOOTER BOTTOM SECTION START -->
+    <div class="footer-bottom-section section">
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <!-- Copyright -->
+                <div class="copyright text-left col-md-auto col-12">
+                    <p>Powered by <a href="https://seongnam.greenart.co.kr/">green team4</a></p>
+                </div>
+                <!-- Payment Method -->
+                <div class="footer-menu text-right col-md-auto col-12">
+                    <a>Help & Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FOOTER BOTTOM SECTION END -->
+    <!-- Modernizr JS -->
+    <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- jQuery latest version -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <!-- Bootstrap js -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <!-- Plugins js -->
+    <script src="/js/plugins.js"></script>
+    <!-- Ajax Mail js -->
+    <script src="/js/ajax-mail.js"></script>
+    <!-- Main js -->
+    <script src="/js/main.js"></script>
+    <!--카테고리 js (JH추가)-->
+    <script src="/js/category.js"></script>
+    <!--검색 js (JH추가)-->
+    <script src="/js/search.js"></script>
+    <!--타임딜 js (JH추가)-->
+    <script src="/js/timeDeal.js"></script>
+    <!-- 카트 메뉴 데이터 (SW 추가 0605) -->
+    <script>
+        // Cart 관련 ---------------------------------------------------------------------------------
+        $(".uploadCartResult").empty(); // 데이터 중복 방지
+
+        // id 가져오기
+        var id = $("input[name=idSec]").val();
+        console.log("idSec: "+id);
+
+        // 비회원일때
+        if(id === 'anonymousUser'){
+            var str2 = "";
+            str2 += "<p>"+"로그인 후 이용해주세요:)"+"</p>";
+            $(".uploadCartResult").append(str2);
+            // return;
+        }
+        else {
+            // 회원일때
+            var data ={id:id}
+
+            console.log("입력받은 data: ",data)
+            $.ajax({
+                url:'/mypage/cart/listMain',
+                method:'post',
+                data:JSON.stringify(data),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function (cartList){
+                    // 받아온 데이터
+                    console.log("Ajax통신 성공 후 받은 cartList: ",cartList);
+                    console.log(cartList[0]) // 장바구니 상품 2개 담긴 배열
+                    console.log(cartList[1][0].cartCnt) // 장바구니 상품 전체 개수
+                    console.log(cartList[1][0].mno) // 접속한 회원 mno
+
+                    var recentCartList = cartList[0];
+                    var cartTotalCnt = cartList[1][0].cartCnt;
+                    var mnoSec = cartList[1][0].mno;
+
+                    // 장바구니 상품 개수 업데이트
+                    $("#cartCntSpan").text(cartTotalCnt);
+
+                    // mno 업데이트
+                    console.log("mno from ajax: ",mnoSec)
+                    $("input[name=mnoSec]").val(mnoSec);
+
+                    console.log("mnoSec after update: ",$("input[name=mnoSec]").val());
+
+                    // 장바구니 최근 2개 상품 업데이트
+                    var cartListDiv = $(".uploadCartResult"); // 태그 추가할 영역
+                    var str = "";
+
+                    if(cartList[0][0].status !== '없음'){ // 장바구니 상품이 1개 이상이면
+                        $(recentCartList).each(function (){
+                            console.log("들어오나")
+                            str+="<div class=\"single-cart clearfix\">"
+                            str+="<div class=\"cart-image\">";
+                            str+="<a href=\'/shop/read?pno="+this.pno+"&mno="+this.mno+"\'>"
+                            str+="<img height='70' src=\'/display?fileName="+this.pimage+"\'>"
+                            str+="</a>"
+                            str+="</div>"
+                            str+="<div class=\"cart-info\">";
+                            str+="<h5><a style='font-weight: bold; color: #191c1f'>"+this.cname+"</a></h5>";
+                            str+="<p style='font-size: small'>"+"["+this.coption+" / "+this.coption2+" / "+this.ccolor+"]"+"</p>";
+                            str+="<p>"+this.ccount+"개"+"</p>";
+                            str+="</div>"
+                            str+="</div>"
+                        })
+                        cartListDiv.append(str);
+                    }
+                    else { // 장바구니가 비어있으면
+                        console.log("들어오나2")
+                        str += "<p>"+"장바구니가 비어있습니다"+"</p>";
+                        cartListDiv.append(str);
+                    }
+
+                    // 메뉴 href 변경
+                    var getMno = $("input[name=mnoSec]").val();
+                    console.log("mnoSec: "+getMno)
+                    $("#mypageMain").attr("href","/mypage/main?mno="+getMno);
+                    $("#mypageInterest").attr("href","/mypage/interest/list?mno="+getMno);
+                    $("#mypageRegQ").attr("href","/mypage/personalQ/regQ?mno="+getMno);
+                    $("#getCartListM").attr("href","/mypage/cart/list?mno="+getMno);
+                }
+            })
+        }
+
+    </script>
+
+    </div>
+    <!-- Body main wrapper end -->
+
+</html>

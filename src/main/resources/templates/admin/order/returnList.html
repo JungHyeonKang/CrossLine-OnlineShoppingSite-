@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-interest-list</title>
+</head>
+
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'반품관리'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">adpage</a></li>
+                            <li class="active">returnList</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 일반배송 List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div><!-- form 태그에서 div로 바꿈(옆)-->
+                    <div class="col-xs-12">
+                        <div class="wishlist-table table-responsive mb-40">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="pro-title">신청일</th>
+                                    <th class="pro-title">처리완료일</th>
+                                    <th class="pro-title">구분</th>
+                                    <th class="pro-title">주문번호</th>
+<!--                                    <th class="pro-title">상품번호</th>-->
+                                    <th class="pro-title">신청서</th>
+                                    <th class="pro-title">진행상태</th>
+                                    <th class="pro-title">옵션1</th>
+                                    <th class="pro-title">옵션2</th>
+                                    <th class="pro-title">색상</th>
+                                    <th class="pro-add-to-cart">반품처리진행</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="return : ${returnList}">
+                                    <td class="pro-title" th:text="${return.exDate}"></td>
+                                    <td class="pro-title" th:text="${return.exEndDate}"></td>
+                                    <td class="pro-title" th:text="${return.exCategory}"></td>
+                                    <td class="pro-title" th:text="${return.ono}"></td>
+<!--                                    <td class="pro-title" th:text="${return.pno}"></td>-->
+                                    <td class="pro-title">
+                                        <button type="button" class="btn" id="getExchangeRead">
+                                            <a style="font-size: small" th:href="@{/mypage/exchange/read(eno=${return.eno})}">조회</a>
+                                        </button>
+                                    </td>
+                                    <td class="pro-title" th:text="${return.exStatus}"></td>
+                                    <td class="pro-title" th:text="${return.iOption}"></td>
+                                    <td class="pro-title" th:text="${return.iOption2}"></td>
+                                    <td class="pro-title" th:text="${return.iColor}"></td>
+                                    <!-- 반품 처리 실행 form -->
+                                    <td class="pro-add-to-cart">
+                                        <form th:action="@{/admin/order/cancelReg}" method="post">
+                                            <input type="hidden" name="ono" th:value="${return.ono}" readonly>
+                                            <input type="hidden" name="oINo" th:value="${return.oINo}" readonly>
+                                            <input type="hidden" name="pno" th:value="${return.pno}" readonly>
+                                            <input type="hidden" name="eno" th:value="${return.eno}" readonly>
+                                            <input type="hidden" name="category" value="'반품신청'" readonly>
+                                            <button type="submit" th:if="${return.exStatus != '반품완료'}" id="returnBtn" class="btn">반품</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 반품 처리 버튼 누르면
+        $("#returnBtn").click(function (){
+            alert("반품처리가 완료되었습니다.")
+        })
+
+        // 이전 메뉴로 가기
+        $("#goBack").click(function (){
+            window.location.href = '/admin/adpage'
+        })
+    })
+</script>
+</html>

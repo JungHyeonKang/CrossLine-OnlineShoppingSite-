@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- head fragment -->
+<div th:fragment="head">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="/image/x-icon" href="/img/favicon.ico">
+
+        <!-- All CSS Files -->
+        <!-- Bootstrap css -->
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <!-- Icon Font -->
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/pe-icon-7-stroke.css">
+        <!-- Plugins css file -->
+        <link rel="stylesheet" href="/css/plugins.css">
+        <!-- Theme main style -->
+        <link rel="stylesheet" href="/style.css">
+        <!-- Responsive css -->
+        <link rel="stylesheet" href="/css/responsive.css">
+        <!-- 페이징 별도 css (SW추가) -->
+        <link rel="stylesheet" href="/paginationCustom.css">
+    </head>
+</div>
+
+<!-- header fragment -->
+<div th:fragment="headerFragment">
+    <!-- Body main wrapper start -->
+    <div class="wrapper">
+
+        <!-- START HEADER SECTION -->
+        <header class="header-section section sticker">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <!-- logo -->
+                        <div class="header-logo">
+                            <a th:href="@{/mainPage}"><img style="width: 135px;height: 21px" src="/img/logoCrossLine2.png" alt="main logo"></a>
+                        </div>
+                    </div>
+                    <div class="col-auto d-flex">
+                        <!-- header-search & total-cart -->
+                        <nav class="main-menu">
+                            <ul class="mainCatecory_ul">
+                                <li><a th:href="@{/community/main}">Community</a>
+                                    <ul class="sub-menu">
+                                        <li><a th:href="@{/community/board/list}">Sports</a></li>
+                                        <li><a href="#">Health</a></li>
+                                        <li><a href="#">Fashion</a></li>
+                                        <li><a href="#">Life Hacks</a></li>
+                                    </ul>
+                                </li>
+                                <li sec:authorize="hasAnyRole('ROLE_ADMIN')"><a href="/admin/adpage">Admin</a>
+                                    <ul class="sub-menu">
+                                        <li><a th:href="@{/admin/member/member(mno=1)}">member</a></li>
+                                        <li><a th:href="@{/admin/product/upload}">product upload</a></li>
+                                        <li><a th:href="@{/admin/product/list(pno=1)}">product list</a></li>
+                                        <li><a th:href="@{/admin/order/list}">order List</a></li>
+                                        <li><a th:href="@{/admin/order/cancelList}">cancel List</a></li>
+                                        <li><a th:href="@{/admin/order/changeList}">change List</a></li>
+                                        <li><a th:href="@{/admin/order/normalList}">normal List</a></li>
+                                        <li><a th:href="@{/admin/order/returnList}">return List</a></li>
+                                        <li><a th:href="@{/admin/personalQ/listM}">customer inquiry</a></li>
+                                        <li><a th:href="@{/admin/mail/writeDirect}">mail write</a></li>
+                                        <li><a th:href="@{/admin/mail/list}">mail list</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                        <!-- header-search & total-cart -->
+                        <div class="header-option-btns d-flex">
+                            <!-- header-search -->
+                            <div class="header-search">
+                                <button class="search-toggle"><i class="pe-7s-search"></i></button>
+                                <div class="header-search-form">
+                                    <form class="searchForm" action="/shop/list" method="get">
+                                        <input type="text" placeholder="Search" id="keyword" name="keyword">
+                                        <button id="findBtn"><i class="fa fa-long-arrow-right"></i></button>
+                                    </form>
+                                    <div id="selectView"></div>
+                                </div>
+                            </div>
+
+                            <div class="header-account">
+                                <ul>
+                                    <li><a href="#" class="account-toggle"><i class="pe-7s-config"></i></a>
+                                        <ul class="account-menu">
+                                            <form method="post" th:action="@{/account/logout}">
+                                                <li><a sec:authorize="isAuthenticated()" th:href="@{/account/logout}" type="submit" onclick="logout()">Logout</a></li>
+                                                <li><a sec:authorize="isAnonymous()" th:href="@{/account/login}" type="submit">Login</a></li>
+                                            </form>
+                                            <ul sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                                                <li><a th:href="@{/admin/member/member(mno=1)}">member</a></li>
+                                                <li><a th:href="@{/admin/product/upload}">product upload</a></li>
+                                                <li><a th:href="@{/admin/product/list(pno=1)}">product list</a></li>
+                                                <li><a th:href="@{/admin/order/cancelList}">cancel List</a></li>
+                                                <li><a th:href="@{/admin/order/changeList}">change List</a></li>
+                                                <li><a th:href="@{/admin/order/normalList}">normal List</a></li>
+                                                <li><a th:href="@{/admin/order/returnList}">return List</a></li>
+                                                <li><a th:href="@{/admin/mail/writeDirect}">mail write</a></li>
+                                                <li><a th:href="@{/admin/mail/list}">mail list</a></li>
+                                            </ul>
+                                            <ul sec:authorize="hasAnyRole('ROLE_MEMBER')">
+                                                <li><a id="mypageMain">My Account</a></li>
+                                                <li><a id="mypageInterest">Wish list</a></li>
+                                                <li><a id="mypageRegQ">1:1 inquiry</a></li>
+                                            </ul>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- 장바구니 드롭다운 화면 -->
+                            <ul sec:authorize="hasAnyRole('ROLE_MEMBER') or isAnonymous()">
+                                <!-- Header Cart -->
+                                <div class="header-cart">
+                                    <!-- Cart Toggle -->
+                                    <a class="cart-toggle">
+                                        <i class="pe-7s-cart"></i>
+                                        <span id="cartCntSpan"></span>
+                                    </a>
+                                    <!-- Mini Cart Brief -->
+                                    <div class="mini-cart-brief text-left">
+                                        <!-- Cart Products -->
+                                        <h6>CART</h6>
+                                        <input type="hidden" name="idSec" th:value="${#authentication.name}"/>
+                                        <input type="hidden" name="mnoSec"/>
+                                        <!-- 회원별 장바구니 데이터 들어오는 영역 -->
+                                        <div class="all-cart-product clearfix uploadCartResult">
+
+                                        </div>
+                                        <!-- Cart Button -->
+                                        <div sec:authorize="hasAnyRole('ROLE_MEMBER')" class="cart-bottom  clearfix">
+                                            <a id="getCartListM">Go to Cart List</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+
+                            <!-- 관리자 접속 시 카트 아이콘 대신 클립보드 아이콘 활성화 -->
+                            <ul sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                                <!-- Header Cart -->
+                                <div class="header-cart">
+                                    <a href="/admin/adpage">
+                                        <img src="/icons_bootstrap/clipboard-check.svg">
+                                    </a>
+                                </div>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="mobile-menu"></div>
+                </div>
+            </div>
+        </header>
+        <!-- END HEADER SECTION -->
+
+    </div>
+    <script>
+        function logout(){
+            alert("로그아웃이 완료되었습니다. 감사합니다.");
+        }
+    </script>
+
+</html>

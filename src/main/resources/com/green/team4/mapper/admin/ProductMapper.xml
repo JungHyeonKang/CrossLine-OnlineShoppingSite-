@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.admin.ProductMapper">
+
+    <insert id="insert">
+        insert into tbl_product (pName, pPrice, pSize, pColor, pInformation,
+                                 pImage, pAmount, pCateCode, pDiscount, pStatus)
+        values (#{pName}, #{pPrice}, #{pSize}, #{pColor}, #{pInformation},
+                #{pImage}, #{pAmount}, #{pCateCode}, #{pDiscount}, #{pStatus})
+    </insert>
+
+    <select id="getAll" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product
+    </select>
+
+    <select id="getOne" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product where pno = #{pno}
+    </select>
+
+    <update id="update">
+        update tbl_product
+        set pStatus=#{pStatus}
+        where pno=#{pno}
+    </update>
+
+    <delete id="delete">
+        delete from tbl_product where pno=#{pno}
+    </delete>
+
+    <select id="getEvePno" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product order by pno desc limit 1;
+    </select>
+
+</mapper>

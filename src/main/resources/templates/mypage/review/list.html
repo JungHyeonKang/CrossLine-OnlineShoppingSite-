@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>REVIEW LIST</title>
+</head>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'내가 쓴 리뷰'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">mypage</a></li>
+                            <li class="active">review list</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- review List -->
+    <div class="page-section section pt-120 pb-120">
+        <div class="container">
+            <div>
+                <form action="/mypage/review/list" method="get">
+                    <label>상품명 검색</label>
+                    <input type="text" id="search" name="search">
+                    <input type="hidden" id="mno" name="mno" th:value="${mno}">
+                    <button style="background: #191c1f; color: white" type="submit" id="searchBtn">검색</button>
+                </form><br/>
+            </div>
+            <div class="isotope-grid row">
+                <div class="isotope-item ptable col-xl-3 col-lg-4 col-md-6 col-12 mb-50" th:each="review : ${reviewList}">
+                    <div class="product-item product-item-2 text-center">
+                        <input type="hidden" name="mno" th:value="${review.mno}"> <!-- 숨김 -->
+                        <!-- Product Image -->
+                        <div class="product-img">
+                            <!-- Image -->
+                            <a class="image" th:href="@{/mypage/review/read(rno=${review.rno})}"> <!-- 리뷰 세부조회 연결 -->
+                                <img th:if="${review.reviewFilesList.size() >= 1}" th:src="|/display?fileName=${review.reviewFilesList[0].getThumbnailURL}|" height="200" alt=""> <!-- 첨부파일 중 맨 첫번째 사진만 show -->
+                                <img th:if="${review.reviewFilesList.size() == 0}" src="/icons_bootstrap/noImage.jpg" height="200" alt=""> <!-- 첨부파일 없으면 기본 사진 띄우기 -->
+                            </a>
+                        </div>
+                        <!-- Portfolio Info -->
+                        <div class="product-info">
+                            <!-- 상품명 -->
+                            <h5 class="title"><a th:href="@{/shop/read(pno=${review.pno},mno=${review.mno})}">[[${review.iName}]]</a></h5>
+                            <!-- 리뷰 작성정보 -->
+                            <div class="price-ratting fix">
+                                <span style="font-size: small" class="price">작성일자: <span class="new" th:text="${#temporals.format(review.rRegdate, 'yyyy-MM-dd')}"></span></span>
+                            </div>
+                            <div>
+                                <span>평점 : [[${review.rRating}]]([[${review.likeHit}]])</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/main?mno='+mno;
+        })
+    })
+</script>
+</html>

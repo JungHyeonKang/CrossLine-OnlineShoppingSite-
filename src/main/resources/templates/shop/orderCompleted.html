@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-main</title>
+</head>
+<style>
+    .order-wrapper{
+        width:100%;
+        height:500px;
+    }
+    .order-table{
+        width:600px;
+        height:300px;
+        margin:0 auto;
+    }
+    .table_result{
+        width: 600px;
+        height:100px;
+    }
+    .order-button{
+        width: 250px;
+        height:200px;
+        margin:0 auto;
+    }
+    .goShop{
+        padding: 10px;
+    }
+</style>
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+<!-- PAGE BANNER SECTION -->
+
+<div class="page-banner-section section" style="background-image: url('/mainPageImg/9.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <h1>주문 완료</h1>
+                    <ul class="breadcrumb">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-section section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="order-wrapper">
+                    <h3 style="text-align: center">결제가 완료되었습니다! 이용해주셔서 감사합니다.</h3>
+                    <div class="order-table table-responsive mb-30">
+                        <table class="table_result">
+                            <tbody>
+                            <tr>
+                                <td class="product-name">
+                                    <strong>주문번호</strong>
+                                </td>
+                                <td class="product-total">
+                                    <span class="amount">[[${order.ono}]]</span>
+                                </td>
+                            </tr>
+
+                            <tr >
+                                <td class="product-name" >
+                                    <strong>주문</strong>
+                                </td>
+                                <td class="product-total" th:if="${order.orders.size() ==1}" >
+                                    [[${order.orders.get(0).pName}]]
+                                </td>
+                                <td class="product-total" th:if="${order.orders.size() >1}">
+                                    [[${order.orders.get(0).pName}]]  외&nbsp;&nbsp;<strong>[[${order.orders.size()-1}]]</strong>건
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="product-name">
+                                    <strong>받는 분</strong>
+                                </td>
+                                <td class="product-total">
+                                    [[${order.receiverName}]]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="product-name">
+                                    <strong>배송지</strong>
+                                </td>
+                                <td class="product-total">
+                                    [[${order.postcode}]]&nbsp;</span>&nbsp;<span>[[${order.address}]]&nbsp;</span>&nbsp;<span>[[${order.detailAddress}]]</span></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="product-name">
+                                    <strong>결제 금액</strong>
+                                </td>
+                                <td class="product-total" th:text="|${#numbers.formatInteger(order.tTotalPrice,0,'COMMA')}원|">
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="order-button">
+                        <a th:href="@{/mainPage}"><input type="submit" class="goShop" value="쇼핑 계속하기" /></a>
+                        <a th:href="@{/mypage/order/list(mno=${order.mno})}"><input type="submit" class="goShop" value="주문내역" /></a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<script>
+    $(document).ready(function (){
+        // $(".order-button").click(function (e){
+        //     e.preventDefault()
+        //     $(".orderForm").attr("method","get");
+        //     $(".orderForm").attr("action","/shop/list");
+        //     $(".orderForm").submit();
+        // })
+    })
+</script>
+</body>
+</html>

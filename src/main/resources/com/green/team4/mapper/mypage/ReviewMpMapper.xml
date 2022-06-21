@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.ReviewMpMapper">
+
+    <!-- tbl_review 데이터 등록 -->
+    <insert id="insert">
+        <selectKey keyProperty="rno" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        <![CDATA[
+        insert into tbl_review (pno, mno, oINo, rRating, rContent)
+        values (#{pno},#{mno},#{oINo},#{rRating},#{rContent})
+        ]]>
+    </insert>
+
+    <!-- tbl_review 데이터 전체 가져오기(pno 단위) -->
+    <select id="getAllByPno" resultType="com.green.team4.vo.mypage.ReviewMpVO">
+        select tbl_review.rno, tbl_review.pno, tbl_review.mno, tbl_review.oINo, tbl_review.rRating,
+               tbl_review.rContent, tbl_review.LIKEHIT, tbl_review.rRegdate, tbl_review.rUpdatedate,
+               tbl_orderItem.iName, tbl_orderItem.iOption, tbl_orderItem.iOptionName, tbl_orderItem.iOption2,
+               tbl_orderItem.iOptionName2, tbl_orderItem.iColor, tbl_orderItem.iPrice, tbl_orderItem.iDiscount,
+               tbl_orderItem.iDisPrice, tbl_orderItem.iCount, tbl_orderItem.iSavePoint, tbl_orderItem.iTotalPrice
+        from tbl_review
+        left outer join tbl_orderItem on tbl_review.oINo = tbl_orderItem.oINo
+        where tbl_review.pno=#{pno}
+        <include refid="reviewSort"></include>
+            limit #{startPage}, #{numPerPage}
+    </select>
+    <sql id="reviewSort">
+        <if test="sort == ''">
+            order by rRegdate desc
+        </if>
+        <if test="sort == 'new'">
+            order by rRegdate desc
+        </if>
+        <if test="sort == 'best'">
+            order by likeHit desc
+        </if>
+        <if test="sort == 'ratingdesc'">
+            order by rRating desc
+        </if>
+        <if test="sort == 'ratingasc'">
+            order by rRating asc
+        </if>
+    </sql>
+
+    <!-- tbl_review 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAllByMno" resultType="com.green.team4.vo.mypage.ReviewMpVO">
+        select tbl_review.rno, tbl_review.pno, tbl_review.mno, tbl_review.oINo, tbl_review.rRating,
+               tbl_review.rContent, tbl_review.LIKEHIT, tbl_review.rRegdate, tbl_review.rUpdatedate,
+               tbl_orderItem.iName, tbl_orderItem.iOption, tbl_orderItem.iOptionName, tbl_orderItem.iOption2,
+               tbl_orderItem.iOptionName2, tbl_orderItem.iColor, tbl_orderItem.iPrice, tbl_orderItem.iDiscount,
+               tbl_orderItem.iDisPrice, tbl_orderItem.iCount, tbl_orderItem.iSavePoint, tbl_orderItem.iTotalPrice
+        from tbl_review
+        left outer join tbl_orderItem on tbl_review.oINo = tbl_orderItem.oINo
+        where mno=#{mno}
+        order by mno
+    </select>
+
+
+
+    <!-- tbl_review 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAllByMnoSearch" resultType="com.green.team4.vo.mypage.ReviewMpVO">
+        select tbl_review.rno, tbl_review.pno, tbl_review.mno, tbl_review.oINo, tbl_review.rRating,
+               tbl_review.rContent, tbl_review.LIKEHIT, tbl_review.rRegdate, tbl_review.rUpdatedate,
+               tbl_orderItem.iName, tbl_orderItem.iOption, tbl_orderItem.iOptionName, tbl_orderItem.iOption2,
+               tbl_orderItem.iOptionName2, tbl_orderItem.iColor, tbl_orderItem.iPrice, tbl_orderItem.iDiscount,
+               tbl_orderItem.iDisPrice, tbl_orderItem.iCount, tbl_orderItem.iSavePoint, tbl_orderItem.iTotalPrice
+        from tbl_review
+        left outer join tbl_orderItem on tbl_review.oINo = tbl_orderItem.oINo
+        where mno=#{mno}
+        <if test="search != null">
+            AND tbl_orderItem.iName LIKE CONCAT('%',#{search},'%')
+        </if>
+        order by tbl_review.rRegdate desc;
+    </select>
+
+    <!-- tbl_review 데이터 하나 가져오기(mno 단위) -->
+    <select id="getOneByRno" resultType="com.green.team4.vo.mypage.ReviewMpVO">
+        select tbl_review.rno, tbl_review.pno, tbl_review.mno, tbl_review.oINo, tbl_review.rRating,
+               tbl_review.rContent, tbl_review.LIKEHIT, tbl_review.rRegdate, tbl_review.rUpdatedate,
+               tbl_orderItem.iName, tbl_orderItem.iOption, tbl_orderItem.iOptionName, tbl_orderItem.iOption2,
+               tbl_orderItem.iOptionName2, tbl_orderItem.iColor, tbl_orderItem.iPrice, tbl_orderItem.iDiscount,
+               tbl_orderItem.iDisPrice, tbl_orderItem.iCount, tbl_orderItem.iSavePoint, tbl_orderItem.iTotalPrice
+        from tbl_review
+        left outer join tbl_orderItem on tbl_review.oINo = tbl_orderItem.oINo
+        where rno=#{rno}
+    </select>
+
+    <!-- tbl_review 데이터 수정 -->
+    <update id="update">
+        update tbl_review
+        set rRating=#{rRating}, rContent=#{rContent}, likeHit=#{likeHit}, rUpdatedate=#{rUpdatedate}
+        where rno=#{rno}
+    </update>
+
+    <!-- tbl_review 데이터 삭제(ReviewMpVO) -->
+    <delete id="delete">
+        delete from tbl_review where rno=#{rno}
+    </delete>
+
+    <!-- tbl_review 데이터 삭제(rno) -->
+    <delete id="deleteByRno">
+        delete from tbl_review where rno=#{rno}
+    </delete>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.admin.StaticMapper">
+
+
+    <select id="getTotalProfit" resultType="com.green.team4.vo.admin.StaticVO">
+        select sum(tTotalPrice) as 'totalProfit' from tbl_order where tPayStatus = '결제완료'
+    </select>
+
+    <select id="getTotalMemberCnt" resultType="com.green.team4.vo.admin.StaticVO">
+        select count(mno) as 'totalMemberCnt' from tbl_memberInfo where auth = 'ROLE_MEMBER'
+    </select>
+
+    <select id="getTotalDeleteMemCnt" resultType="com.green.team4.vo.admin.StaticVO">
+        select count(dMNo) as 'totalDeleteMemCnt' from tbl_deletemem
+    </select>
+
+    <select id="getTotalProductCnt" resultType="com.green.team4.vo.admin.StaticVO">
+        select count(pno) as 'totalProductCnt' from tbl_product
+    </select>
+
+</mapper>

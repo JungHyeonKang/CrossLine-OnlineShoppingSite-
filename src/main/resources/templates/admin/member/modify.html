@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>member/modify</title>
+</head>
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'회원정소'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a th:href="@{/admin/member/member?mno=1}">member</a></li>
+                            <li class="active">modify</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+
+    <!-- modify -->
+    <div class="page-section section pt-120 pb-45">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form class="forModify" th:action="@{/admin/member/modify}" th:method="post">
+                            <div class="row">
+                                <h3>회원상세정보</h3>
+                                <p>수정할 내용을 입력하시고 수정 등록을 눌러주세요</p>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>회원번호 <span class="required">*</span></label>
+                                    <input type="text" name="mno" th:value="${getOne.mno}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>이름 <span class="required">*</span></label>
+                                    <input type="text" name="name" th:value="${getOne.name}" th:placeholder="${getOne.name}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>별명 <span class="required">*</span></label>
+                                    <input type="text" name="nickName" th:value="${getOne.nickName}" th:placeholder="${getOne.nickName}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>아이디 <span class="required">*</span></label>
+                                    <input type="text" name="id" readonly th:value="${getOne.id}" th:placeholder="${getOne.id}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>비밀번호 <span class="required">*</span></label>
+                                    <input type="text" name="password" th:value="${getOne.password}" th:placeholder="${getOne.password}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>주민등록번호 <span class="required">*</span></label>
+                                    <input type="text" name="sSNum" th:value="${getOne.sSNum}" th:placeholder="${getOne.sSNum}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>성별 <span class="required">*</span></label>
+                                    <input type="text" name="gender" th:value="${getOne.gender}" th:placeholder="${getOne.gender}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>전화번호 </label>
+                                    <input type="text" name="phoneNum" th:value="${getOne.phoneNum}" th:placeholder="${getOne.phoneNum}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>휴대전화번호 <span class="required">*</span></label>
+                                    <input type="text" name="mobileNum" th:value="${getOne.mobileNum}" th:placeholder="${getOne.mobileNum}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>이메일 <span class="required">*</span></label>
+                                    <input type="email" name="email" th:value="${getOne.email}" th:placeholder="${getOne.email}"/>
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <label>주소 <span class="required">*</span></label>
+                                    <input type="text" name="postcode" th:value="${getOne.postcode}"  th:placeholder="${getOne.postcode}" />
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <input type="text"  name="address" th:value="${getOne.address}" th:placeholder="${getOne.address}" />
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <input type="text"  name="detailAddress" th:value="${getOne.detailAddress}"  th:placeholder="${getOne.detailAddress}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>관심운동 <span class="required">*</span></label>
+                                    <input type="text" name="interestSports" th:value="${getOne.interestSports}" th:placeholder="${getOne.interestSports}" />
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>권한 <span class="required">*</span></label>
+                                    <input type="text" name="auth" th:value="${getOne.auth}" th:placeholder="${getOne.auth}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>보유 포인트 <span class="required">*</span></label>
+                                    <input type="text" name="point" th:value="${getOne.point}" th:placeholder="${getOne.point}" />
+                                </div>
+
+                                <div class="col-xs-12">
+                                    <input value="회원정보 수정등록" type="submit">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<br/>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <form th:action="@{/admin/member/remove}" th:method="post">
+                    <input type="hidden" name="mno" th:value="${getOne.mno}">
+                    <input type="submit" class="btn" value="회원삭제">
+                </form>
+            </div>
+        </div>
+    </div><br/>
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+
+</script>
+</html>

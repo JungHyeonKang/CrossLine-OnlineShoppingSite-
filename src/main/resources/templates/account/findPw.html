@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>FindPassword</title>
+</head>
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'비밀번호 찾기'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a th:id="goBack">mainpage</a></li>
+                            <li class="active">login</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-10 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form id="fp" action="/account/findPw" method="post">
+                            <div class="row">
+                                <h3>비밀번호찾기</h3>
+                                <p>아이디와 이메일을 입력해주세요</p>
+                                <div class="col-12 mb-20">
+                                    <label>ID <span class="required">*</span></label>
+                                    <input id="id" name="id" type="text">
+                                </div>
+                                <div class="col-12 mb-20">
+                                    <label>EMAIL <span class="required">*</span></label>
+                                    <input id="email" name="email" type="email">
+                                </div>
+                                <div class="col-12 mb-20">
+                                    <button class="inline" id="findBtn" type="button" onclick="getVO()">전송</button>
+                                </div>
+                                <div class="col-12 mb-20" id="authDiv" style="display: none">
+                                    <label>인증번호<span class="required">*</span></label>
+                                    <input id="auth" type="text">
+                                    <button class="inline" id="check" type="button" onclick="checkNum()">입력</button>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="col-12 mb-20">
+                            <label class="inline">
+                                <a style="font-weight: bold" href="/account/signup">회원가입</a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAGE SECTION END -->
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<script>
+
+    // 메인 화면으로 돌아가기
+    $("#goBack").click(function (){
+        var mno = $("input[name=mno]").val();
+        window.location.href = '/mainPage';
+    })
+    var authNum = 0;
+    function getVO(){
+			$.ajax({
+				url : "/account/findPwAx",
+				type : "POST",
+				data : JSON.stringify({
+					id : $("#id").val(),
+					email : $("#email").val()
+				}),
+				dataType: "json",
+                contentType: "application/json; charset=utf-8;",
+				success : function(result) {
+				    console.log("result: ",result)
+				    authNum = result;
+					alert("인증번호가 발급되었습니다.");
+					$('#authDiv').attr('style', 'display:show');
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+                    alert("아이디 혹은 이메일을 다시 입력해주세요.")
+                }
+			})
+    }
+    var time = 300;
+    var min = "";
+    var sec = "";
+    var timer = setInterval(function(){
+        min = parseInt(time/60);
+        sec = time%60;
+        $("#auth").attr('placeholder', min + '분 ' + sec + '초');
+        time--;
+        if(time < 0){
+            clearInterval(timer);
+            alert('제한시간이 초과되었습니다. 인증번호를 다시 발급받아 주세요.');
+            $("#insertAuthNum").attr('placeholder', '제한시간초과');
+        }
+    }, 1000);
+
+    function checkNum(){
+    console.log('입력한 인증번호: ', $('#auth').val(), ' 타입: ', typeof($('#auth').val));
+    console.log('발급된 인증번호: ', authNum, ' 타입: ', typeof(authNum));
+        if($('#auth').val() == authNum){
+
+            alert("인증이 완료되었습니다. 비밀번호 재설정 페이지로 이동합니다.")
+            window.location.href = "/account/newPw?id="+$("#id").val();
+            $("#fp").submit();
+        } else{
+            alert("인증번호가 유효하지 않습니다.");
+        }
+    }
+
+</script>
+</html>

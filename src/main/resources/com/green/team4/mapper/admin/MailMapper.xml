@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.admin.MailMapper">
+
+    <insert id="insert">
+        insert into tbl_mail (mno, email, subject, text, reception)
+        values (#{mno}, #{email}, #{subject}, #{text}, #{reception})
+    </insert>
+
+    <select id="getAll" resultType="com.green.team4.vo.admin.MailVO">
+        select * from tbl_mail order by sendDate desc
+    </select>
+
+    <select id="getOne" resultType="com.green.team4.vo.admin.MailVO">
+        select * from tbl_mail
+            where mailNo=#{mailNo}
+    </select>
+
+    <update id="update">
+        update tbl_mail
+            set email=#{email}, subject=#{subject}, text=#{text}, reception=#{reception}
+                where mailNo=#{mailNo}
+    </update>
+
+    <delete id="delete">
+        delete from tbl_mail where mno=#{mno}
+    </delete>
+
+</mapper>

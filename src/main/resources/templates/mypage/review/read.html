@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>REVIEW READ</title>
+</head>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'리뷰 상세'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">review list</a></li>
+                            <li class="active">REVIEW READ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- review Read -->
+    <div class="page-section section pt-120 pb-45">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form id="reviewReadForm">
+                            <div class="row">
+                                <h3>상품 구매 정보</h3>
+                                <br/>
+                                <br/>
+                                <!-- 숨김 data -->
+                                <input type="hidden" name="rno" th:value="${review.rno}"/>
+                                <input type="hidden" name="pno" th:value="${review.pno}"/>
+                                <input type="hidden" name="mno" th:value="${review.mno}"/>
+                                <input type="hidden" name="oINo" th:value="${review.oINo}"/>
+                                <!-- 표시 data -->
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <hr/>
+                                    <div style="font-size: medium; color: #191c1f">상품명: [[${review.iName}]]</div><br/>
+                                    <div>[[${review.iOptionName}]]: [[${review.iOption}]]</div>
+                                    <div>[[${review.iOptionName2}]]: [[${review.iOption2}]]</div>
+                                    <div>색상: [[${review.iColor}]]</div>
+                                    <br/>
+                                    <div data-th-text="'상품가격: ' + ${#numbers.formatInteger(review.iDisPrice, 3, 'COMMA') + ' 원'}"></div>
+                                    <div>구매수량: [[${review.iCount}]]</div>
+                                    <div data-th-text="'결제금액(상품가 x 수량): ' + ${#numbers.formatInteger(review.iTotalPrice, 3, 'COMMA') + ' 원'}"></div>
+                                    <hr/>
+                                </div>
+
+                                <h3>리뷰 정보</h3>
+
+                                <br/>
+                                <br/>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>평점 <span class="required">*</span></label>
+                                    <div class="starrr"></div>
+                                    <input type="hidden" name="rRating" th:value="${review.rRating}">
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>좋아요 개수 <span class="required">*</span></label>
+                                    <div type="text" name="likeHit" th:text="${review.likeHit}"></div>
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <label>리뷰 본문 <span class="required">*</span></label>
+                                    <textarea name="rContent" class="form-control" cols="30" rows="10" th:text="${review.rContent}"></textarea>
+                                    <input type="hidden" name="rContentIpt" class="form-control">
+                                </div>
+                                <div>
+                                    <span class="input-group-addon">첨부이미지 <span class="required">*</span></span>
+                                    <div class="col-sm-6 col-xs-12 mb-20" th:each="reviewFile : ${review.reviewFilesList}" th:data-file="${reviewFile.getThumbnailURL()}">
+                                        <img th:src="|/display?fileName=${reviewFile.getThumbnailURL()}|">
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <label style="font-size: small"><span class="required">*</span>평점 및 리뷰 본문만 수정 가능합니다.</label>
+                                    <label style="font-size: small"><span class="required">*</span>기타 수정은 글 삭제 후 재등록해주세요.</label>
+                                </div>
+                                <div style="display: block">
+                                    <!-- 리뷰 수정 버튼 -->
+                                    <div class="col-xs-12">
+                                        <input id="reviewModifyBtn" value="리뷰 수정등록" type="submit">
+                                    </div>
+                                    <!-- 리뷰 삭제 버튼 -->
+                                    <div class="col-xs-12">
+                                        <input id="reviewRemoveBtn" style="background: #dc3545" value="리뷰 삭제" type="submit">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<!-- Star -->
+<script th:src="@{/starrr.js}"></script>
+<link th:href="@{/starrr.css}" rel="stylesheet">
+
+<script>
+    $(document).ready(function (){
+
+        // textarea data => input에 담아놓기 (페이지 로딩되자마자)
+        $("input[name=rContentIpt]").val($("textarea[name=rContent]").val());
+
+        // 별점
+        var grade = $("input[name=rRating]").val();
+        var mno = [[${mno}]]
+        $('.starrr').starrr({
+            rating:grade,
+            change:function (e,value){
+                if(value){
+                    console.log("value: ",value);
+                    grade = value;
+                    $("input[name=rRating]").val(grade);
+                }
+            }
+        })
+        // 리뷰 본문 수정시 업데이트
+        $("textarea[name=rContent]").change(function (){
+            var newContent = $("textarea[name=rContent]").val();
+            $("input[name=rContentIpt]").val(newContent);
+            console.log($("textarea[name=rContent]").text());
+        })
+
+        // 리뷰 수정 버튼
+        $("#reviewModifyBtn").click(function (){
+            // 전송할 데이터
+            var rno = $("input[name=rno]").val()
+            var rrating = $("input[name=rRating]").val()
+            var rcontent = $("input[name=rContentIpt]").val();
+            var data ={rno,rrating,rcontent}
+            console.log("입력받은 data: ",data)
+
+            // Ajax
+            $.ajax({
+                url:'/mypage/review/modify',
+                method:'post',
+                data:JSON.stringify(data),
+                contentType:'application/json; charset=utf-8',
+                dataType:'text',
+                success:function (result){
+                    console.log("Ajax통신 성공 후 받은 result: ",result);
+                    alert(result);
+                    self.location.reload();
+                }
+            })
+        })
+
+        // 삭제 버튼 누르면
+        $("#reviewRemoveBtn").click(function (){
+            if(!confirm("정말 삭제하시겠습니까?")){
+                alert("삭제를 취소합니다.")
+                return
+            }
+            else {
+                $("#reviewReadForm").attr("action","/mypage/review/remove")
+                $("#reviewReadForm").attr("method","post")
+                alert("삭제 완료하였습니다.")
+                $("#reviewReadForm").submit();
+            }
+        })
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/review/list?mno='+mno;
+        })
+    })
+</script>
+</html>

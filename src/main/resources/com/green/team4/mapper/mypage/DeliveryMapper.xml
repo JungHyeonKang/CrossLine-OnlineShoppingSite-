@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.DeliveryMapper">
+
+    <!-- Delivery 데이터 신규 추가 -->
+    <insert id="insert">
+        insert into tbl_delivery (mno, oINo, dCompanyName, dCategory, dOption,
+                                  dLocation, dStartDate, dEndDate, dStatus)
+        values (#{mno},#{oINo},#{dCompanyName},#{dCategory},#{dOption},
+                #{dLocation},#{dStartDate},#{dEndDate},#{dStatus})
+    </insert>
+
+    <!-- Delivery 데이터 하나 가져오기(dno 단위) -->
+    <select id="getOneByDno" resultType="com.green.team4.vo.mypage.DeliveryVO">
+        select mno, oINo, dno, dCompanyName, dCategory, dOption,
+               dLocation, dStartDate, dEndDate, dStatus from tbl_delivery
+        where dno=#{dno}
+    </select>
+
+    <!-- Delivery 데이터 하나 가져오기(oIno,dCategory 단위) -->
+    <select id="getOneByOINoDCat" resultType="com.green.team4.vo.mypage.DeliveryVO">
+        select mno, oINo, dno, dCompanyName, dCategory, dOption,
+               dLocation, dStartDate, dEndDate, dStatus from tbl_delivery
+        where oINo=#{oINo}
+    </select>
+
+    <!-- Delivery 데이터 전체 가져오기 -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.DeliveryVO">
+        select mno, oINo, dno, dCompanyName, dCategory, dOption,
+               dLocation, dStartDate, dEndDate, dStatus from tbl_delivery
+    </select>
+
+    <!-- Delivery 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAllByMno" resultType="com.green.team4.vo.mypage.DeliveryVO">
+        select mno, oINo, dno, dCompanyName, dCategory, dOption,
+               dLocation, dStartDate, dEndDate, dStatus from tbl_delivery
+        where mno=#{mno}
+    </select>
+
+    <!-- Delivery 데이터 수정 (관리자 전용) -->
+    <update id="update">
+        update tbl_delivery
+        set dCompanyName=#{dCompanyName},dCategory=#{dCategory},
+            dOption=#{dOption},dLocation=#{dLocation},
+            dStartDate=#{dStartDate},dEndDate=#{dEndDate},
+            dStatus=#{dStatus}
+        where dno=#{dno}
+    </update>
+
+    <!-- Delivery 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_delivery where dno=#{dno}
+    </delete>
+
+</mapper>

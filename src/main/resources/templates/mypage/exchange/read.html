@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-order-exchange</title>
+</head>
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'취소/반품/교환'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">list</a></li>
+                            <li class="active">read</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="checkout-form">
+                        <div class="row">
+                            <div class="col-lg-6 mb-40">
+                                <form action="#">
+                                    <h3>신청 정보</h3>
+                                    <!-- 숨김 데이터 -->
+                                    <input type="hidden" name="mno" th:value="${exchangeVO.mno}" readonly>
+                                    <input type="hidden" name="ono" th:value="${exchangeVO.ono}" readonly>
+                                    <input type="hidden" name="eno" th:value="${exchangeVO.eno}" readonly>
+                                    <input type="hidden" name="pno" th:value="${exchangeVO.pno}" readonly>
+                                    <!-- 표시 데이터 -->
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label>신청일자 </label>
+                                            <input type="text" name="exDate" th:value="${exchangeVO.exDate}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label>처리완료일자 </label>
+                                            <input type="text" name="exEndDate" th:value="${exchangeVO.exEndDate}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label>진행상태 </label>
+                                            <input type="text" name="exStatus" th:value="${exchangeVO.exStatus}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label>카테고리 </label>
+                                            <input type="text" name="exCategory" th:value="${exchangeVO.exCategory}" readonly>
+                                        </div>
+                                        <div class="order-notes">
+                                            <label>신청사유 </label>
+                                            <textarea name="exContent" cols="100" rows="10" th:text="${exchangeVO.exContent}" readonly></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- 주문 결제 내역 -->
+                            <div class="col-lg-6 col-12 mb-40">
+                                <div class="order-wrapper">
+                                    <h3>결제 내역</h3>
+                                    <div class="order-table table-responsive mb-30">
+                                        <table><!-- 클래스명 제거시 디자인 통일됨 -->
+                                            <thead>
+                                            <tr>
+                                                <th class="product-name">구분</th>
+                                                <th class="product-total">금액</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td class="product-name">
+                                                    [[${exchangeVO.pName}]] [ [[${exchangeVO.iOption} ]] / [[ ${exchangeVO.iOption2} ]] / [[ ${exchangeVO.iColor}]] ] <strong class="product-qty"> × [[${exchangeVO.iCount}]]</strong>
+                                                </td>
+                                                <td class="product-total">
+                                                    <span class="amount" data-th-text="${#numbers.formatInteger(exchangeVO.iDisPrice, 3, 'COMMA') + ' 원(개당)'}"></span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <th>총 상품가격</th>
+                                                <td><strong data-th-text="${#numbers.formatInteger(exchangeVO.iTotalPrice, 3, 'COMMA') + ' 원'}"></strong></td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 mb-30">
+                                    <span class="input-group-addon">첨부이미지</span>
+                                    <div th:each="exchangeFile : ${exchangeVO.exchangeFilesList}" th:data-file="${exchangeFile.getThumbnailURL()}">
+                                        <img th:src="|/display?fileName=${exchangeFile.getThumbnailURL()}|">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/exchange/list?mno='+mno;
+        })
+    })
+</script>
+</html>

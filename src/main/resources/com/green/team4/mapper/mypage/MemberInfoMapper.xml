@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.MemberInfoMapper">
+
+    <!-- MemberInfo 데이터 등록 -->
+    <insert id="insert">
+        insert into tbl_memberInfo (id, password, name, nickName, gender, sSNum,
+                                    email, phoneNum, mobileNum, postcode, address, detailAddress,
+                                    interestSports, auth)
+        values (#{id},#{password},#{name},#{nickName},#{gender},#{sSNum},
+                #{email},#{phoneNum},#{mobileNum},#{postcode},#{address},#{detailAddress},
+                #{interestSports},#{auth})
+    </insert>
+
+    <!-- MemberInfo 데이터 전체 가져오기 -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.MemberInfoVO">
+        select * from tbl_memberInfo
+    </select>
+
+    <!-- MemberInfo 데이터 전체 가져오기(Page) -->
+    <select id="selectAll" resultType="com.green.team4.vo.mypage.MemberInfoVO">
+        select * from tbl_memberInfo
+    </select>
+
+    <!-- MemberInfo 데이터 하나 가져오기 -->
+    <select id="getOne" resultType="com.green.team4.vo.mypage.MemberInfoVO">
+        select * from tbl_memberInfo where mno=#{mno}
+    </select>
+
+    <!-- MemberInfo 데이터 수정 (회원 전용) -->
+    <update id="updateByMember">
+        update tbl_memberInfo
+        set password=#{password}, name=#{name}, nickName=#{nickName}, gender=#{gender},
+            phoneNum=#{phoneNum}, mobileNum=#{mobileNum}, postcode=#{postcode}, address=#{address},
+            detailAddress=#{detailAddress}, interestSports=#{interestSports}
+        where mno=#{mno}
+    </update>
+
+    <!-- MemberInfo 데이터 수정 (관리자 전용) -->
+    <update id="updateByAdmin">
+        update tbl_memberInfo
+        set id=#{id}, password=#{password}, name=#{name}, nickName=#{nickName},
+            gender=#{gender}, sSNum=#{sSNum}, email=#{email}, phoneNum=#{phoneNum},
+            mobileNum=#{mobileNum}, postcode=#{postcode},address=#{address},
+            detailAddress=#{detailAddress}, interestSports=#{interestSports},
+            auth=#{auth}, grade=#{grade}, point=#{point}
+        where mno=#{mno}
+    </update>
+
+    <!-- MemberInfo 데이터 삭제(탈퇴 회원정보 삭제) -->
+    <delete id="delete">
+        delete from tbl_memberInfo where mno=#{mno}
+    </delete>
+
+    <!-- MemberInfo 회원데이터 아이디로 가져오기 (관리자페이지) -->
+    <select id="getMemberInfo" resultType="com.green.team4.vo.mypage.MemberInfoVO">
+        select * from tbl_memberInfo
+        where mno=#{mno}
+    </select>
+    <!-- id로 회원조회(security) -->
+    <select id="findByUsername" resultType="com.green.team4.vo.mypage.MemberInfoVO">
+        select * from tbl_memberInfo
+        where id=#{id}
+    </select>
+    <select id="findPw" resultType="com.green.team4.vo.mypage.MemberInfoVO">
+        select * from tbl_memberInfo
+        where id=#{id} and email=#{email}
+    </select>
+    <!-- 비밀번호 생성 -->
+    <update id="newPw">
+        update tbl_memberInfo set password=#{password} where id=#{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.OrderMapper">
+
+    <!-- 회원별 Order 개수 가져오기 -->
+    <select id="getAllCnt" resultType="Integer">
+        select count(*) from tbl_order
+        where tbl_order.mno=#{mno}
+    </select>
+
+    <!-- Order 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.OrderVO">
+        select tbl_order.mno,tbl_order.ono,tbl_order.orderDate,tbl_order.receiverName,tbl_order.receiverPhone,
+               tbl_order.postcode,tbl_order.address,tbl_order.detailAddress,tbl_order.message,tbl_order.tProductPrice,
+               tbl_order.tShipFee,tbl_order.tUsePoint,tbl_order.tTotalPrice,tbl_order.tPayStatus,
+               tbl_order.tSavePoint,
+               tbl_memberInfo.name,tbl_memberInfo.mobileNum from tbl_order
+        left outer join tbl_memberInfo on tbl_order.mno = tbl_memberInfo.mno
+        where tbl_order.mno=#{mno}
+        order by tbl_order.orderDate desc
+    </select>
+
+    <!-- Order 데이터 하나 가져오기(ono 단위) -->
+    <select id="getOne" resultType="com.green.team4.vo.mypage.OrderVO">
+        select tbl_order.mno,tbl_order.ono,tbl_order.orderDate,tbl_order.receiverName,tbl_order.receiverPhone,
+               tbl_order.postcode,tbl_order.address,tbl_order.detailAddress,tbl_order.message,tbl_order.tProductPrice,
+               tbl_order.tShipFee,tbl_order.tUsePoint,tbl_order.tTotalPrice,tbl_order.tPayStatus,
+               tbl_order.tSavePoint,
+               tbl_memberInfo.name,tbl_memberInfo.mobileNum from tbl_order
+        left outer join tbl_memberInfo on tbl_order.mno = tbl_memberInfo.mno
+        where tbl_order.ono=#{ono}
+        order by tbl_order.orderDate desc
+    </select>
+
+    <!-- Order 데이터 전체 가져오기(관리자용) -->
+    <select id="getAllAdmin" resultType="com.green.team4.vo.mypage.OrderVO">
+        select tbl_order.mno,tbl_order.ono,tbl_order.orderDate,tbl_order.receiverName,tbl_order.receiverPhone,
+               tbl_order.postcode,tbl_order.address,tbl_order.detailAddress,tbl_order.message,tbl_order.tProductPrice,
+               tbl_order.tShipFee,tbl_order.tUsePoint,tbl_order.tTotalPrice,tbl_order.tPayStatus,
+               tbl_order.tSavePoint,
+               tbl_memberInfo.name,tbl_memberInfo.mobileNum from tbl_order
+        left outer join tbl_memberInfo on tbl_order.mno = tbl_memberInfo.mno
+        order by tbl_order.orderDate desc
+    </select>
+
+    <!-- Order 데이터 수정(취소/반품/교환 신청, 결제상태만 변경 (관리자 전용)) -->
+    <update id="update">
+        update tbl_order
+        set tPayStatus=#{tPayStatus}
+        where ono=#{ono}
+    </update>
+
+    <!-- Order 데이터 등록(취소/반품/교환 처리 완료 후 새 주문서 등록) -->
+    <insert id="insert">
+        insert into tbl_order (mno, ono, receiverName, receiverPhone,
+                               postcode, address, detailAddress, message,
+                               tProductPrice, tShipFee, tUsePoint, tTotalPrice,
+                               tSavePoint)
+        values (#{mno},#{ono},#{receiverName},#{receiverPhone},#{postcode},#{address},#{detailAddress},
+                #{message},#{tProductPrice},#{tShipFee},#{tUsePoint},#{tTotalPrice},#{tSavePoint})
+    </insert>
+
+    <!-- Order 삭제 -->
+    <delete id="delete">
+        delete from tbl_order where ono=#{ono}
+    </delete>
+
+    <!-- 현재월 데이터 가져오기 -->
+    <select id="getAllByThisMonth" resultType="com.green.team4.vo.mypage.OrderVO">
+        select * from tbl_order
+        WHERE MONTH(orderDate) = MONTH(CURRENT_DATE())
+        AND YEAR(orderDate) = YEAR(CURRENT_DATE())
+        and tPayStatus = '결제완료'
+        and mno = #{mno}
+    </select>
+</mapper>

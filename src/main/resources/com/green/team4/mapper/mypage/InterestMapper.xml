@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.InterestMapper">
+
+    <!-- 회원별 Interest 개수 가져오기 -->
+    <select id="getAllCnt" resultType="Integer">
+        select count(*) from tbl_interest
+        where tbl_interest.mno=#{mno}
+    </select>
+
+    <!-- Interest 데이터 신규 추가 -->
+    <insert id="insert">
+        insert into tbl_interest(mno, pno) values (#{mno},#{pno})
+    </insert>
+
+    <!-- Interest 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.InterestVO">
+        select tbl_interest.mno,tbl_interest.itrNo,tbl_interest.pno,tbl_interest.itrDate,
+               tbl_product.pName,tbl_product.pPrice,tbl_product.pImage from tbl_interest
+        left outer join tbl_product
+        on tbl_interest.pno = tbl_product.pno
+        where tbl_interest.mno=#{mno}
+        order by tbl_interest.itrDate desc
+    </select>
+
+    <!-- Interest 데이터 전체 가져오기(mno 단위, 검색) -->
+    <select id="getAllWithSearch" resultType="com.green.team4.vo.mypage.InterestVO">
+        select tbl_interest.mno,tbl_interest.itrNo,tbl_interest.pno,tbl_interest.itrDate,
+               tbl_product.pName,tbl_product.pPrice,tbl_product.pImage from tbl_interest
+                left outer join tbl_product on tbl_interest.pno = tbl_product.pno
+        where tbl_interest.mno=#{mno}
+        <if test="keyword == 'pName'">
+            AND tbl_product.pName LIKE CONCAT('%',#{search},'%')
+        </if>
+        <if test="keyword == 'pno'">
+            AND tbl_product.pno = #{search}
+        </if>
+        order by tbl_interest.itrDate desc
+    </select>
+
+    <!-- Interest 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_interest where mno=#{mno} and pno=#{pno}
+    </delete>
+
+    <!-- Interest 데이터 삭제(pno 단위) -->
+    <delete id="deleteByPno">
+        delete from tbl_interest pno=#{pno}
+    </delete>
+
+    <select id="getOne" resultType="int">
+        select count(*) from tbl_interest where mno =#{mno} and pno = #{pno}
+    </select>
+
+</mapper>

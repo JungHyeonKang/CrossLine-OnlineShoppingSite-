@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-memberInfo-read</title>
+</head>
+
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'배송조회'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">orderRead</a></li>
+                            <li class="active">delivery</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+
+    <!-- MemberInfo -->
+    <div class="page-section section pt-120 pb-45">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form>
+                            <div class="row">
+                                <h3>배송조회</h3>
+                                <p>배송상태를 확인하세요</p>
+                                <!-- 표시 data -->
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>배송 현황</label>
+                                    <input type="text" name="dStatus" th:value="${deliveryVO.dStatus}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>상품명</label>
+                                    <input type="text" name="iName" th:value="${item.iName}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>택배사</label>
+                                    <input type="text" name="dCompanyName" th:value="${deliveryVO.dCompanyName}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>택배 카테고리</label>
+                                    <input type="text" name="dCategory" th:value="${deliveryVO.dCategory}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>택배 종류</label>
+                                    <input type="text" name="dOption" th:value="${deliveryVO.dOption}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>택배 위치</label>
+                                    <input type="text" name="dLocation" th:value="${deliveryVO.dLocation}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>배송 출발일자</label>
+                                    <input type="text" name="dStartDate" th:value="${deliveryVO.dStartDate}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>배송 완료일자</label>
+                                    <input type="text" name="dEndDate" th:value="${deliveryVO.dEndDate}" readonly/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- hidden data -->
+<input type="hidden" name="ono" th:value="${item.ono}">
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/order/read?ono='+$("input[name=ono]").val()
+        })
+    })
+</script>
+</html>

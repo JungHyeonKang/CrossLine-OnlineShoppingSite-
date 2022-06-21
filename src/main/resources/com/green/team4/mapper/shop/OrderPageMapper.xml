@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.team4.mapper.shop.OrderPageMapper">
+<!--    주문 페이지 Mapper-->
+    <select id="getProductsInfo" resultType="com.green.team4.vo.shop.OrderPageItemVO">
+        select pno,pName,pPrice,pDiscount,pImage from tbl_product p
+
+         where pno = #{pno}
+    </select>
+    <select id="getProductsInfoWithOpt" resultType="com.green.team4.vo.shop.OrderPageItemVO">
+        select p.pno,pName,pPrice,pDiscount,pImage,ps.pColor,ps.pAmount, ps.pOption ,ps.pOptionName,ps.pOption2 ,ps.pOptionName2 from tbl_product p
+         inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno}   <include refid="option"></include>
+    </select>
+
+<!--    주문 정보 가져오기-->
+
+    <select id="getOrderInfo" resultType="com.green.team4.vo.shop.DBOrderItemVO">
+        select pno,pName,pPrice,pDiscount,pImage from tbl_product where pno = #{pno}
+    </select>
+    <select id="getOrderInfoWithOpt" resultType="com.green.team4.vo.shop.DBOrderItemVO">
+        select p.pno,pName,pPrice,pDiscount,pImage,ps.pColor,ps.pAmount,ps.pOption ,ps.pOptionName,ps.pOption2 ,ps.pOptionName2  from tbl_product p
+       inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno}  <include refid="option"></include>
+    </select>
+
+<!--    <sql id="option">-->
+<!--        <if test="pColor != null and pColor != '' and pOption == ''">-->
+<!--            and ps.pColor = #{pColor} and  ps.pOption is null and  ps.pOption2 is null-->
+<!--        </if>-->
+<!--        <if test=" pColor == '' and pOption != null and pOption != '' and pOption2 == ''" >-->
+<!--            and ps.pColor is null  and  ps.pOption = #{pOption} and  ps.pOption2 is null-->
+<!--        </if>-->
+<!--        <if test=" pColor == '' and pOption2 != '' and pOption != ''">-->
+<!--            and ps.pColor is null  and  ps.pOption = #{pOption} and  ps.pOption2 = #{pOption2}-->
+<!--        </if>-->
+<!--        <if test=" pColor != '' and pOption2 == '' and pOption != ''">-->
+<!--            and ps.pColor =  #{pColor}  and  ps.pOption = #{pOption} and  ps.pOption2 is null-->
+<!--        </if>-->
+<!--        <if test="pColor != null and pColor != '' and pOption != null and pOption != '' and pOption2 != null and pOption2 != ''" >-->
+<!--            and ps.pColor = #{pColor}  and  ps.pOption = #{pOption} and  ps.pOption2 = #{pOption2}-->
+<!--        </if>-->
+
+<!--    </sql>-->
+<!--    주문 테이블 등록-->
+    <insert id="enrollOrder">
+        insert into tbl_order
+        (ono, receiverName,receiverPhone, mno, postcode, address, detailAddress,  tShipFee, tUsePoint,tProductPrice,tTotalPrice,tSavePoint,message)
+        values
+            (#{ono},#{receiverName},#{receiverPhone}, #{mno}, #{postcode}, #{address}, #{detailAddress},  #{tShipFee}, #{tUsePoint},#{tProductPrice},#{tTotalPrice},${tSavePoint},#{message})
+    </insert>
+
+<!-- 주문 상품 테이블 등록 -->
+	<insert id="enrollOrderItem">
+
+		insert into tbl_orderitem(ono, pno,iName, iCount, iPrice, iDiscount, iDisPrice,iSavePoint ,iOption,iOptionName,iOption2,iOptionName2,iColor,iTotalPrice)
+		values(#{ono}, #{pno},#{pName},#{iCount}, #{pPrice}, #{pDiscount},#{iDisPrice}, #{iSavePoint},#{pOption},#{pOptionName},#{pOption2},#{pOptionName2},#{pColor},#{iTotalPrice})
+
+	</insert>
+	
+<!--	회원 포인트 차감-->
+    <update id="deductMoney">
+        update tbl_memberInfo set  point=#{point} where mno = #{mno}
+    </update>
+<!--주문 재고 차감-->
+    <update id="deductStockWithOpt">
+         update tbl_product_opt ps set pAmount = #{pAmount} where pno = #{pno}  <include refid="option"></include>
+    </update>
+    <update id="deductStock">
+         update tbl_product set pAmount = #{pAmount} where pno = #{pno}
+    </update>
+
+    <sql id="option">
+        <if test="(pColor == null and pColor =='') and (pOption ==null and pOption =='') and (pOption2 ==null and pOption2 =='') ">
+
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption ==null or pOption =='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor = #{pColor} and ps.pOption is null and ps.pOption2  is null
+        </if>
+        <if test="(pColor == null or pColor =='' )and (pOption !=null and pOption !='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor is null and ps.pOption = #{pOption} and  ps.pOption2  is null
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption !=null and pOption !='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor = #{pColor} and ps.pOption = #{pOption} and ps.pOption2  is null
+        </if>
+        <if test="(pColor == null or pColor =='') and (pOption !=null and pOption !='') and (pOption2 !=null and pOption2 !='') ">
+            and ps.pColor is null and ps.pOption= #{pOption} and ps.pOption2 = #{pOption2}
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption !=null and pOption !='') and (pOption2 !=null and pOption2 !='') ">
+            and ps.pColor = #{pColor} and  ps.pOption = #{pOption} and ps.pOption2 = #{pOption2}
+        </if>
+
+    </sql>
+
+<!--    장바구니 삭제(주문한거만)-->
+<!--    <delete id="deleteOrderCart">-->
+<!--	-->
+<!--		delete from 장바구니 테이블 where mno = #{mno} and pno = #{pno}-->
+<!--	-->
+<!--	</delete>-->
+</mapper>

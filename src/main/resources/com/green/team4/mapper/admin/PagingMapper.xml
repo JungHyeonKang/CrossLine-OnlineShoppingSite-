@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.admin.PagingMapper">
+
+    <select id="findProduct" resultType="com.green.team4.vo.admin.ProductVO">
+        SELECT *
+        FROM tbl_product
+        WHERE 1=1
+        <if test="keyword == 'pno'">
+            AND pno LIKE CONCAT('%',#{search},'%')
+        </if>
+        <if test="keyword == 'pName'">
+            AND pName LIKE CONCAT('%',#{search},'%')
+        </if>
+        <if test="keyword == 'pMainCategory'">
+            AND pCateCode LIKE CONCAT('%',#{search},'%')
+        </if>
+        <if test="keyword == 'pPrice'">
+            AND pPrice LIKE CONCAT('%',#{search},'%')
+        </if>
+        order by pRegdate desc
+    </select>
+
+</mapper>

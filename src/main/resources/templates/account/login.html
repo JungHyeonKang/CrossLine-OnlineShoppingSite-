@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>LOGIN</title>
+</head>
+<style>
+    .error{
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'LOGIN'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a th:id="goBack">mainpage</a></li>
+                            <li class="active">login</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-10 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form action="/loginProc" method="post">
+                            <div class="row">
+                                <h3>로그인</h3>
+                                <p>아이디와 비밀번호를 입력해주세요</p>
+                                <div class="col-12 mb-20">
+                                    <span th:if="${errorMessage}">
+                                        <p>[[${errorMessage}]]</p>
+                                    </span>
+                                    <span th:if="${exception}">
+                                        <p>[[${exception}]]</p>
+                                    </span>
+                                </div>
+                                <div class="col-12 mb-20">
+                                    <label>ID <span class="required">*</span></label>
+                                    <input name="id" type="text" required>
+                                </div>
+                                <div class="col-12 mb-20">
+                                    <label>PASSWORD <span class="required">*</span></label>
+                                    <input name="password" type="password" required>
+                                </div>
+                                <div class="col-12 mb-20">
+
+                                </div>
+                                <div class="col-12 mb-20">
+                                    <input value="Login" name="login" class="inline" type="submit" onclick="login()">
+                                    <label class="inline">
+                                        <a href="/account/findPw">비밀번호 찾기</a>
+                                        <span> | </span>
+                                        <a style="font-weight: bold" href="/account/signup">회원가입</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAGE SECTION END -->
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<script src="https://cdn.jsdeliver.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+<script th:inline="javascript">
+
+    // 메인 화면으로 돌아가기
+    $("#goBack").click(function (){
+        var mno = $("input[name=mno]").val();
+        window.location.href = '/mainPage';
+    })
+
+</script>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-interest-list</title>
+</head>
+
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'교환관리'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">adpage</a></li>
+                            <li class="active">changeList</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 일반배송 List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div><!-- form 태그에서 div로 바꿈(옆)-->
+                    <div class="col-xs-12">
+                        <div class="wishlist-table table-responsive mb-40">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="pro-title">신청일</th>
+                                    <th class="pro-title">처리완료일</th>
+                                    <th class="pro-title">구분</th>
+                                    <th class="pro-title">주문번호(기존)</th>
+                                    <th class="pro-title">신청서</th>
+                                    <th class="pro-title">진행상태</th>
+                                    <th class="pro-title">옵션1(교환)</th>
+                                    <th class="pro-title">옵션2(교환)</th>
+                                    <th class="pro-title">색상(교환)</th>
+                                    <th class="pro-add-to-cart">교환처리</th>
+                                    <th class="pro-add-to-cart">배송등록</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="change : ${changeList}">
+                                    <td class="pro-title" th:text="${change.exDate}"></td>
+                                    <td class="pro-title" th:text="${change.exEndDate}"></td>
+                                    <td class="pro-title" th:text="${change.exCategory}"></td>
+                                    <td class="pro-title" th:text="${change.ono}"></td>
+                                    <td class="pro-title">
+                                        <button type="button" class="btn" id="getExchangeRead">
+                                            <a style="font-size: small" th:href="@{/mypage/exchange/read(eno=${change.eno})}">조회</a>
+                                        </button>
+                                    </td>
+                                    <td class="pro-title" th:text="${change.exStatus}"></td>
+                                    <td class="pro-title" th:text="${change.eOption}"></td>
+                                    <td class="pro-title" th:text="${change.eOption2}"></td>
+                                    <td class="pro-title" th:text="${change.color}"></td>
+                                    <!-- 교환 처리 실행 form -->
+                                    <td class="pro-add-to-cart">
+                                        <form>
+                                            <input type="hidden" name="ono" th:value="${change.ono}" readonly>
+                                            <input type="hidden" name="pno" th:value="${change.pno}" readonly>
+                                            <input type="hidden" name="eno" th:value="${change.eno}" readonly>
+                                            <input type="hidden" name="oINo" th:value="${change.oINo}" readonly>
+                                            <button type="button" id="initChange" th:if="${change.exStatus != '교환완료'}" class="btn">교환</button>
+                                        </form>
+                                    </td>
+                                    <!-- 교환 배송등록 form -->
+                                    <td class="pro-add-to-cart">
+                                        <form th:action="@{/admin/order/deliveryReg}" method="get">
+                                            <input type="hidden" name="ono" th:value="${change.newOno}" readonly>
+                                            <input type="hidden" name="pno" th:value="${change.pno}" readonly>
+                                            <button type="submit" class="btn">배송등록(등록완료시 비활성화 필요)</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 이전화면으로 돌아가기
+        $("#goBack").click(function (){
+            window.location.href = '/admin/adpage'
+        })
+
+        // 교환 처리 진행 => 새로 발행한 주문서 번호 반환
+        $("#initChange").click(function (e) {
+            var data = {
+                ono: $(this).form().find("input[name=ono]").val(),
+                pno: parseInt($(this).form().find("input[name=pno]").val()),
+                eno: parseInt($(this).form().find("input[name=eno]").val()),
+                oino: parseInt($(this).form().find("input[name=oINo]").val())
+            }
+            console.log("입력받은 data: ", data)
+            $.ajax({
+                url: '/admin/order/changeReg',
+                method: 'post',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text',
+                success: function (newOno) {
+                    console.log("Ajax통신 성공 후 받은 result: ", newOno);
+                    alert("교환처리가 완료되었습니다. (신규발행 주문번호: "+newOno+")")
+                    self.location.reload();
+                }
+            })
+        })
+
+
+    })
+</script>
+</html>

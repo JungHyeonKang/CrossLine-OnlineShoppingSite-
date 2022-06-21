@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-interest-list</title>
+</head>
+
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'일반배송관리'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">adpage</a></li>
+                            <li class="active">normalList</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 일반배송 List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div><!-- form 태그에서 div로 바꿈(옆)-->
+                    <div class="col-xs-12">
+                        <div class="wishlist-table table-responsive mb-40">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="pro-title">주문번호</th>
+                                    <th class="pro-title">주문상품번호</th>
+                                    <th class="pro-title">상품명</th>
+                                    <th class="pro-title">수량</th>
+                                    <th class="pro-title">배송상태</th>
+                                    <th class="pro-title">취소/반품/교환 신청여부</th>
+                                    <th class="pro-add-to-cart">배송등록</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="normal : ${normalList}">
+                                    <td class="pro-title" name="ono" th:text="${normal.ono}"></td>
+                                    <td class="pro-title" th:text="${normal.oINo}"></td>
+                                    <td class="pro-title" th:text="${normal.iName}"></td>
+                                    <td class="pro-title" th:text="${normal.iCount}"></td>
+                                    <td class="pro-title" th:text="${normal.iDeliveryStatus}"></td>
+                                    <td class="pro-title" th:text="${normal.iExStatus}"></td>
+                                    <!-- 배송 신규등록 form -->
+                                    <td class="pro-add-to-cart">
+                                        <form th:action="@{/admin/order/deliveryReg}" method="get">
+                                            <input type="hidden" name="ono" th:value="${normal.ono}" readonly>
+                                            <input type="hidden" name="oINo" th:value="${normal.oINo}" readonly>
+                                            <button type="submit" class="btn">배송등록</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        $("#goBack").click(function (){
+            window.location.href = '/admin/adpage'
+        })
+    })
+</script>
+</html>

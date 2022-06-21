@@ -1,0 +1,102 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- head fragment -->
+    <th:block th:replace="/fragments/common/header :: head"></th:block>
+    <title>Cross the Line</title>
+    <style>
+        .hero-slider-content h1{
+            color: #f0f0f0;
+            font-family: "Montserrat",sans-serif;
+            font-size: 50px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 7px;
+            text-transform: uppercase
+        }
+    </style>
+</head>
+
+<body>
+<!-- header fragment -->
+<th:block th:replace="/fragments/common/header.html :: headerFragment"></th:block>
+
+
+<!-- START SLIDER SECTION -->
+<div class="home-slider-section section">
+    <!-- Home Slider -->
+    <div id="home-slider" class="slides">
+        <img src="/img/slider/jeff-tumale-SD9Jyl1xNQ4-unsplash.jpg" alt="slide_Img_1" title="#slider-caption-1" />
+        <img src="/img/slider/wallpaperflare.com_wallpaper%20(1).jpg" alt="slide_Img_2" title="#slider-caption-2"  />
+    </div>
+    <!-- Caption 1 -->
+    <div id="slider-caption-1" class="nivo-html-caption">
+        <div class="container">
+            <div class="row">
+                <div class="hero-slider-content col-sm-8 col-xs-12">
+                    <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">SHOP NOW</h1>
+                    <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="1s">지금 CrossLine의 인기 상품을 만나보세요</p>
+                    <a href="/mainPage" class="wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="1s">enter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Caption 2 -->
+    <div id="slider-caption-2" class="nivo-html-caption">
+        <div class="container">
+            <div class="row">
+                <div class="hero-slider-content col-sm-8 col-xs-12">
+                    <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">인기글</h1>
+                    <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="1s"><span th:if="${VO} != null" th:text="${VO.title}"></span></p>
+                    <a th:href="@{board/read(bno=${VO.bno})}" class="wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="1s">보러가기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SLIDER SECTION -->
+    
+
+
+<!-- BANNER-SECTION START -->
+<div class="banner-section section pt-90 pb-90">
+    <div class="container">
+        <div class="row">
+            <h3>게시판 목록</h3>
+            <!-- Banner Item Start -->
+            <div class="col-md-3 col-12 mb-30">
+                <div class="single-banner">
+                    <a href="/community/board/list"><img src="/img/blog/galvao-rvca-4.jpg" alt=""></a>
+                </div>
+            </div>
+            <!-- Banner Item End -->
+            <!-- Banner Item Start -->
+            <div class="col-md-3 col-12 mb-30">
+                <div class="single-banner">
+                    <a href="#"><img src="/img/blog/running_1.jpg" alt=""></a>
+                </div>
+            </div>
+            <!-- Banner Item End -->
+            <!-- Banner Item Start -->
+            <div class="col-md-3 col-12 mb-30">
+                <div class="single-banner">
+                    <a href="#"><img src="/img/blog/mike-von-2UTk-Nip5aM-unsplash.jpg" alt=""></a>
+                </div>
+            </div>
+            <div class="col-md-3 col-12 mb-30">
+                <div class="single-banner">
+                    <a href="#"><img src="/img/blog/maria-fernanda-pissioli-hhyAlXfmlag-unsplash.jpg" alt=""></a>
+                </div>
+            </div>
+            <!-- Banner Item End -->
+        </div>
+    </div>
+</div> 
+<!-- BANNER-SECTION END -->
+</body>
+<!-- footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+</html>

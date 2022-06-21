@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.team4.mapper.shop.ShopMapper">
+    <select id="getListAll" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product where pno>0
+    </select>
+    <!--    <select id="getListWithCategory" resultType="com.green.team4.vo.admin.ProductVO">-->
+    <!--        select * from product where p_category = #{p_category}-->
+    <!--    </select>-->
+
+
+    <select id="getOne" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product where pno=#{pno}
+    </select>
+    <select id="getOneWithOpt" resultType="com.green.team4.vo.admin.ProductVO">
+       select p.pno,ps.pcno,ps.pColor,ps.pOption,ps.pOption2,ps.pOptionName,ps.pOptionName2  from tbl_product p
+         inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno};
+    </select>
+    <select id="getOneWithPno" resultType="com.green.team4.vo.admin.ProductVO">
+        select p.pno,pName,pPrice,pDiscount,pImage,ps.pColor,ps.pAmount,ps.pcno,ps.pColor,ps.pOption,ps.pOption2,ps.pOptionName,ps.pOptionName2  from tbl_product p
+                                                                                                       inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno};
+    </select>
+    <select id="getProductWithOpt" resultType="com.green.team4.vo.shop.Product_optVO">
+        select p.pno,pName,pPrice,pDiscount,pImage,ps.pColor,ps.pAmount,
+               ps.pOption,ps.pOptionName,ps.pOption2,ps.pOptionName2,ps.pOptionPrice  from tbl_product p
+       inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno} <include refid="price"></include>
+    </select>
+
+    <insert id="insert">
+        insert into tbl_product (pName,pPrice,pAmount,pImage,pInformation,pCateCode,pDiscount)
+        values (#{pName},#{pPrice},#{pAmount},
+                #{pImage},#{pInformation},#{pCateCode},#{pDiscount})
+    </insert>
+
+    <select id="getColors" resultType="com.green.team4.vo.shop.Product_optVO">
+        select distinct ps.pColor from tbl_product p
+                                           inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno} and ps.pAmount != 0
+    </select>
+    <select id="getOptions" resultType="com.green.team4.vo.shop.Product_optVO">
+        select distinct ps.pOption ,ps.pOptionName from tbl_product_opt P
+                                            inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno} and ps.pAmount != 0
+    </select>
+    <select id="getOptions2" resultType="com.green.team4.vo.shop.Product_optVO">
+        select distinct ps.pOption2 ,ps.pOptionName2 from tbl_product_opt P
+                                            inner join tbl_product_opt ps on p.pno = ps.pno
+        where p.pno = #{pno} and ps.pAmount != 0
+    </select>
+        <!--    restful용-->
+        <select id="getOptList" resultType="com.green.team4.vo.shop.Product_optVO">
+            select * from tbl_product_opt
+
+            where pno = #{pno}  and pAmount !=0   <include refid="option"></include>
+        </select>
+        <select id="getOptionPrice" resultType="com.green.team4.vo.shop.Product_optVO">
+            select P.pPrice,pOptionPrice, ps.pAmount from tbl_product P
+            inner join tbl_product_opt ps on p.pno = ps.pno
+            where p.pno = #{pno} and ps.pAmount !=0 <include refid="price"></include>
+        </select>
+    <sql id="option">
+        <if test="pColor == '' and pColor == '' and pOption =='' ">
+
+        </if>
+        <if test="(pColor != null and pColor != '') and (pOption =='' or pOption ==null)">
+            and pColor = #{pColor}
+        </if>
+        <if test="(pOption != null and pOption != '') and ( pColor =='' or pColor ==null)">
+            and pOption = #{pOption}
+        </if>
+        <if test="(pColor != null and pColor != '' ) and( pOption != null and pOption != '')">
+            and pColor = #{pColor} and  pOption = #{pOption}
+        </if>
+
+    </sql>
+    <sql id="price">
+        <if test="(pColor == null and pColor =='') and (pOption ==null or pOption =='') and (pOption2 == null or pOption2 =='') ">
+
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption ==null or pOption =='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor = #{pColor} and ps.pOption is null and ps.pOption2  is null
+        </if>
+        <if test="(pColor == null or pColor =='' )and (pOption !=null and pOption !='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor is null and ps.pOption = #{pOption} and  ps.pOption2  is null
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption !=null and pOption !='') and (pOption2 == null or pOption2 =='') ">
+            and ps.pColor = #{pColor} and ps.pOption = #{pOption} and ps.pOption2  is null
+        </if>
+        <if test="(pColor == null or pColor =='') and (pOption !=null and pOption !='') and (pOption2 !=null and pOption2 !='') ">
+            and  ps.pColor is null and ps.pOption= #{pOption} and ps.pOption2 = #{pOption2}
+        </if>
+        <if test="(pColor != null and pColor !='') and (pOption !=null and pOption !='') and (pOption2 !=null and pOption2 !='') ">
+            and ps.pColor = #{pColor} and  ps.pOption = #{pOption} and ps.pOption2 = #{pOption2}
+        </if>
+
+    </sql>
+   
+
+
+    <select id="getListByFind" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product P
+        left outer join tbl_product_cate PC on P.pCateCode = PC.pCateCode
+        <include refid="criteria"></include>
+        <include refid="sort"></include>
+        limit #{startPage}, #{numPerPage}
+    </select>
+<!--    <select id="getListByFind4" resultType="com.green.team4.vo.admin.ProductVO">-->
+<!--        select * from tbl_product P-->
+<!--        left outer join tbl_product_cate PC on P.pCateCode = PC.pCateCode-->
+<!--        <include refid="criteria"></include>-->
+<!--        <include refid="sort"></include>-->
+<!--        limit 5-->
+<!--    </select>-->
+    <select id="getListWithBest" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product P
+        left outer join tbl_product_cate PC on P.pCateCode = PC.pCateCode
+          where  P.pCateCode like concat('0','%') and pStatus = '판매중'
+
+    </select>
+    <select id="getListWithTimeDeal" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product P
+        left outer join tbl_product_cate PC on P.pCateCode = PC.pCateCode
+        where  P.pCateCode like concat('6','%') and pStatus = '판매중'
+        order by pno desc
+
+    </select>
+    <update id="updateDiscount">
+        update tbl_product set pDiscount = 0.0 where pCateCode like concat(#{pCatecode},'%');
+    </update>
+
+    <select id="getTotaldatabyFind" resultType="int">
+        select count(pno) from tbl_product P
+        left outer join tbl_product_cate PC on P.pCateCode = PC.pCateCode
+        <include refid="criteria"></include>
+        <include refid="sort"></include>
+    </select>
+
+    <select id="getListBySearch" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product
+        where pName like concat('%',#{keyword},'%')
+        order by pno desc limit 5
+    </select>
+    <select id="getListByRand" resultType="com.green.team4.vo.admin.ProductVO">
+        select * from tbl_product
+        where pCateCode like concat('%',#{keyword},'%') and pStatus = '판매중'
+        order by rand() limit 10
+    </select>
+
+    <sql id="keyword">
+        <if test="keyword != null and keyword != '' "  >
+            pName like concat('%',#{keyword},'%')
+        </if>
+    </sql>
+    <sql id="criteria">
+        <trim prefix="where (" suffix=")" prefixOverrides="and" >
+            <trim prefix="and">
+                <choose>
+                    <when test="pCateCode != null and pCateCode != ''">
+                        P.pCateCode like concat(#{pCateCode},'%')
+                    </when>
+                    <when test="keyword != null and keyword != ''">
+                        P.pName like concat('%',#{keyword},'%')
+                    </when>
+                </choose>
+            </trim>
+        </trim>
+    </sql>
+    <sql id="sort">
+
+        <if test="sort == '' ">
+            order by pno desc
+        </if>
+        <if test="sort == 'new' ">
+            order by pno desc
+        </if>
+        <if test="sort == 'pricedesc' ">
+            order by pPrice desc
+        </if>
+        <if test="sort == 'priceasc' ">
+            order by pPrice asc
+        </if>
+        <if test="sort == 'reviewCntDesc'">
+            order by pReviewCnt desc
+        </if>
+        <if test="sort == 'ratingDesc'">
+            order by pRating desc
+        </if>
+    </sql>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.ShipmentMapper">
+
+    <!-- shipmentInfo 데이터 등록 -->
+    <insert id="insert">
+        insert into tbl_shipmentInfo (mno,sno,shipName,postcode,address,detailAddress)
+            values (#{mno},#{sno},#{shipName},#{postcode},#{address},#{detailAddress})
+    </insert>
+
+    <!-- shipmentInfo 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.ShipmentVO">
+        select * from tbl_shipmentInfo where mno=#{mno}
+    </select>
+
+    <!-- shipmentInfo 데이터 하나 가져오기(sno 단위) -->
+    <select id="getOne" resultType="com.green.team4.vo.mypage.ShipmentVO">
+        select * from tbl_shipmentInfo where sno=#{sno}
+    </select>
+
+    <!-- shipmentInfo 데이터 수정 -->
+    <update id="update">
+        update tbl_shipmentInfo
+            set shipName=#{shipName},postcode=#{postcode},address=#{address},detailAddress=#{detailAddress}
+                where sno=#{sno}
+    </update>
+
+    <!-- shipmentInfo 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_shipmentInfo where sno=#{sno}
+    </delete>
+
+</mapper>

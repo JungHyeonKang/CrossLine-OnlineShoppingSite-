@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.team4.mapper.shop.CategoryMapper">
+    <select id="cateList" resultType="com.green.team4.vo.shop.CategoryVO">
+        select * from tbl_product_cate
+    </select>
+
+    <select id="getCateCode1" resultType="com.green.team4.vo.shop.CategoryVO">
+
+		<![CDATA[
+        select * from tbl_product_cate where pCateCode > 100000 and pCateCode < 200000
+        ]]>
+	</select>
+
+    <select id="getCateCode2" resultType="com.green.team4.vo.shop.CategoryVO">
+
+		<![CDATA[
+        select * from tbl_product_cate where pCateCode > 200000 and pCateCode < 300000
+        ]]>
+
+	</select>
+
+    <select id="getCateTier2" resultType="com.green.team4.vo.shop.CategoryVO">
+        select * from tbl_product_cate where tier='2';
+	</select>
+    <select id="getCateTier3WithCode" resultType="com.green.team4.vo.shop.CategoryVO">
+        select * from tbl_product_cate where tier='3' and  pCateCode like concat(#{pCateCode},'%')
+    </select>
+
+    <select id="getCateTier3" resultType="com.green.team4.vo.shop.CategoryVO">
+        select * from tbl_product_cate where tier='3'
+    </select>
+
+    <select id="getCateName"  resultType="com.green.team4.vo.shop.CategoryVO">
+        select * from tbl_product_cate where pCateCode=#{pCateCode}
+    </select>
+</mapper>

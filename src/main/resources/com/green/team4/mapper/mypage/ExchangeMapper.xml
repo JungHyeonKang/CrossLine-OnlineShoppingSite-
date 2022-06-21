@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.ExchangeMapper">
+
+    <!-- 회원별 exchange 글 개수 가져오기 -->
+    <select id="getAllCnt" resultType="Integer">
+        select count(*) from tbl_exchange
+        where tbl_exchange.mno=#{mno}
+    </select>
+
+    <!-- tbl_exchange 데이터 등록 -->
+    <insert id="insert">
+        <selectKey keyProperty="eno" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        <![CDATA[
+        insert into tbl_exchange (mno,ono,oINo, pno, exCategory, exContent,
+                    exStatus, exDate, exEndDate, eOptionName, eOption, eOptionName2, eOption2, color)
+                VALUES (#{mno},#{ono},#{oINo},#{pno},#{exCategory},#{exContent},#{exStatus},#{exDate},
+                    #{exEndDate},#{eOptionName},#{eOption},#{eOptionName2},#{eOption2},#{color})
+        ]]>
+    </insert>
+
+    <!-- tbl_exchange 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.ExchangeVO">
+        select tbl_exchange.mno,tbl_exchange.ono,tbl_exchange.oINo,tbl_exchange.newOno,tbl_exchange.pno,tbl_exchange.eno,exCategory,exContent,tbl_exchange.exStatus,exDate,exEndDate,
+               tbl_product.pName,tbl_orderItem.iDisPrice,tbl_orderItem.iCount,tbl_orderItem.iTotalPrice,
+               tbl_orderItem.iOption,tbl_orderItem.iOption2,tbl_orderItem.iColor,
+               tbl_exchange.exEndDate, tbl_exchange.eOptionName, tbl_exchange.eOption, tbl_exchange.eOptionName2,
+               tbl_exchange.eOption2, tbl_exchange.color
+        from tbl_exchange
+        left outer join tbl_product on tbl_exchange.pno = tbl_product.pno
+        left outer join tbl_orderItem on tbl_exchange.oINo = tbl_orderItem.oINo
+        where tbl_exchange.mno=#{mno}
+        order by tbl_exchange.eno desc
+    </select>
+
+    <!-- tbl_exchange 데이터 전체 가져오기(ono 단위) -->
+    <select id="getAllByOno" resultType="com.green.team4.vo.mypage.ExchangeVO">
+        select tbl_exchange.mno,tbl_exchange.ono,tbl_exchange.oINo,tbl_exchange.newOno,tbl_exchange.pno,tbl_exchange.eno,exCategory,exContent,tbl_exchange.exStatus,exDate,exEndDate,
+               tbl_product.pName,tbl_orderItem.iDisPrice,tbl_orderItem.iCount,tbl_orderItem.iTotalPrice,
+               tbl_orderItem.iOption,tbl_orderItem.iOption2,tbl_orderItem.iColor,
+               tbl_exchange.exEndDate, tbl_exchange.eOptionName, tbl_exchange.eOption, tbl_exchange.eOptionName2,
+               tbl_exchange.eOption2, tbl_exchange.color
+        from tbl_exchange
+                 left outer join tbl_product on tbl_exchange.pno = tbl_product.pno
+                 left outer join tbl_orderItem on tbl_exchange.oINo = tbl_orderItem.oINo
+        where tbl_exchange.ono=#{ono}
+        order by tbl_exchange.eno desc
+    </select>
+
+    <!-- tbl_exchange 데이터 전체 가져오기 -->
+    <select id="getAllAdmin" resultType="com.green.team4.vo.mypage.ExchangeVO">
+        select tbl_exchange.mno,tbl_exchange.ono,tbl_exchange.oINo,tbl_exchange.newOno,tbl_exchange.pno,tbl_exchange.eno,exCategory,exContent,tbl_exchange.exStatus,exDate,exEndDate,
+               tbl_product.pName,tbl_orderItem.iDisPrice,tbl_orderItem.iCount,tbl_orderItem.iTotalPrice,
+               tbl_orderItem.iOption,tbl_orderItem.iOption2,tbl_orderItem.iColor,
+               tbl_exchange.exEndDate, tbl_exchange.eOptionName, tbl_exchange.eOption, tbl_exchange.eOptionName2,
+               tbl_exchange.eOption2, tbl_exchange.color
+        from tbl_exchange
+        left outer join tbl_product on tbl_exchange.pno = tbl_product.pno
+        left outer join tbl_orderItem on tbl_exchange.oINo = tbl_orderItem.oINo
+        order by tbl_exchange.eno desc
+    </select>
+
+    <!-- tbl_exchange 데이터 하나 가져오기(eno 단위) -->
+    <select id="getOne" resultType="com.green.team4.vo.mypage.ExchangeVO">
+        select tbl_exchange.mno,tbl_exchange.ono,tbl_exchange.oINo,tbl_exchange.newOno,tbl_exchange.pno,tbl_exchange.eno,exCategory,exContent,tbl_exchange.exStatus,exDate,exEndDate,
+               tbl_product.pName,tbl_orderItem.iDisPrice,tbl_orderItem.iCount,tbl_orderItem.iTotalPrice,
+               tbl_orderItem.iOption,tbl_orderItem.iOption2,tbl_orderItem.iColor,
+               tbl_exchange.exEndDate, tbl_exchange.eOptionName, tbl_exchange.eOption, tbl_exchange.eOptionName2,
+               tbl_exchange.eOption2, tbl_exchange.color
+        from tbl_exchange
+                 left outer join tbl_product on tbl_exchange.pno = tbl_product.pno
+                 left outer join tbl_orderItem on tbl_exchange.oINo = tbl_orderItem.oINo
+        where tbl_exchange.eno=#{eno}
+    </select>
+
+    <!-- tbl_exchange 데이터 수정 (관리자만 수정 가능) -->
+    <update id="update">
+        update tbl_exchange
+            set exStatus=#{exStatus}, exEndDate=#{exEndDate}, newOno=#{newOno}
+                where eno=#{eno}
+    </update>
+
+
+    <update id="updateNull1">
+        update tbl_exchange
+        set eOption=null
+        where nullif (eOption,"") is null
+    </update>
+
+    <update id="updateNull2">
+        update tbl_exchange
+        set eOption2=null
+        where nullif (eOption2,"") is null
+    </update>
+
+    <update id="updateNull3">
+        update tbl_exchange
+        set color=null
+        where nullif (color,"") is null
+    </update>
+
+    <!-- tbl_exchange 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_exchange where eno=#{eno}
+    </delete>
+
+</mapper>

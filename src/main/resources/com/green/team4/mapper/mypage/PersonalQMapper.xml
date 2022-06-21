@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.PersonalQMapper">
+
+    <!-- 회원별 1:1문의 글 개수 가져오기 -->
+    <select id="getAllCnt" resultType="Integer">
+        select count(*) from tbl_personalQ
+        where tbl_personalQ.mno=#{mno}
+    </select>
+
+    <!-- tbl_personalQ 데이터 등록 -->
+    <insert id="insert">
+        <selectKey keyProperty="pqNo" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        <![CDATA[
+        insert into tbl_personalQ (mno, pqCategory, ono,
+                                   pno, pqTitle, pqContent, pqRegDate,
+                                   pqReplyTitle, pqReplyContent, pqReplyDate, pqStatus)
+        values (#{mno},#{pqCategory},#{ono},#{pno},#{pqTitle},#{pqContent},
+                #{pqRegDate},#{pqReplyTitle},#{pqReplyContent},#{pqReplyDate},#{pqStatus})
+        ]]>
+    </insert>
+
+    <!-- tbl_personalQ 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAllByMno" resultType="com.green.team4.vo.mypage.PersonalQVO">
+        select * from tbl_personalQ
+        where mno=#{mno}
+        order by pqNo desc
+    </select>
+
+    <!-- tbl_personalQ 데이터 전체 가져오기(pno 단위) -->
+    <select id="getAllByPno" resultType="com.green.team4.vo.mypage.PersonalQVO">
+        select * from tbl_personalQ
+        where pno=#{pno}
+        order by pqNo desc
+    </select>
+
+    <!-- tbl_personalQ 데이터 전체 가져오기(ono 단위) -->
+    <select id="getAllByOno" resultType="com.green.team4.vo.mypage.PersonalQVO">
+        select * from tbl_personalQ
+        where ono=#{ono}
+        order by pqNo desc
+    </select>
+
+    <!-- tbl_personalQ 데이터 전체 가져오기(Admin) -->
+    <select id="getAllAdmin" resultType="com.green.team4.vo.mypage.PersonalQVO">
+        select * from tbl_personalQ
+        order by pqNo desc
+    </select>
+
+    <!-- tbl_personalQ 데이터 하나 가져오기(pqNo) -->
+    <select id="getOne" resultType="com.green.team4.vo.mypage.PersonalQVO">
+        select * from tbl_personalQ
+        where pqNo=#{pqNo}
+    </select>
+
+    <!-- tbl_personalQ 데이터 수정 -->
+    <update id="update">
+        update tbl_personalQ
+        set ono=#{ono}, pno=#{pno}, pqTitle=#{pqTitle}, pqContent=#{pqContent}, pqRegDate=#{pqRegDate},
+        pqReplyTitle=#{pqReplyTitle},pqReplyContent=#{pqReplyContent},pqReplyDate=#{pqReplyDate},pqStatus=#{pqStatus}
+        where pqNo=#{pqNo}
+    </update>
+
+    <!-- tbl_personalQ 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_personalQ where pqNo=#{pqNo}
+    </delete>
+
+</mapper>

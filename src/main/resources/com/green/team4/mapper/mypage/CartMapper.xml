@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.CartMapper">
+
+    <!-- Cart 데이터 신규 추가 -->
+    <insert id="insert">
+        insert into tbl_cart (mno, pno, cName, cOption, cOptionName, cOption2,
+                              cOptionName2, cColor, cPrice, cDiscount,
+                              cDisPrice, cCount, cTotalPrice,cOptionPrice)
+        values (#{mno},#{pno},#{cName},#{cOption},#{cOptionName},#{cOption2},#{cOptionName2},
+                #{cColor},#{cPrice},#{cDiscount},#{cDisPrice},#{cCount},#{cTotalPrice},#{cOptionPrice})
+    </insert>
+
+    <!-- Cart 데이터 하나 가져오기(pno 단위) 사용X -->
+    <select id="getOneByPnoMno" resultType="com.green.team4.vo.mypage.CartVO">
+        select mno, cno, tbl_cart.pno, cName, cOption, cOptionName, cOption2,
+               cOptionName2, cColor, cPrice, cDiscount,
+               cDisPrice, cCount, cTotalPrice,cOptionPrice,
+               tbl_product.pImage from tbl_cart
+        left outer join tbl_product on tbl_cart.pno = tbl_product.pno
+        where tbl_cart.pno=#{pno} and tbl_cart.mno=#{mno}
+        order by tbl_cart.cno
+    </select>
+
+    <!-- Cart 데이터 하나 가져오기(cno 단위) -->
+    <select id="getOneByCno" resultType="com.green.team4.vo.mypage.CartVO">
+        select mno, cno, tbl_cart.pno, cName, cOption, cOptionName, cOption2,
+               cOptionName2, cColor, cPrice, cDiscount,
+               cDisPrice, cCount, cTotalPrice,cOptionPrice,
+               tbl_product.pImage from tbl_cart
+               left outer join tbl_product on tbl_cart.pno = tbl_product.pno
+        where tbl_cart.cno=#{cno}
+    </select>
+
+    <!-- Cart 데이터 전체 가져오기(mno 단위) -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.CartVO">
+        select mno, cno, tbl_cart.pno, cName, cOption, cOptionName, cOption2,
+               cOptionName2, cColor, cPrice, cDiscount,
+               cDisPrice, cCount, cTotalPrice,cOptionPrice,
+               tbl_product.pImage from tbl_cart
+        left outer join tbl_product on tbl_cart.pno = tbl_product.pno
+        where mno=#{mno}
+        order by tbl_cart.cno desc
+    </select>
+
+    <update id="update">
+        update tbl_cart
+        set cCount = #{cCount}, cTotalPrice = #{cTotalPrice}
+        where cno = #{cno}
+    </update>
+
+    <!-- Cart 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_cart where cno=#{cno}
+    </delete>
+
+    <!-- Cart 데이터 삭제(pno 단위) -->
+    <delete id="deleteByPno">
+        delete from tbl_cart where pno=#{pno}
+    </delete>
+
+
+
+</mapper>

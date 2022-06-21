@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.admin.ProductInfoImgMapper">
+
+    <insert id="insert">
+        insert into tbl_product_infoImg (pno, pName, pInformation, pInfoPath)
+        values (#{pno}, #{pName}, #{pInformation}, #{pInfoPath})
+    </insert>
+
+    <select id="getAll" resultType="com.green.team4.vo.admin.ProductInfoImgVO">
+        select * from tbl_product_infoImg
+    </select>
+
+    <select id="getOne" resultType="com.green.team4.vo.admin.ProductInfoImgVO">
+        select * from tbl_product_infoImg where pno = #{pno}
+    </select>
+
+    <update id="update">
+        update tbl_product_infoImg
+            set pno=#{pno}, pName=#{pName}, pInformation=#{pInformation}, pInfoPath=#{pInfoPath}
+                where pno=#{pno}
+    </update>
+
+    <delete id="delete">
+        delete from tbl_product_infoImg where pno=#{pno}
+    </delete>
+
+<!--    <delete id="deleteInfoImg">-->
+<!--        delete from tbl_product_img where ino=#{ino}-->
+<!--    </delete>-->
+
+<!--    <select id="getEvePno" resultType="com.green.team4.vo.admin.ProductImgVO">-->
+<!--        select * from tbl_product_img order by pno desc limit 1;-->
+<!--    </select>-->
+
+    <select id="getOneInfoList" resultType="com.green.team4.vo.admin.ProductImgVO">
+        <!-- pno를 통한 상품 정보 이미지 리스트 조회 -->
+        select p.pno, p.pname, i.pInfoPath, i.pInformation from  tbl_product p
+        inner join tbl_product_infoImg i
+        on p.pno = #{p.pno};
+    </select>
+<!--    상품별 이미지 리스트 조회 (JH추가)-->
+    <select id="infoImgList" resultType="com.green.team4.vo.admin.ProductInfoImgVO">
+        select  * from tbl_product_infoImg where pno = #{pno}
+    </select>
+</mapper>

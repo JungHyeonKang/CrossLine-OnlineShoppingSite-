@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>PERSONALQ LIST</title>
+</head>
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'1:1문의글관리'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">adpage</a></li>
+                            <li class="active">list</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- exchange List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="wishlist-table table-responsive mb-40">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="pro-stock-stauts">신청일</th>
+                                <th class="pro-stock-stauts">처리 완료일</th>
+                                <th class="pro-title">접수번호</th>
+                                <th class="pro-title">카테고리</th>
+                                <th class="pro-title">제목</th>
+                                <th class="pro-title">진행상태</th>
+                                <th class="pro-title">답변</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="pq : ${pqList.getList()}">
+                                <td class="pro-stock-status" name="pqRegDate" th:text="${pq.pqRegDate}"></td>
+                                <td class="pro-stock-status" name="pqReplyDate" th:text="${pq.pqReplyDate}"></td>
+                                <td class="pro-stock-status" name="pqNo" th:text="${pq.pqNo}"></td>
+                                <td class="pro-stock-status" name="pqCategory" th:text="${pq.pqCategory}"></td>
+                                <td class="pro-title" name="pqTitle" th:text="${pq.pqTitle}"></td>
+                                <td class="pro-title" name="pqStatus" th:text="${pq.pqStatus}"></td>
+                                <td class="pro-title" th:if="${pq.pqStatus.equals('접수완료')}" ><a th:href="@{/admin/personalQ/replyM(pqNo=${pq.pqNo})}">답변하기</a></td>
+                                <td class="pro-title" th:if="${pq.pqStatus.equals('답변완료')}" ><a th:href="@{/admin/personalQ/replyM(pqNo=${pq.pqNo})}">내용보기</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Paging custom -->
+                <div class="paginationC clearfix">
+                    <!-- 이전 버튼 -->
+                    <li th:if="${pqList.getPrePage() != 0}">
+                        <a th:href="@{/admin/personalQ/listM(pageNum=${pqList.getPrePage()})}">Previous</a>
+                    </li>
+                    <li th:if="${pqList.getPrePage() == 0}">
+                        <a>Previous</a>
+                    </li>
+                    <!-- 페이지 번호-->
+                    <li th:each="page: ${#numbers.sequence(pqList.getNavigateFirstPage(), pqList.getNavigateLastPage())}" th:classappend="${page == pqList.getPageNum()} ? 'active'">
+                        <a th:text="${page}" th:href="@{/admin/personalQ/listM(pageNum=${page})}"></a>
+                    </li>
+                    <!-- 다음 버튼-->
+                    <li th:if="${pqList.getNextPage() != 0}">
+                        <a th:href="@{/admin/personalQ/list(pageNum=${pqList.getNextPage()})}">Next</a>
+                    </li>
+                    <li th:if="${pqList.getNextPage() == 0}">
+                        <a>Next</a>
+                    </li>
+                    <p>현재페이지[[${pageNum}]]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 신청목록 삭제 버튼 클릭하면 동작
+        $("input[name=pqDeleteBtn]").click(function (e){
+            if(!confirm("정말 삭제하시겠습니까?")){
+                alert("삭제를 취소합니다.")
+                return
+            }
+            else {
+                var target = $(this)
+                target.form().submit();
+                alert("삭제 완료하였습니다.")
+            }
+        })
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/admin/adpage';
+        })
+    })
+</script>
+</html>

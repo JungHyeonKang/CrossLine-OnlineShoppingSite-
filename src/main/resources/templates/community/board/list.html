@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="">
+<head>
+    <meta charset="UTF-8">
+    <title>리스트</title>
+    <!-- head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}"/>
+    <style>
+        .slick-arrow {
+            background-color: #fff;
+            border: medium none;
+            border-radius: 50%;
+            -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            color: #777777;
+            height: 25px;
+            margin-top: -20px;
+            opacity: 0;
+            padding: 0;
+            top: 50%;
+            width: 25px;
+            z-index: 9;
+        }
+        .arrow-prev {
+            left: -5px;
+
+        }
+        .arrow-next {
+            right: -5px;
+        }
+        .slick-arrow i {
+            font-size: 12px;
+            line-height: 28px;
+            text-align: center;
+        }
+        .slick-arrow {
+            opacity: 1;
+        }
+        .slick-arrow:hover {
+            background-color: #3f3f3f;
+            color: #fff;
+        }
+        .paginate_button{
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+        select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(0, 0, 0, 0) url("/img/icon/select-arrow-down.png") no-repeat scroll right 5px center;
+            border: 1px solid #ddd;
+            padding-right: 30px;
+            padding-left: 15px;
+            text-transform: capitalize;
+            font-size: 5px;
+        }
+        #keyword{
+            border: 1px solid #ddd;
+            color: #666;
+            font-family: "Catamaran",sans-serif;
+            font-weight: 400;
+            font-size: 8px;
+            letter-spacing: 0.5px;
+            padding-right: 30px;
+            padding-left: 15px;
+        }
+        #btnSearch{
+            background-color: transparent;
+            border: 1px solid #ddd;
+            color: #666;
+            font-family: "Catamaran",sans-serif;
+            font-size: 8px;
+            font-weight: 400;
+            height: 27.97px;
+            width: 55.93px;
+        }
+        #regBtn{
+            background-color: transparent;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<body>
+<!-- header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+<!-- PAGE SECTION START -->
+<!-- banner -->
+<div class="page-banner-section section" style="background-image: url('/img/banner/nathan-dumlao-WyV_EOPHy6g-unsplash.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <a href="/community/main"><h1 th:text="'Community'"></h1></a>
+                    <ul class="breadcrumb">
+                        <li><a href="#" th:id="goBack">sports</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page section start -->
+<div class="page-section section pt-120 pb-45">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="mb-75">
+                    <form method="get" action="register" id="registerForm">
+                        <h2 style="display: inline">글 목록</h2>
+                        <!--  추후 넘어오는 데이터로 수정 -->
+<!--                        <input type="hidden" name="idSec" th:value="${#authentication.name}">-->
+                        <button type="submit" id="regBtn" style="float: right; border: none; padding: 0px; display: inline"><img src="/img/icon/register.png" alt="글쓰기" width="30" height="30" >글쓰기</button>
+                    </form>
+                </div>
+                <hr style="border: 3px">
+            </div>
+        </div>
+    </div>
+    <div class="container mt-50 mb-50" th:each="item : ${items}">
+        <p>
+        <div class="row">
+            <div class="col-8 mx-auto">
+                <span th:text="${item.bno}" style="display: inline"></span>
+                <div class="blog-item">
+                    <a class="move" th:href="${item.bno}"><h4 class="title" th:text="${item.title}"></h4></a>
+                    <span th:text="${item.nonMemberId}" th:if="${item.nickName}==null"></span>
+                    <span th:text="${item.nickName}" th:if="${item.nickName}!=null"></span>
+                    <span class="date" th:text="${#dates.format(item.regDate, 'MM-dd')}" style="display: inline; float: right"></span><br>
+                    <hr style="border: 1px">
+                </div>
+            </div>
+
+        </div>
+        </p>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-75 mx-auto">
+                <!-- pagination -->
+                <div class="bs-paging">
+                <!--            th:block 사용시 selector 인식 못함-->
+                    <button type="button" class="arrow-prev slick-arrow" th:if="${pageMaker.prev}"><a th:href="${pageMaker.startPage - 1}" id="prev">
+                        <i class="fa fa-angle-left"></i></a></button>
+                    <span class="paginate_button" th:each="num: ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}">
+                        <a th:href="${num}" th:text="${num}"></a>
+                    </span>
+                    <button type="button" class="arrow-next slick-arrow" th:if="${pageMaker.next}"><a th:href="${pageMaker.endPage + 1}" id="next">
+                        <i class="fa fa-angle-right"></i></a></button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+                <!-- pagination end-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-75 mx-auto">
+                <form id="actionForm" action="list" method="get">
+                    <div class="mb-75">
+                        <input type="hidden" name="page" th:value="${pageMaker.criteria.page/pageMaker.criteria.pageNum+1}">
+                        <input type="hidden" name="pageNum" th:value="${pageMaker.criteria.pageNum}">
+                    </div>
+                    <!-- Search -->
+                    <div style="text-align: center">
+                        <div>
+                            <select name="type" id="type" th:value="${pageMaker.criteria.type}">
+                                <option value="title">제목</option>
+                                <option value="content">내용</option>
+                                <option value="userName">작성자</option>
+                            </select>
+                            <input type="text" name="keyword" id="keyword" th:value="${pageMaker.criteria.keyword}">
+                            <button name="btnSearch" id="btnSearch">검색</button>
+                        </div>
+                    </div>
+                    <!-- Search end-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->
+<!-- search, pagination info -->
+</body>
+<!-- footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+<script>
+    $('document').ready(function (e){
+        let idSec = $('input[name=idSec]');
+        let mnoSec = $('input[name=mnoSec]');
+        let mno = $('input[name=mno]');
+        let regForm = $('#registerForm');
+        // // 인증 정보(id) 컨트롤러로 넘겨주기
+        // $.ajax({
+        //     url : "id/"+idSec.val(),
+        //     data : idSec.val(),
+        //     type : 'get',
+        //     success : function (result){
+        //         console.log("@Result : " + result);
+        //         mnoSec.val(result);
+        //     }
+        // })
+        // console.log("@@ after ajax mnoSec : "+mnoSec.val());
+        if (idSec.val()=='anonymousUser'){
+            mnoSec = $('input[name=mnoBoard]');
+        }
+
+        $("#regBtn").on('mouseover',function (){
+            console.log("idSec : " + idSec.val() + "mnoSec : " + mnoSec.val() + " | mno : "+ mno);
+        });
+        $("#regBtn").on('click', function(e){
+            e.preventDefault();
+            if(mnoSec.val()!=""){
+                regForm.append("<input type='hidden' name='idSec' value='"+idSec.val()+"'>");
+            }
+            // anonymousUser 일 때, mnoSec에 null값이 들어가게 되고 value가 넘어갈 때 String으로 넘어가면서 Type 오류가 생김
+            regForm.submit();
+        })
+
+    })
+
+</script>
+<script th:inline="javascript">
+    // 변수
+
+    $(document).ready(function (){
+        let result = '<div th:text="${result}">';
+        checkModal(result);
+        history.replaceState({},null,null);
+        function checkModal(result){
+            if(result==='' || history.state){
+                return ;
+            }
+            if (parseInt(result)>0){
+                $(".modal-body").html(
+                    "게시글 " + parseInt((result) + "번이 등록되었습니다.")
+                )
+            }
+
+            // $("#myModal").modal("show");
+        }
+        let actionForm = $("#actionForm")
+
+        // pagination start
+        // 페이지 이동 : next, prev, displayPage
+        $(".paginate_button a").on("click", function (e){
+            // 페이지가 넘어가지 않게 방지
+            e.preventDefault();
+            // .find() : 어떤 요소의 하위 요소 중 특정 요소를 찾을 때 사용
+            actionForm.find("input[name='page']").val($(this).attr("href"));
+            actionForm.submit();
+        })
+
+        $("#next").on("click", function (e){
+            e.preventDefault();
+            actionForm.find("input[name='page']").val($(this).attr("href"));
+            actionForm.submit();
+        })
+
+        $("#prev").on("click", function (e){
+            e.preventDefault();
+            actionForm.find("input[name='page']").val($(this).attr("href"));
+            actionForm.submit();
+        })
+
+        // 게시글 href 연결, 복잡한 링크를 만들지 않기 위해 form에 bno정보 담아 전달
+        $(".move").on("click",function (e){
+            e.preventDefault();
+            actionForm.append("<input type='hidden' name='bno' value='" +
+                $(this).attr("href") +"'>");
+            actionForm.attr("action","/community/board/read");
+            actionForm.submit();
+        })
+
+
+        // pagination end
+        // search start
+        $("#btnSearch").on('click',function (e){
+            e.preventDefault();
+            // pageContext.request.contextPath : 상대경로, 여기선 ${#httpServletRequest.getContextPath()} 사용.
+            // httpServletRequest : url정보를 얻기 위해 여러 함수를 사용할 수 있는 객체.
+            // let url = $('#contextPathHolder').attr('data-contextPath') ?  $('#contextPathHolder').attr('data-contextPath') : '';
+            // url = url + "?searchType=" + $("#searchType").val();
+            // url = url + "&keyword=" + $('#keyword').val();
+            // location.href = url;
+            // console.log(url);
+            // console.log($('#contextPathHolder').attr('data-contextPath'));
+            actionForm.submit();
+
+        })
+        // search end
+
+
+
+    })
+</script>
+</html>

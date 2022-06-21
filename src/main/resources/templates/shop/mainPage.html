@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>mypage-main</title>
+
+</head>
+<style>
+    .search_result_div{
+        width: 200px;
+    }
+    .search_img{
+        display: block;
+        float: left;
+        margin-right: 15px;
+        width: 95px;
+    }
+    .search_Name{
+        width: 95px;
+        font-size: 20px;
+        text-align: center;
+    }
+    .float-end{
+        margin-right: 80px;
+    }
+    .reviewCnt_span{
+        font-size:12px;
+        margin-left: 3px;
+    }
+    #sample01{
+        color: red;
+        font-size: 25px;
+    }
+    .product_TimeDealLogo{
+        border: solid 1px red;
+        color: red;
+        background-color: white;
+    }
+    .product_BestLogo{
+        border: solid 1px blue;
+        color: blue;
+        background-color: white;
+    }
+    .product_HotDealLogo{
+        border: solid 1px hotpink;
+        color: hotpink;
+        background-color: white;
+    }
+</style>
+
+
+
+<body>
+<!-- mypage header fragment -->
+<th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+<!-- START SLIDER SECTION -->
+<div class="home-slider-section section">
+    <div class="container">
+        <div class="row">
+            <!-- Home Slick Text Slider -->
+            <div class="home-slick-text-slider col-sm-6 col-xs-12">
+                <!-- Home Text Content -->
+                <div class="home-slick-content"  >
+                    <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" >BUNDANG X</h1>
+                    <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">친환경 소재의 새로운 느낌을 경험해보세요</p>
+                    <a href="#" class="btn wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">SHOP NOW</a>
+                </div>
+                <div class="home-slick-content">
+                    <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">여성 스포츠 할인</h1>
+                    <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="1s">여성 스포츠 제품 최대 15% 할인</p>
+                    <a href="#" class="btn wow fadeInUp" data-wow-duration="1s" data-wow-delay="1.5s">SHOP NOW</a>
+                </div>
+                <!-- Home Text Content -->
+                <div class="home-slick-content">
+                    <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">WORK IT OUT</h1>
+                    <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">여러분의 지식과 노하우를 공유해보세요</p>
+                    <a th:href="@{/community/board/list}" class="btn wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">커뮤니티 들어가기</a>
+                </div>
+            </div>
+            <!-- Home Slick Image Slider -->
+
+            <div class="home-slick-image-slider col-sm-6 col-xs-12">
+                <div class="image"><img src="mainPageImg/pic3.png" alt=""></div>
+                <div class="image"><img src="mainPageImg/main8.png" alt=""></div>
+                <div class="image"><img src="mainPageImg/pic6.png" alt=""></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SLIDER SECTION -->
+<!--<h1>Sample01 : 내일까지</h1>-->
+<!--<h2 id="sample01"></h2>-->
+<br/>
+
+
+<!--BEST-->
+<div class="product-section section pt-120 pb-120" style="margin-top: 250px">
+    <div class="container">
+
+        <div class="row">
+            <div class="section-title text-center col-xs-12 mb-60">
+                <h2 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" >베스트 셀러</h2>
+                <br>
+                <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">BUNDANG의 베스트 셀러</p>
+                <div style="width: 150px;height: 30px;float: right" class="cart-bottom  clearfix wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">
+                    <a th:href="@{/shop/list(pCateCode='500000',tier=1,page=1,numPerPage=8,sort='',keyword='')}" style="color: white">더 알아보기</a>
+                </div>
+            </div>
+        </div>
+
+        <div  class="row wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s" >
+            <div class="product-slider product-slider-4" >
+                <!-- Product Item Start -->
+                <div class="col-xs-12" th:each="dto : ${bestList}">
+                    <div class="product-item text-center" >
+                        <div class="product-img">
+                            <a class="image" th:href="@{/shop/read(pno=${dto.pno})}"><img style="width: 442px; height: 350px" th:src="|/display?fileName=${dto.pImage}|" alt=""/></a>
+                            <a class="wishlist" href="#" title="Wishlist"><i class="pe-7s-like"></i></a>
+
+                        </div>
+                        <div class="product-info text-left">
+                            <h5 class="title"><button th:if="${dto.pCateCode.substring(0,1)}=='0'"  class="product_BestLogo" style="font-size: 4px;float: left;margin-left: 2px;">BEST</button><button th:if="${dto.pDiscount>0.0}"  class="product_HotDealLogo" style="font-size: 4px;float: left;margin-left: 2px;">핫딜</button>
+                                <a style="margin-right: 45px" th:href="@{/shop/read(pno=${dto.pno})}">[[${dto?.pName}]]</a></h5>
+                            <div class="price-ratting fix"  th:if="${dto.pDiscount>0.0}">
+                                <span  style="color: red;float: left;font-size: 20px"><strong th:text="${#numbers.formatInteger(dto.pDiscount*100,0)}"></strong><small>%</small></span><span class="price"><strong style="font-size: 19px"><span class="new" th:text="|${#numbers.formatInteger(dto.pPrice-dto.pPrice*dto.pDiscount,0,'COMMA')}원|"></span></strong><span class="old"><small th:text="|${#numbers.formatInteger(dto?.pPrice,0,'COMMA')}원|"></small></span></span>
+                            </div>
+                            <div class="price-ratting fix" th:if="${dto.pDiscount==0.0}" >
+                                <span  class="price"><span class="new" ><strong style="font-size: 19px" th:text="|${#numbers.formatInteger(dto?.pPrice,0,'COMMA')}|"></strong><small>원</small></span></span>
+                            </div>
+                            <span class="ratting float-end "  >
+                                <th:block th:if="${#numbers.formatInteger(dto.pRating,0)} !=0" th:with="end = ${#numbers.formatInteger(dto.pRating,0)}, end2 = 5-${#numbers.formatInteger(dto.pRating,0)}">
+                                    <i class="fa fa-star active"
+                                       th:each="star,numStat : ${#numbers.sequence(1, end)}" ></i>
+                                     <i class="fa fa-star" th:if="${end } !=5"
+                                        th:each="star : ${#numbers.sequence(1, end2)}"></i>
+                                    <span class="reviewCnt_span" th:text="|(${dto.pReviewCnt})|"></span>
+                                </th:block>
+
+                            </span>
+                            <span th:if="${#numbers.formatInteger(dto.pRating,0)} ==0" class="ratting float-end">
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                            <span class="reviewCnt_span" th:text="|(${dto.pReviewCnt})|"></span>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Item End -->
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- BEST 끝 -->
+<br>
+<!-- TD -->
+<div class="product-section section pb-120" id="timeDeal" style="margin-top: 250px" >
+    <div class="container">
+
+        <div class="row" style="margin-bottom: 5px">
+            <div class="section-title text-center col-xs-12 mb-60">
+                <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" >타임딜</h1>
+                <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" id="timeDealContent">이 기회를 놓치지 마세요!</p>
+                <span class="wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s"  id="sample01"></span>
+            </div>
+
+        </div>
+
+
+
+        <div class="row wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s"  >
+            <div class="product-slider product-slider-4">
+                <!-- Product Item Start -->
+                <div class="col-xs-12" th:each="dto : ${TDList}">
+                    <div class="product-item text-center" >
+                        <div class="product-img">
+                            <a class="image" th:href="@{/shop/read(pno=${dto.pno})}"><img style="width: 442px; height: 350px" th:src="|/display?fileName=${dto.pImage}|" alt=""/></a>
+
+
+                        </div>
+                        <div class="product-info text-left">
+                            <h5 class="title"><button th:if="${dto.pCateCode.substring(0,1)}=='6'" class="product_TimeDealLogo" style="font-size: 4px;float: left;margin-left: 2px;color: red">타임딜</button><a style="margin-right: 10px;text-align: center" th:href="@{/shop/read(pno=${dto.pno})}">[[${dto?.pName}]]</a></h5>
+                            <div class="price-ratting fix" style="margin: 5px"  th:if="${dto.pDiscount>0.0}">
+                                <span  style="color: red;float: left;font-size: 20px"><strong th:text="${#numbers.formatInteger(dto.pDiscount*100,0)}"></strong><small>%</small></span><span class="price"><strong style="font-size: 19px"><span class="new" th:text="|${#numbers.formatInteger(dto.pPrice-dto.pPrice*dto.pDiscount,0,'COMMA')}원|"></span></strong><span class="old"><small th:text="|${#numbers.formatInteger(dto?.pPrice,0,'COMMA')}원|"></small></span></span>
+                            </div>
+                            <div class="price-ratting fix" th:if="${dto.pDiscount==0.0}" >
+                                <span  class="price"><span class="new" ><strong style="font-size: 19px;margin-left: 3px" th:text="|${#numbers.formatInteger(dto?.pPrice,0,'COMMA')}|"></strong><small>원</small></span></span>
+                            </div>
+                            <span class="ratting float-end "  >
+                                <th:block th:if="${#numbers.formatInteger(dto.pRating,0)} !=0" th:with="end = ${#numbers.formatInteger(dto.pRating,0)}, end2 = 5-${#numbers.formatInteger(dto.pRating,0)}">
+                                    <i class="fa fa-star active"
+                                       th:each="star,numStat : ${#numbers.sequence(1, end)}" ></i>
+
+                                     <i class="fa fa-star" th:if="${end } !=5"
+                                        th:each="star : ${#numbers.sequence(1, end2)}"></i>
+                                    <span class="reviewCnt_span" th:text="|(${dto.pReviewCnt})|"></span>
+
+                                </th:block>
+
+                            </span>
+                            <span th:if="${#numbers.formatInteger(dto.pRating,0)} ==0" class="ratting float-end">
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                                    <i class="fa fa-star "></i>
+                            <span class="reviewCnt_span" th:text="|(${dto.pReviewCnt})|">${#numbers.formatInteger(dto.pRating,0)}</span>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Item End -->
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TD끝 -->
+
+<!-- BLOG SECTION START -->
+<div class="blog-section section pb-80" style="margin-top: 250px">
+    <div class="container">
+
+
+        <div class="row">
+            <div class="section-title text-center col-xs-12 mb-60">
+                <h2 class="wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s">WORK IT OUT</h2>
+                <br>
+                <p class="wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s">여러분의 지식과 노하우를 공유해보세요!</p>
+
+                <div  style="width: 150px;height: 30px;float: right" class="cart-bottom  clearfix">'
+                    <a class="wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s" th:href="@{/community/board/list}" style="color: white">커뮤니티 들어가기</a>
+                </div>
+            </div>
+        </div>
+        <div class="row community-slider-4 wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s" style="margin-top: 50px">
+            <!-- Home Blog Item -->
+            <div class="col-lg-6 col-12  mb-40 " th:each="board : ${boardList}">
+
+                <div class="home-blog-item">
+                    <!-- Image -->
+                    <a th:href="@{/community/board/read(bno=${board.bno})}" class="image float-start">
+                        <img th:if="${board.bImg != null}" th:src="|/display?fileName=${board.bImg}|" alt="">
+                        <img th:if="${board.bImg == null}" src="mainPageImg/community2.png" alt="mainPageImg/community2.png">
+                    </a>
+                    <!-- Content -->
+                    <div class="content fix">
+                        <!-- Date -->
+<!--                        <span class="date" th:text="${board.mno}">-->
+<!--                            <span class="day">12</span>-->
+                            <!--                            <span class="month"></span>-->
+                        </span>
+                        <!-- Title -->
+                        <h4 class="title" th:text="${board.title}"><a th:href="@{/community/board/read(bno=${board.bno})}"></a></h4>
+                        <p>[[${board.community}]]</p>
+                        <a th:href="@{/community/board/read(bno=${board.bno})}" class="read-more">READ MORE</a>
+                    </div>
+                </div>
+            </div>
+
+            <!--            커뮤니티 글 끝-->
+
+
+        </div>
+    </div>
+</div>
+<!-- BLOG SECTION END -->
+
+
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+</body>
+<script>
+
+
+
+
+
+</script>
+</html>

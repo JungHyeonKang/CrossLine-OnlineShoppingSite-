@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.account.SignupMapper">
+
+    <insert id="insert">
+        insert into tbl_memberinfo (id,password,name,nickName,gender,sSNum,email,phoneNum,
+                                    mobileNum,postcode,address,detailAddress,interestSports,auth,grade,point)
+        values ( #{id}, #{password}, #{name}, #{nickName},#{gender},#{sSNum},#{email},
+                #{phoneNum}, #{mobileNum}, #{postcode}, #{address},#{detailAddress},
+                #{interestSports}, #{auth}, #{grade}, #{point})
+    </insert>
+
+    <select id="idCheck" resultType="string">
+        select id from tbl_memberinfo where id=#{id}
+    </select>
+</mapper>

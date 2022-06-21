@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- head fragment -->
+    <th:block th:replace="/fragments/common/header :: head"></th:block>
+    <title>게시글 등록</title>
+    <style>
+        label[for=img] {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: transparent;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 0;
+            width: 85px;
+        }
+
+        #img{  /* 파일 필드 숨기기 */
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip:rect(0,0,0,0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<!-- header fragment -->
+<th:block th:replace="/fragments/common/header.html :: headerFragment"></th:block>
+<div class="page-banner-section section" style="background-image: url('/img/banner/nathan-dumlao-WyV_EOPHy6g-unsplash.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-banner-content">
+                    <a href="/community/main"><h1 th:text="'Community'"></h1></a>
+                    <ul class="breadcrumb">
+                        <li><a href="/community/board/list" th:id="goBack">sports</a></li>
+                        <li class="active">create</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-section section pt-120 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="login-reg-form">
+                    <form id="registerForm" action="register" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <!-- hidden Data SW 추가 시작 -->
+                            <input th:if="${#authentication.name!='anonymousUser'}" type="hidden" name="mno" th:value="${memberInfoVO.mno}">
+                            <!-- hidden Data SW 추가 끝 -->
+                            <div class="col-xs-12 mb-20">
+                                <label for="title">제목 <span class="required">*</span></label>
+                                <input id="title" name="title" type="text"/>
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <label for="content">내용</label>
+                                <textarea id="content" name="content"></textarea>
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <label for="img">파일 추가</label>
+                                <input id="img" name="img" type="file" multiple/>
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <label for="nonMemberId" th:if="${#authentication.name=='anonymousUser'}">작성자<span class="required">*</span></label>
+                                <input id="nonMemberId" name="nonMemberId" type="text" th:if="${#authentication.name=='anonymousUser'}"/>
+                                <label for="nickName" th:if="${#authentication.name!='anonymousUser'}">작성자</span></label>
+                                <input id="nickName" name="nickName" type="text" th:value="${memberInfoVO.nickName}" th:if="${#authentication.name!='anonymousUser'}" readonly/>
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <label for="nonMemberPassword" th:if="${#authentication.name=='anonymousUser'}">비밀번호<span class="required">*</span></label>
+                                <input id="nonMemberPassword" name="nonMemberPassword" type="text" th:if="${#authentication.name=='anonymousUser'}"/>
+                            </div>
+                            <div class="bs-div-btn">
+                                <button class="btn" id="register" type="button">등록</button>
+                                <a href="list"><button class="btn" type="button">목록</button></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- Body main wrapper end -->
+<!-- footer fragment -->
+<th:block th:replace="fragments/common/footer.html :: footerFragment"></th:block>
+<script>
+    $(document).ready(function () {
+        let registerForm = $('#registerForm');
+        let mnoSec=$('input[name=mnoSec]');
+        $('#register').on('click',function (e){
+            e.preventDefault();
+            let str = '<input type="hidden" name="mno" value="'+mnoSec.val()+'">'
+            registerForm.append(str);
+            registerForm.submit();
+        })
+    });
+</script>
+</html>

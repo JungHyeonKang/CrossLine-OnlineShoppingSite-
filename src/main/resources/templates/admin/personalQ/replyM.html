@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- mypage head fragment -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>cs-personalQ-read</title>
+</head>
+
+<body>
+    <!-- mypage header fragment -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'1:1문의글 조회'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">list</a></li>
+                            <li class="active">read</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="checkout-form">
+                        <div class="row">
+                            <div class="col-lg-6 mb-40">
+                                <div class="order-wrapper">
+                                    <form>
+                                        <h3><span style="font-size: 45px;margin-right: 20px">Q</span>문의 내용</h3>
+                                        <!-- 표시 데이터 -->
+                                        <div class="row">
+                                            <div class="col-sm-6 col-xs-12 mb-30">
+                                                <label>문의일자</label>
+                                                <input type="text" th:value="${pqVO.pqRegDate}" readonly>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12 mb-30">
+                                                <label>제목</label>
+                                                <input type="text" name="name" th:value="${pqVO.pqTitle}" readonly>
+                                            </div>
+                                            <div class="order-notes">
+                                                <label>본문</label>
+                                                <textarea id="pqContent" name="pqContent" th:text="${pqVO.pqContent}" readonly></textarea>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12 mb-30">
+                                                <span class="input-group-addon">첨부이미지</span>
+                                                <div th:each="personalQFile : ${pqVO.personalQFilesList}" th:data-file="${personalQFile.getThumbnailURL()}">
+                                                    <img th:src="|/display?fileName=${personalQFile.getThumbnailURL()}|">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- 답변 내역 -->
+                            <div class="col-lg-6 col-12 mb-40">
+                                <div class="order-wrapper">
+                                    <form action="/admin/personalQ/replyM" method="post">
+                                        <h3><span style="font-size: 45px;margin-right: 20px">A</span> 답변 내용</h3>
+                                        <p>고객 문의 내용에 대한 답변을 작성해주세요</p>
+                                        <br/>
+                                        <input type="hidden" name="pqNo" th:value="${pqVO.pqNo}" readonly>
+                                        <input type="hidden" name="mno" th:value="${pqVO.mno}" readonly>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label>진행상태</label>
+                                            <input type="text" name="pqStatus" th:value="${pqVO.pqStatus}" readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+                                            <label>제목 <span class="required">*</span></label>
+                                            <input type="text" name="pqReplyTitle" th:value="${pqVO.pqReplyTitle}">
+                                        </div>
+                                        <div class="order-notes">
+                                            <label>본문 <span class="required">*</span></label>
+                                            <textarea id="pqReplyContent" name="pqReplyContent" th:text="${pqVO.pqReplyContent}"></textarea>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12 mb-30">
+
+                                        </div>
+                                        <div class="order-button">
+                                            <input th:if="${pqVO.pqStatus.equals('접수완료')}" type="submit" value="답변 등록"/>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- mypage footer fragment -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 뒤로가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/admin/personalQ/listM?mno='+mno;
+        })
+    })
+</script>
+</html>

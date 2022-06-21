@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>CART LIST</title>
+</head>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'장바구니'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">mypage</a></li>
+                            <li class="active">cart</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- cart List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+<!--                    <form>-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="cart-table table-responsive mb-40">
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th class="pro-title all_check_input_div"><input type="checkbox" class="all_check_input input_size_20" checked><span class="all_chcek_span"></span></th>
+                                            <th class="pro-title">이미지</th>
+                                            <th class="pro-title">상품명</th>
+<!--                                            <th class="pro-title">상품번호</th>-->
+                                            <th class="pro-title">옵션1</th>
+                                            <th class="pro-title">옵션2</th>
+                                            <th class="pro-title">색상</th>
+                                            <th class="pro-price">가격(개당)</th>
+                                            <th class="pro-quantity">수량</th>
+                                            <th class="pro-price">총 결제금액</th>
+    <!--                                        <th class="pro-title">주문하기(개별)</th>-->
+                                            <th class="pro-remove">삭제</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="cart : ${cartList}">
+                                                <td>
+                                                    <div class="cart_info_div">
+                                                        <input class="individual_cart_checkbox" type="checkbox" checked />
+                                                        <input type="hidden" class="individual_pno_input" th:value="${cart.pno}">
+                                                        <input type="hidden" class="individual_itemCount_input" th:value="${cart.cCount}" >
+                                                        <input type="hidden" class="individual_pColor_input" th:value="${cart.cColor}">
+                                                        <input type="hidden" class="individual_pOption_input" th:value="${cart.cOption}">
+                                                        <input type="hidden" class="individual_pOption2_input" th:value="${cart.cOption2}">
+                                                        <input type="hidden" class="individual_pOptionPrice_input" th:value="${cart.cOptionPrice}">
+                                                    </div>
+                                                </td>
+                                                <input type="hidden" th:id="${cart.cno}"> <!-- 행 검색용(숨김) -->
+                                                <td class="pro-title"><img th:src="|/display?fileName=${cart.pImage}|" alt="" /></td>
+                                                <td class="pro-title"><a th:href="@{/shop/read(pno=${cart.pno},mno=${cart.mno})}" th:text="${cart.cName}"></a></td>
+<!--                                                <td class="pro-title"  th:text="${cart.pno}"></td>-->
+                                                <td class="pro-title">[[${cart.cOption}]]<span style="font-size: x-small"></span></td>
+                                                <td class="pro-title">[[${cart.cOption2}]]<span style="font-size: x-small"></span></td>
+                                                <td class="pro-title">[[${cart.cColor}]]<span style="font-size: x-small"></span></td>
+                                                <td class="pro-price" th:text="${cart.cDisPrice}"></td>
+                                                <td class="pro-quantity">
+                                                    <div class="product-quantity">
+                                                        <input type="text"  name="qtyInput"  th:value="${cart.cCount}" />
+                                                        <span class="dec qtybtn">
+                                                            <i class="fa fa-angle-left"></i>
+                                                        </span>
+                                                        <span class="inc qtybtn">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td class="pro-price" name="cTotalPrice" th:text="${cart.cTotalPrice}"></td>
+                                                <td class="pro-remove">
+                                                    <form id="deleteForm" th:action="@{/mypage/cart/delete}" th:method="post">
+                                                        <input type="hidden" name="cno" th:value="${cart.cno}" readonly>
+                                                        <input type="hidden" name="mno" th:value="${cart.mno}" readonly>
+                                                        <input style="border: white; background-color: white" type="button" name="cartDeleteBtn" value="X">
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Cart Total 요약 -->
+                            <!-- 공란 -->
+                            <div class="col-xl-8 col-md-7 col-12">
+                                <div class="cart-buttons mb-30">
+                                </div>
+                                <div class="cart-coupon mb-40">
+                                </div>
+                            </div>
+                            <!-- Cart 요약 및 주문 연결 -->
+                            <div class="col-xl-4 col-md-5 col-12">
+                                <div class="cart-total mb-40">
+                                    <h3>장바구니 요약</h3>
+                                    <table>
+                                        <tbody>
+                                        <tr class="order-total">
+                                            <th>Total</th>
+                                            <td>
+                                                <strong><span id="cartTotal" class="amount">[[${cartTotalPrice}]] 원</span></strong>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="proceed-to-checkout section mt-30" >
+                                        <!-- 주문 페이지 연결 -->
+                                        <!-- 넘길때 mno만 넘기고, controller에서 장바구니 List 가져와서 List로 넘길 예정 -->
+                                        <a class="order_btn">구매하기</a>
+                                        <form class="order_form" th:action="|@{/order/}${mno}|" method="get">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+<!--                    </form>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- hidden data -->
+    <input type="hidden" name="mno" th:value="${mno}" readonly>
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    // 장바구니로 주문하기 (JH 추가)
+    $(".order_btn").click(function (e){
+
+        let form_contents ='';
+        let orderNumber = 0;
+        $(".cart_info_div").each(function (index,ele){
+            if($(ele).find(".individual_cart_checkbox").attr("checked") === "checked"){
+
+                let pno = $(ele).find(".individual_pno_input").val();
+                let itemCount =$(ele).find(".individual_itemCount_input").val();
+                let pOption = $(ele).find(".individual_pOption_input").val();
+                let pOption2 = $(ele).find(".individual_pOption2_input").val();
+                let pColor = $(ele).find(".individual_pColor_input").val();
+                let pOptionPrice = $(ele).find(".individual_pOptionPrice_input").val();
+                let pno_input = "<input name='orders[" + orderNumber + "].pno' type='hidden' value='" + pno + "'>";
+                form_contents += pno_input;
+
+                let itemCount_input = "<input name='orders[" + orderNumber + "].itemCount' type='hidden' value='" + itemCount + "'>";
+                form_contents += itemCount_input;
+
+                let pOption_input = "<input name='orders[" + orderNumber + "].pOption' type='hidden' value='" + pOption + "'>";
+                form_contents += pOption_input;
+
+                let pOption2_input = "<input name='orders[" + orderNumber + "].pOption2' type='hidden' value='" + pOption2 + "'>";
+                form_contents += pOption2_input;
+
+                let pColor_input = "<input name='orders[" + orderNumber + "].pColor' type='hidden' value='" + pColor + "'>";
+                form_contents += pColor_input;
+
+                let pOptionPrice_input = "<input name='orders[" + orderNumber + "].pOptionPrice' type='hidden' value='" + pOptionPrice + "'>";
+                form_contents += pOptionPrice_input;
+                console.log("itemcount",itemCount)
+                orderNumber += 1;
+            }
+        })
+
+        $(".order_form").html(form_contents);
+        $(".order_form").submit();
+    })
+    $(document).ready(function (){
+        // 수량 변경시 order페이지에 넘겨줄 수량 데이터도 변경하는 이벤트 (JH 추가)
+        $(".qtybtn").click(function (){
+            let targetInput = $(this).siblings("input[name='qtyInput']").val()
+            $(this).closest("tr").find("input[class='individual_itemCount_input']").val(targetInput)
+
+        })
+        //체크박스 이벤트(JH추가)
+        $(".individual_cart_checkbox").on("click", function(){
+            if($(this).prop("checked")){
+                $(this).attr("checked",true)
+            }
+            else {
+                $(this).attr("checked",false)
+            }
+        });
+        //전체 체크박스 선택 (JH추가)
+        $(".all_check_input_div").click(function (){
+            if($(".all_check_input").prop("checked")){
+                $(".individual_cart_checkbox").attr("checked", true);
+            } else{
+                $(".individual_cart_checkbox").attr("checked", false);
+            }
+        })
+        // 장바구니 업데이트 Ajax 통신 함수
+        const updateCart = (cCount, mno, cno) =>{
+
+            var data ={
+                mno:mno,
+                cno:cno,
+                ccount:cCount
+            }
+
+            console.log("입력받은 data: ",data)
+            $.ajax({
+                url:'/mypage/cart/modify',
+                method:'post',
+                data:JSON.stringify(data),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function (cartVO){
+                    console.log("Ajax통신 성공 후 받은 cartVO: ",cartVO);
+
+                    // 해당 장바구니 상품 행 가져오기
+                    // (1) 상품 금액 태그 가져오기
+                    var cno = cartVO.cno;
+                    var targetTotal = $("input#"+cno+"").closest("tr").find("td[name=cTotalPrice]"); // 해당 태그 찾기
+
+                    // (1-1) 장바구니 총 금액 태그 가져오기
+                    var cartTotal = $("#cartTotal").text() // 총 장바구니 금액 원본
+                    var modCartTotal = cartTotal.replace(" 원","") // ' 원' 문자 제거한 장바구니 금액
+
+                    // (2) 상품 금액 증감 내역 기록
+                    var originalTotal = targetTotal.text(); // 기존 상품 결제금액
+                    var newTotal = cartVO.ctotalPrice // 수정된 상품 결제금액
+                    var dif = newTotal - parseInt(originalTotal); // 기존 대비 증감 금액
+
+                    // (3) 상품 금액 + 장바구니 총 금액 수정하기
+                    targetTotal.text(cartVO.ctotalPrice) // 상품 결제 금액 수정
+                    var finalCartTotal = parseInt(modCartTotal) + dif; // 최종 수정된 장바구니 총 금액(기존금액+증감금액)
+                    $("#cartTotal").html(finalCartTotal+" 원"); // 총 장바구니 금액 수정
+                }
+            })
+
+        }
+
+        // 장바구니 특정 상품 수량 +- 누르면
+        $(".fa-angle-left,.fa-angle-right").click(function (){
+            console.log("-버튼 클릭")
+
+            // Target 태그 가져오기
+            var targetInput = $(this).closest("tr").find("input[name=qtyInput]"); // 대상 input
+            var originalVal = targetInput.val(); // 기존 수량
+            // +- 버튼에 따라 수량 업데이트 진행
+            console.log($(this).attr('class'))
+            if($(this).hasClass('fa-angle-left')){
+                var updateVal = parseInt(originalVal) - 1; // 변경 수량
+                // targetInput.val(updateVal); // 변경 수량 업데이트
+            }
+            else {
+                var updateVal = parseInt(originalVal) + 1;
+                // targetInput.val(updateVal);
+            }
+
+
+
+            // Ajax 통신용 데이터 가져오기
+            var mno = $(this).closest("tr").find("input[name=mno]").val();
+            var cno = $(this).closest("tr").find("input[name=cno]").val();
+            // console.log(mno)
+            // console.log(cno)
+
+            // Ajax 통신 함수 호출
+            updateCart(updateVal,mno,cno);
+        })
+
+        // 장바구니 삭제 버튼 클릭하면 동작
+        $("input[name=cartDeleteBtn]").click(function (e){
+            var target = $(this).closest('form');
+            if(!confirm("정말 삭제하시겠습니까?")){
+                alert("삭제를 취소합니다.")
+                return
+            }
+            else {
+                target.submit();
+                alert("삭제 완료하였습니다.")
+            }
+        })
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/main?mno='+mno;
+        })
+    })
+</script>
+</html>

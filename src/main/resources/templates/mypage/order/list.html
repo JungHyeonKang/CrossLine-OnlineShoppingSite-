@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>ORDER LIST</title>
+</head>
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'주문 목록'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">mypage</a></li>
+                            <li class="active">order list</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- order List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <form action="#">
+                    <div class="col-xs-12">
+                        <div class="wishlist-table table-responsive mb-40">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="pro-stock-stauts">주문일자</th>
+                                    <th class="pro-title">주문번호</th>
+                                    <th class="pro-price">결재상태</th>
+                                    <th class="pro-price">총 결제금액</th>
+                                    <th class="pro-price">주문서 조회</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="order : ${orderList.getList()}">
+                                    <td class="pro-stock-stauts" th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd')}"></td>
+                                    <td class="pro-title">[[${order.ono}]]</td>
+                                    <td class="pro-price" th:text="${order.tPayStatus}"></td>
+                                    <td class="pro-price" data-th-text="${#numbers.formatInteger(order.tTotalPrice, 3, 'COMMA') + ' 원'}"></td>
+                                    <td class="pro-price">
+                                        <button type="button" class="btn"><a th:href="@{/mypage/order/read(ono=${order.ono})}">[[조회]]</a></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div>
+            <div>
+                <!-- Paging custom -->
+                <div class="paginationC clearfix">
+                    <!-- 이전 버튼 -->
+                    <li th:if="${orderList.getPrePage() != 0}">
+                        <a th:href="@{/mypage/order/list(pageNum=${orderList.getPrePage()}, mno=${mno})}">Previous</a>
+                    </li>
+                    <li th:if="${orderList.getPrePage() == 0}">
+                        <a>Previous</a>
+                    </li>
+                    <!-- 페이지 번호-->
+                    <li th:each="page: ${#numbers.sequence(orderList.getNavigateFirstPage(), orderList.getNavigateLastPage())}" th:classappend="${page == orderList.getPageNum()} ? 'active'">
+                        <a th:text="${page}" th:href="@{/mypage/order/list(pageNum=${page}, mno=${mno})}"></a>
+                    </li>
+                    <!-- 다음 버튼-->
+                    <li th:if="${orderList.getNextPage() != 0}">
+                        <a th:href="@{/mypage/order/list(pageNum=${orderList.getNextPage()}, mno=${mno})}">Next</a>
+                    </li>
+                    <li th:if="${orderList.getNextPage() == 0}">
+                        <a>Next</a>
+                    </li>
+                    <div style="font-size: small;">[ page[[${pageNum}]] ]</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<!-- hidden Data -->
+<input type="hidden" name="mno" th:value="${mno}">
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/main?mno='+mno;
+        })
+    })
+</script>
+</html>

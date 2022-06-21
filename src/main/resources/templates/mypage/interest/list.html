@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>WISHLIST</title>
+</head>
+
+<!-- 검색창 전용 style -->
+<style>
+    #searchForm select, option, input{
+        height: 30px;
+    }
+</style>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'찜한 상품'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">mypage</a></li>
+                            <li class="active">wishList</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interest List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div>
+                <!-- 키워드 검색 -->
+                <form id="searchForm" action="/mypage/interest/list" method="get">
+                    <select name="keyword" id="keyword">
+                        <option value="pName">상품명</option>
+                        <option value="pno">상품번호</option>
+                    </select>
+                    <input type="text" id="search" name="search">
+                    <input type="hidden" id="mno" name="mno" th:value="${mno}">
+                    <button style="background: #191c1f; color: white" type="submit" id="searchBtn">검색</button>
+                </form>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="wishlist-table table-responsive mb-40">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="pro-stock-stauts">찜한 날짜</th>
+                                <th class="pro-title">이미지</th>
+                                <th class="pro-title">상품명</th>
+                                <th class="pro-title">가격</th>
+                                <th class="pro-title">상품보러가기</th>
+                                <th class="pro-remove">삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="itr : ${itrList.getList()}">
+                                <td class="pro-stock-stauts" name="itrDate" th:text="${#temporals.format(itr.itrDate, 'yyyy-MM-dd')}"></td>
+                                <td class="pro-title" id="pImage"><img th:src="|/display?fileName=${itr.pImage}|" alt="" /></td>
+                                <td class="pro-title" id="pName">[[${itr.pName}]]</td>
+                                <td class="pro-title" id="pPrice" data-th-text="${#numbers.formatInteger(itr.pPrice, 3, 'COMMA') + ' 원'}"></td>
+                                <td class="pro-title">
+                                    <a th:href="@{/shop/read(pno=${itr.pno},mno=${itr.mno})}" th:text="'클릭'"></a>
+                                </td>
+                                <td class="pro-remove">
+                                    <form id="itrDeleteForm" th:action="@{/mypage/interest/delete}" th:method="post">
+                                        <input type="hidden" name="mno" th:value="${itr.mno}" readonly>
+                                        <input type="hidden" name="pno" th:value="${itr.pno}" readonly>
+                                        <input type="hidden" name="itrNo" th:value="${itr.itrNo}" readonly>
+                                        <input style="border: white; background-color: white" type="button" name="itrDeleteBtn" value="X">
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Paging custom -->
+                <div class="paginationC clearfix">
+                    <!-- 이전 버튼 -->
+                    <li th:if="${itrList.getPrePage() != 0}">
+                        <a th:href="@{/mypage/interest/list(pageNum=${itrList.getPrePage()}, keyword=${searchVO.getKeyword()}, search=${searchVO.getSearch()}, mno=${mno})}">Previous</a>
+                    </li>
+                    <li th:if="${itrList.getPrePage() == 0}">
+                        <a>Previous</a>
+                    </li>
+                    <!-- 페이지 번호-->
+                    <li th:each="page: ${#numbers.sequence(itrList.getNavigateFirstPage(), itrList.getNavigateLastPage())}" th:classappend="${page == itrList.getPageNum()} ? 'active'">
+                        <a th:text="${page}" th:href="@{/mypage/interest/list(pageNum=${page}, keyword=${searchVO.getKeyword()}, search=${searchVO.getSearch()}, mno=${mno})}"></a>
+                    </li>
+                    <!-- 다음 버튼-->
+                    <li th:if="${itrList.getNextPage() != 0}">
+                        <a th:href="@{/mypage/interest/list(pageNum=${itrList.getNextPage()}, keyword=${searchVO.getKeyword()}, search=${searchVO.getSearch()},mno=${mno})}">Next</a>
+                    </li>
+                    <li th:if="${itrList.getNextPage() == 0}">
+                        <a>Next</a>
+                    </li>
+                    <div style="font-size: small;">[ page[[${pageNum}]] ]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- hidden Data -->
+    <input type="hidden" th:name="mno" th:value="${mno}">
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 찜목록 삭제 버튼 클릭하면 동작
+        $("input[name=itrDeleteBtn]").click(function (e){
+            var target = $(this).closest('form')
+            if(!confirm("정말 삭제하시겠습니까?")){
+                alert("삭제를 취소합니다.")
+                return
+            }
+            else {
+                target.submit();
+                alert("삭제 완료하였습니다.")
+            }
+        })
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            console.log(mno)
+            window.location.href = '/mypage/main?mno='+mno;
+        })
+    })
+</script>
+</html>

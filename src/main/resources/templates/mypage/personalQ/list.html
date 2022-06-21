@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>Q LIST</title>
+</head>
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'1:1문의내역'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">mypage</a></li>
+                            <li class="active">Q list</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- exchange List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="wishlist-table table-responsive mb-40">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="pro-stock-stauts">등록일</th>
+                                    <th class="pro-stock-stauts">답변일</th>
+                                    <th class="pro-stock-stauts">접수번호</th>
+                                    <th class="pro-title">카테고리</th>
+                                    <th class="pro-title">제목</th>
+                                    <th class="pro-title">진행상태</th>
+                                    <th class="pro-title">접수 취소</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="pq : ${pqList.getList()}">
+                                    <td class="pro-stock-stauts" name="pqRegDate" th:text="${#temporals.format(pq.pqRegDate, 'yyyy-MM-dd')}"></td>
+                                    <td class="pro-stock-stauts" name="pqReplyDate" th:text="${#temporals.format(pq.pqReplyDate, 'yyyy-MM-dd')}"></td>
+                                    <td class="pro-stock-stauts"><a style="font-weight: bold; color: #191c1f" th:href="@{/mypage/personalQ/read(pqNo=${pq.pqNo})}" th:text="${pq.pqNo}"></a></td>
+                                    <td class="pro-stock-stauts" name="pqCategory" th:text="${pq.pqCategory}"></td>
+                                    <td class="pro-title" name="pqTitle" th:text="${pq.pqTitle}"></td>
+                                    <td style="font-weight: bold; color: #191c1f" class="pro-title" th:text="${pq.pqStatus}"></td>
+                                    <td class="pro-remove">
+                                        <form th:action="@{/mypage/personalQ/delete}" th:method="post">
+                                            <input type="hidden" name="pqNo" th:value="${pq.pqNo}" readonly>
+                                            <input type="hidden" name="mno" th:value="${mno}" readonly>
+                                            <input style="border: white; background-color: white" type="button"
+                                                   th:if="${#strings.contains(pq.pqStatus,'접수완료')}"
+                                                   name="pqDeleteBtn" value="X">
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Paging custom -->
+                <div class="paginationC clearfix">
+                    <!-- 이전 버튼 -->
+                    <li th:if="${pqList.getPrePage() != 0}">
+                        <a th:href="@{/mypage/personalQ/list(pageNum=${pqList.getPrePage()}, mno=${mno})}">Previous</a>
+                    </li>
+                    <li th:if="${pqList.getPrePage() == 0}">
+                        <a>Previous</a>
+                    </li>
+                    <!-- 페이지 번호-->
+                    <li th:each="page: ${#numbers.sequence(pqList.getNavigateFirstPage(), pqList.getNavigateLastPage())}" th:classappend="${page == pqList.getPageNum()} ? 'active'">
+                        <a th:text="${page}" th:href="@{/mypage/personalQ/list(pageNum=${page}, mno=${mno})}"></a>
+                    </li>
+                    <!-- 다음 버튼-->
+                    <li th:if="${pqList.getNextPage() != 0}">
+                        <a th:href="@{/mypage/personalQ/list(pageNum=${pqList.getNextPage()}, mno=${mno})}">Next</a>
+                    </li>
+                    <li th:if="${pqList.getNextPage() == 0}">
+                        <a>Next</a>
+                    </li>
+                    <div style="font-size: small;">[ page[[${pageNum}]] ]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- hidden Data -->
+    <input type="hidden" th:name="mno" th:value="${mno}">
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 신청목록 삭제 버튼 클릭하면 동작
+        $("input[name=pqDeleteBtn]").click(function (e){
+            var target = $(this).closest('form');
+            if(!confirm("정말 취소하시겠습니까?")){
+                alert("목록화면으로 돌아갑니다.")
+                return
+            }
+            else {
+                target.submit();
+                alert("삭제 완료하였습니다.")
+            }
+        })
+
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/main?mno='+mno;
+        })
+    })
+</script>
+</html>

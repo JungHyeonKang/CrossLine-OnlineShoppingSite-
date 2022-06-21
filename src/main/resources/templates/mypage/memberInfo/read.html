@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>MEMBER INFO</title>
+</head>
+
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'개인정보관리'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a th:id="goBack">mypage</a></li>
+                            <li class="active">Member Info</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE SECTION START -->
+
+    <!-- MemberInfo -->
+    <div class="page-section section pt-120 pb-45">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12 mx-auto">
+                    <div class="login-reg-form">
+                        <form class="forModify" th:action="@{/mypage/memberInfo/memModify}" th:method="post">
+                            <div class="row">
+                                <h3>개인정보</h3>
+                                <p>수정할 내용을 입력하시고 등록을 눌러주세요</p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <!-- 숨김 data -->
+                                <input type="hidden" name="mno" th:value="${memberInfo.mno}"/>
+                                <!-- 표시 data -->
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>이름 <span class="required">*</span></label>
+                                    <input type="text" name="name" th:value="${memberInfo.name}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>별명 <span class="required">*</span></label>
+                                    <input type="text" name="nickName" th:value="${memberInfo.nickName}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>아이디 </label>
+                                    <input type="text" name="id" readonly th:value="${memberInfo.id}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>비밀번호 <span class="required">*</span></label>
+                                    <input type="password" name="password" placeholder="변경할 비밀번호를 입력하세요.."/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>주민등록번호 </label>
+                                    <input type="text" name="sSNum" readonly th:value="${memberInfo.sSNum}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>성별 <span class="required">*</span></label>
+                                    <label>남성
+                                        <input type="checkbox" name="gender" id="option1" th:value="'남성'">
+                                    </label>
+                                    <label>여성
+                                        <input type="checkbox" name="gender" id="option2" th:value="'여성'">
+                                    </label>
+                                    <input type="hidden" id="getGender" th:value="${memberInfo.gender}">
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>전화번호 <span class="required">*</span></label>
+                                    <input type="text" name="phoneNum" th:value="${memberInfo.phoneNum}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>휴대전화번호 <span class="required">*</span></label>
+                                    <input type="text" name="mobileNum" th:value="${memberInfo.mobileNum}"/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>이메일 <span class="required">*</span></label>
+                                    <input type="email" name="email" th:value="${memberInfo.email}"/>
+                                </div>
+                                <div class="col-xs-12 mb-20">
+
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <button type="button" class="btn" id="getPostCode">우편번호 찾기</button>
+                                </div>
+                                <div class="col-sm-2 col-xs-12 mb-20">
+                                    <label>주소 <span class="required">*</span></label>
+                                    <input type="text" name="postcode" placeholder="우편번호" th:value="${memberInfo.postcode}" readonly/>
+                                </div>
+                                <div class="col-xs-6 mb-20">
+                                    <input type="text"  name="address" placeholder="기본주소" th:value="${memberInfo.address}" readonly/>
+                                </div>
+                                <div class="col-xs-6 mb-20">
+                                    <input type="text"  name="detailAddress" placeholder="세부주소" th:value="${memberInfo.detailAddress}"/>
+                                </div>
+                                <div class="col-xs-12 mb-20">
+                                    <label>관심 스포츠 <span class="required">*</span></label>
+                                    <select name="interestSports">
+                                        <option value="none">==관심스포츠를 선택하세요==</option>
+                                        <option value="없음">없음</option>
+                                        <option value="농구">농구</option>
+                                        <option value="축구">축구</option>
+                                        <option value="야구">야구</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>등급</label>
+                                    <input type="text" name="grade" th:value="${memberInfo.grade}" readonly/>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 mb-20">
+                                    <label>보유 포인트</label>
+                                    <input type="text" name="point" th:value="${memberInfo.point}" readonly/>
+                                </div>
+                                <div class="col-xs-12">
+                                    <input id="memModifyBtn" value="개인정보 수정등록" type="submit">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 배송지 정보 -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="login-reg-form">
+                    <div class="row">
+                        <h3>배송지 정보</h3>
+                        <p>자주 사용하는 배송지를 등록하고 사용해보세요</p>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <!-- 숨김 data -->
+                        <input type="hidden" name="mno" th:value="${memberInfo.mno}"/>
+                        <!-- 표시 data -->
+                        <div class="col-xs-12 mb-20">
+                            <button class="btn addShipBtn">배송지 신규등록</button>
+                        </div>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <div class="shipList col-xs-12 mb-20" th:each="shipment : ${shipmentList}">
+                            <ul>
+                                <li>
+                                    <hr/>
+                                    <input type="hidden" th:id="mno" th:value="${shipment.mno}">
+                                    <input type="hidden" th:id="sno" th:value="${shipment.sno}">
+                                    <div style="font-size: large; color: #191c1f" th:id="shipShipName" th:text="${shipment.shipName}"></div>
+                                    <div th:id="shipPostcode" th:text="${shipment.postcode}"></div>
+                                    <div th:id="shipAddress" th:text="${shipment.address}"></div>
+                                    <div th:id="shipDetailAddress" th:text="${shipment.detailAddress}"></div>
+                                    <hr/>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><br/>
+
+    <!-- 기타 버튼 -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <!-- 회원 탈퇴 -->
+                <form th:action="@{/mypage/memberInfo/memDelete}" th:method="get">
+                    <input type="hidden" name="mno" th:value="${memberInfo.mno}">
+                    <input type="submit" class="btn" value="회원탈퇴">
+                </form>
+            </div>
+        </div>
+    </div><br/>
+
+    <!-- Modal 모음(아래) --------------------------------------------------------------------------------------------- -->
+    <!-- ship modal -->
+    <div class="shipModal modal fade container" tabindex="-1" role="dialog">
+        <div class="row modal-dialog" role="document">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="login-reg-form modal-content">
+                    <div class="row">
+                        <div class="modal-header">
+                            <h4 class="ship-modal-title" th:text="'배송지 신규등록'"></h4>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <!-- 숨김 영역 -->
+                                <input type="hidden" name="mnoModal" readonly />
+                                <input type="hidden" name="snoModal" readonly />
+                            </div>
+                            <form>
+                                <div class="row">
+                                    <div class="col-xs-12 mb-20">
+                                        <label>배송지 이름 <span class="required">*</span></label>
+                                        <input type="text" name="shipNameModal" placeholder="배송지이름"/>
+                                    </div>
+                                    <br/>
+                                    <label>주소 <span class="required">*</span></label>
+                                    <div class="col-xs-12 mb-20">
+                                        <button type="button" class="btn" id="getPostCodeModal">우편번호 찾기</button>
+                                    </div>
+                                    <div class="col-sm-3 col-xs-12 mb-20">
+                                        <input type="text" name="postcodeModal" placeholder="우편번호" readonly/>
+                                    </div>
+                                    <div class="col-xs-12 mb-20">
+                                        <input type="text"  name="addressModal" placeholder="기본주소" readonly/>
+                                    </div>
+                                    <div class="col-xs-12 mb-20">
+                                        <input type="text"  name="detailAddressModal" placeholder="세부주소" required/>
+                                    </div>
+                                    <div class="col-xs-12 mb-20">
+                                        <button type="button" class="btn shipCloseBtn">닫기</button>
+                                        <button type="button" class="btn shipSaveBtn">저장</button>
+                                        <button type="button" class="btn shipModifyBtn">수정등록</button>
+                                        <button style="color: white" type="button" class="btn btn-danger shipDeleteBtn">삭제</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- hidden data -->
+<input type="hidden" id="interestSports" th:value="${memberInfo.interestSports}">
+
+<!-- daum postcode api -->
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js?autoload=false"></script>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 일반 이벤트 --------------------------------------------------------------------
+
+        // 관심스포츠 데이터 입력
+        var interestSports = $("input[id=interestSports]").val();
+        $("select[name=interestSports]").val(interestSports).prop("selected",true);
+
+        // 성별 체크박스 이벤트
+        // 처음 로딩시
+        var genderData = $("input#getGender").val();
+        if(genderData === '남성') $("input#option1").attr("checked","checked");
+        else $("input#option2").attr("checked","checked");
+        // 성별 변경 시
+        $("input[name=gender]").change(function (){
+            var newGender = $(this).val();
+            $("input#getGender").val(newGender);
+            console.log($("input#getGender").val())
+        })
+
+        // 회원정보 수정 버튼 누르면
+        $("#memModifyBtn").click(function (){
+            var password = $("input[name=password]").val();
+            console.log("비밀번호: ",password)
+            if($("input[name=password]").val() != ""){
+                alert("회원정보 수정이 완료되었습니다.")
+            }
+            else {
+                alert("변경할 비밀번호를 입력해주세요")
+                return false;
+            }
+
+        })
+
+
+        // 배송지 Modal ----------------------------------------------------------------------------
+
+        // 0. Modal 닫기 버튼
+        $(".shipCloseBtn").click(function (){
+            $(".shipModal").modal('hide');
+        })
+
+        // 1. 배송지 신규 등록 -----------------------------------------------------------------------
+        // 배송지 신규등록 버튼 Click => modal 팝업
+        $(".addShipBtn").click(function (e){
+            // 기존에 입력된 value 초기화
+            $(".ship-modal-title").text('배송지 신규등록')
+            $("input[name='shipNameModal']").val("")
+            $("input[name='postcodeModal']").val("")
+            $("input[name='addressModal']").val("")
+            $("input[name='detailAddressModal']").val("")
+            // 수정버튼 숨기기
+            $(".shipModifyBtn").hide();
+            $(".shipDeleteBtn").hide();
+            $(".shipSaveBtn").show();
+            // 모달 보여주기
+            $(".shipModal").modal('show');
+        })
+        // shipModal 우편번호 검색 버튼 클릭하면
+        $("#getPostCodeModal").click(function (){
+            daum.postcode.load(function(){
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        // 우편번호 검색 후 주소 클릭하면 아래 실행
+                        $("input[name=postcodeModal]").val(data.zonecode); // 우편번호 태그에 값 업데이트
+                        $("input[name=addressModal]").val(data.roadAddress); // 주소 태그에 값 업데이트
+                    }
+                }).open();
+            });
+        })
+        // 배송지 신규등록 => 저장 버튼 Click => ajax 통신 => 데이터 등록
+        $(".shipSaveBtn").click(function (e){
+            var data ={
+                mno:$("input[name=mno]").val(),
+                shipName:$("input[name=shipNameModal]").val(),
+                postcode:$("input[name=postcodeModal]").val(),
+                address:$("input[name=addressModal]").val(),
+                detailAddress:$("input[name=detailAddressModal]").val()
+            }
+            console.log("modal => 입력받은 data: ",data)
+            $.ajax({
+                url:'/mypage/memberInfo/shipAdd',
+                method:'post',
+                data:JSON.stringify(data),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function (result){
+                    console.log("주소 저장 => Ajax통신 성공 후 받은 result: ",result);
+                    alert("등록 완료되었습니다.")
+                    self.location.reload();
+                }
+            })
+            $(".shipModal").modal('hide')
+        })
+        // 2. 배송지 수정/삭제 ----------------------------------------------------------------------------------
+        // 배송지 주소 Click => modal 팝업
+        $(".shipList").on("click",function (){
+            // 클릭한 배송지 정보 modal input창에 입력하기
+            var targetship = $(this);
+            $("input[name='mnoModal']").val(targetship.find("#mno").val())
+            $("input[name='snoModal']").val(targetship.find("#sno").val())
+            $("input[name='shipNameModal']").val(targetship.find("#shipShipName").text())
+            $("input[name='postcodeModal']").val(targetship.find("#shipPostcode").text())
+            $("input[name='addressModal']").val(targetship.find("#shipAddress").text())
+            $("input[name='detailAddressModal']").val(targetship.find("#shipDetailAddress").text())
+            // 저장버튼 숨기기
+            $(".shipSaveBtn").hide();
+            $(".shipModifyBtn").show();
+            $(".shipDeleteBtn").show();
+            // 모달 제목 변경
+            $(".ship-modal-title").text('배송지 조회/수정')
+            // 모달 보여주기
+            $(".shipModal").modal('show');
+        })
+        // 배송지 수정 => 수정 버튼 Click => ajax 통신 => 데이터 수정
+        $(".shipModifyBtn").click(function (e){
+            var data ={
+                mno:$("input[name=mnoModal]").val(),
+                sno:$("input[name=snoModal]").val(),
+                shipName:$("input[name=shipNameModal]").val(),
+                postcode:$("input[name=postcodeModal]").val(),
+                address:$("input[name=addressModal]").val(),
+                detailAddress:$("input[name=detailAddressModal]").val()
+            }
+            console.log("modal => 입력받은 data: ",data)
+            $.ajax({
+                url:'/mypage/memberInfo/shipModify',
+                method:'post',
+                data:JSON.stringify(data),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function (result){
+                    console.log("주소 저장 => Ajax통신 성공 후 받은 result: ",result);
+                    alert("수정 완료되었습니다.")
+                    self.location.reload();
+                }
+            })
+            $(".shipModal").modal('hide')
+        })
+        // 배송지 삭제 => 삭제 버튼 Click => ajax 통신 => 데이터 수정
+        $(".shipDeleteBtn").click(function (e){
+            alert("정말 삭제하시겠습니까?")
+            var data ={
+                mno:$("input[name=mnoModal]").val(),
+                sno:$("input[name=snoModal]").val(),
+                postcode:$("input[name=postcodeModal]").val(),
+                address:$("input[name=addressModal]").val(),
+                detailAddress:$("input[name=detailAddressModal]").val()
+            }
+            console.log("modal => 입력받은 data: ",data)
+            $.ajax({
+                url:'/mypage/memberInfo/shipDelete',
+                method:'post',
+                data:JSON.stringify(data),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function (result){
+                    console.log("주소 저장 => Ajax통신 성공 후 받은 result: ",result);
+                    alert("삭제 완료되었습니다.")
+                    self.location.reload();
+                }
+            })
+            $(".shipModal").modal('hide')
+        })
+
+        // Modal 외 이벤트 ----------------------------------------------------------------------------------------------
+        // 성별 선택 체크박스
+        $('input[type="checkbox"][name="gender"]').click(function(){
+            if($(this).prop('checked')){
+                $('input[type="checkbox"][name="gender"]').prop('checked',false);
+                $(this).prop('checked',true);
+            }
+        });
+        // 개인정보관리 우편번호 검색 버튼 클릭하면
+        $("#getPostCode").click(function (){
+            daum.postcode.load(function(){
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        // 우편번호 검색 후 주소 클릭하면 아래 실행
+                        $("input[name=postcode]").val(data.zonecode); // 우편번호 태그에 값 업데이트
+                        $("input[name=address]").val(data.roadAddress); // 주소 태그에 값 업데이트
+                    }
+                }).open();
+            });
+        })
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/main?mno='+mno;
+        })
+    })
+</script>
+</html>

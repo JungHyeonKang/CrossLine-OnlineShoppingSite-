@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- HEAD FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: head"></th:block>
+    <title>EXCHANGE LIST</title>
+</head>
+<body>
+    <!-- HEADER FRAGMENT -->
+    <th:block th:replace="fragments/common/header :: headerFragment"></th:block>
+
+    <!-- PAGE BANNER SECTION -->
+    <div class="page-banner-section section" style='background-image: url("/img/bg/mypageBanner10_2.jpg")'>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-banner-content">
+                        <h1 th:text="'취소/반품/교환'"></h1>
+                        <ul class="breadcrumb">
+                            <li><a href="#" th:id="goBack">mypage</a></li>
+                            <li class="active">exchange list</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- exchange List -->
+    <div class="page-section section pt-120 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="wishlist-table table-responsive mb-40">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="pro-stock-stauts">신청일</th>
+                                <th class="pro-stock-stauts">처리 완료일</th>
+                                <th class="pro-title">접수번호</th>
+                                <th class="pro-title">주문번호</th>
+                                <th class="pro-title">상품명</th>
+                                <th class="pro-title">신청유형</th>
+                                <th class="pro-title">진행상태</th>
+                                <th class="pro-title">삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="exchange : ${exList.getList()}">
+                                <td class="pro-stock-stauts" name="exDate" th:text="${#temporals.format(exchange.exDate, 'yyyy-MM-dd')}"></td>
+                                <td class="pro-stock-stauts" name="exEndDate" th:text="${#temporals.format(exchange.exEndDate, 'yyyy-MM-dd')}"></td>
+                                <td class="pro-title"><a th:href="@{/mypage/exchange/read(eno=${exchange.eno})}" th:text="${exchange.eno}"></a></td>
+                                <td class="pro-title"><a th:href="@{/mypage/order/read(ono=${exchange.ono})}" th:text="${exchange.ono}"></a></td>
+                                <td class="pro-title" th:text="${exchange.pName}"></td>
+                                <td class="pro-title" th:text="${exchange.exCategory}"></td>
+                                <td class="pro-title" th:text="${exchange.exStatus}"></td>
+                                <td class="pro-remove">
+                                    <form th:action="@{/mypage/exchange/delete}" th:method="post">
+                                        <input type="hidden" name="mno" th:value="${exchange.mno}" readonly>
+                                        <input type="hidden" name="eno" th:value="${exchange.eno}" readonly>
+                                        <input type="hidden" name="ono" th:value="${exchange.ono}" readonly>
+                                        <input type="hidden" name="pno" th:value="${exchange.pno}" readonly>
+                                        <input style="border: white; background-color: white" type="button"
+                                               th:if="${#strings.contains(exchange.exStatus,'접수 전')}"
+                                               name="exDeleteBtn" value="X">
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Paging custom -->
+                <div class="paginationC clearfix">
+                    <!-- 이전 버튼 -->
+                    <li th:if="${exList.getPrePage() != 0}">
+                        <a th:href="@{/mypage/exchange/list(pageNum=${exList.getPrePage()}, mno=${mno})}">Previous</a>
+                    </li>
+                    <li th:if="${exList.getPrePage() == 0}">
+                        <a>Previous</a>
+                    </li>
+                    <!-- 페이지 번호-->
+                    <li th:each="page: ${#numbers.sequence(exList.getNavigateFirstPage(), exList.getNavigateLastPage())}" th:classappend="${page == exList.getPageNum()} ? 'active'">
+                        <a th:text="${page}" th:href="@{/mypage/exchange/list(pageNum=${page}, mno=${mno})}"></a>
+                    </li>
+                    <!-- 다음 버튼-->
+                    <li th:if="${exList.getNextPage() != 0}">
+                        <a th:href="@{/mypage/exchange/list(pageNum=${exList.getNextPage()}, mno=${mno})}">Next</a>
+                    </li>
+                    <li th:if="${exList.getNextPage() == 0}">
+                        <a>Next</a>
+                    </li>
+                    <div style="font-size: small;">[ page[[${pageNum}]] ]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- hidden Data -->
+    <input type="hidden" th:name="mno" th:value="${mno}">
+</body>
+
+<!-- FOOTER FRAGMENT -->
+<th:block th:replace="fragments/common/footer :: footerFragment"></th:block>
+
+<script>
+    $(document).ready(function (){
+
+        // 신청목록 삭제 버튼 클릭하면 동작
+        $("input[name=exDeleteBtn]").click(function (e){
+            var target = $(this).closest('form');
+            if(!confirm("정말 삭제하시겠습니까?")){
+                alert("삭제를 취소합니다.")
+                return
+            }
+            else {
+                target.submit();
+                alert("삭제 완료하였습니다.")
+            }
+        })
+
+        // Mypage 메인으로 돌아가기 버튼 클릭하면 동작
+        $("#goBack").click(function (){
+            var mno = $("input[name=mno]").val();
+            window.location.href = '/mypage/main?mno='+mno;
+        })
+    })
+</script>
+</html>

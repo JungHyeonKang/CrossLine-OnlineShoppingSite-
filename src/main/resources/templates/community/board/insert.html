@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+<body>
+<div>
+    <h2>성적을 기입하세요</h2>
+    <form>
+        <label for="reply">내용</label>
+        <input type="text" id="reply">
+        <label for="replyer">작성자</label>
+        <input type="text" id="replyer">
+        <label for="uno">게시글 번호</label>
+        <input type="text" id="uno">
+        <input type="submit" id="submit">
+    </form>
+                
+            
+</div>
+</body>
+<script>
+    $(document).ready(function (){
+        $("#submit").click(function(e) {
+            e.preventDefault();
+            // json 형식으로 데이터 set
+            let reply= $("#reply").val();
+            let replyer= $("#replyer").val();
+            let uno= $("#uno").val();
+            $.ajax({
+                type: 'post',
+                url: "/community/board/insert",
+                data: JSON.stringify({'reply' : reply, 'replyer' : replyer, 'uno' : uno}),
+                contentType: "application/json; charset=utf-8",
+                success: function (){
+                    alert("등록에 성공했습니다.")
+                },
+                error: function (){
+                    alert("등록에 실패했습니다.")
+                }
+            })
+        })
+    })
+
+</script>
+</html>

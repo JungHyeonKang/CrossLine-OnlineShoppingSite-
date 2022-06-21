@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.team4.mapper.mypage.ExchangeFilesMapper">
+
+    <!-- tbl_exchangeFiles 데이터 등록 -->
+    <insert id="insert">
+        insert into tbl_exchangeFiles (eno,img_name,path,uuid)
+                VALUES (#{eno},#{img_name},#{path},#{uuid})
+    </insert>
+
+    <!-- tbl_exchangeFiles 데이터 전체 가져오기(eno 단위) -->
+    <select id="getAll" resultType="com.green.team4.vo.mypage.ExchangeFilesVO">
+        select * from tbl_exchangeFiles where eno=#{eno}
+    </select>
+
+    <!-- tbl_exchangeFiles 데이터 하나 가져오기(eno 단위) -->
+    <select id="getOne" resultType="com.green.team4.vo.mypage.ExchangeFilesVO">
+        select * from tbl_exchangeFiles where ino=#{ino}
+    </select>
+
+    <!-- tbl_exchangeFiles 데이터 수정 -->
+    <update id="update">
+        update tbl_exchangeFiles
+            set img_name=#{img_name}, path=#{path}, uuid=#{uuid}
+                where ino=#{ino}
+    </update>
+
+    <!-- tbl_exchangeFiles 데이터 삭제 -->
+    <delete id="delete">
+        delete from tbl_exchangeFiles where eno=#{eno}
+    </delete>
+
+</mapper>
